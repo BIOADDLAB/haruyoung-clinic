@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Marcellus, EB_Garamond, Asta_Sans } from 'next/font/google';
+import { Marcellus, Cormorant_Garamond, Asta_Sans } from 'next/font/google';
 import './globals.css';
 
 const marcellus = Marcellus({
@@ -8,10 +8,11 @@ const marcellus = Marcellus({
     variable: '--font-marcellus',
 });
 
-// 임시 애플 가라몬드 대체
-const ebGaramond = EB_Garamond({
+// 임시 애플 가라몬드 대체, 사용처 적음
+const cormorantGaramond = Cormorant_Garamond({
+    weight: '400',
     subsets: ['latin'],
-    variable: '--font-eb-garamond',
+    variable: '--font-cormorant-garamond',
 });
 
 const astaSans = Asta_Sans({
@@ -60,7 +61,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="ko" className={`${marcellus.variable} ${ebGaramond.variable} ${astaSans.variable}`}>
+        <html lang="ko" className={`${marcellus.variable} ${cormorantGaramond.variable} ${astaSans.variable}`}>
             <body>{children}</body>
         </html>
     );

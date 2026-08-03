@@ -1,12 +1,113 @@
 @import 'tailwindcss';
 
-@theme {
+@theme inline {
     --color-dark: #3b2b1e;
     --color-brown: #8d6a4d;
     --color-cream: #fffbf6;
     --color-beige: #ccb194;
+
+    --font-display: var(--font-marcellus), var(--font-cormorant-garamond), var(--font-asta-sans), sans-serif;
+    --font-body: var(--font-asta-sans), var(--font-marcellus), sans-serif;
 }
 
 body {
-  font-family: var(--font-asta-sans), var(--font-marcellus), sans-serif;
+    font-family: var(--font-body);
+    background: var(--color-cream);
+    color: var(--color-dark);
+}
+
+.font-display {
+    font-family: var(--font-display);
+}
+
+/* 역할별 타입 스케일 (Design Guide 기준, 그대로 유지) */
+.text-h1 {
+    font-size: clamp(34px, 3.6vw, 48px);
+    line-height: 1.3;
+}
+.text-h2 {
+    font-size: clamp(26px, 2.7vw, 36px);
+    line-height: 1.45;
+}
+.text-h3 {
+    font-size: clamp(20px, 1.8vw, 24px);
+    line-height: 1.5;
+}
+.text-lead {
+    font-size: clamp(17px, 1.5vw, 20px);
+    line-height: 1.75;
+}
+.text-body {
+    font-size: clamp(16px, 1.35vw, 18px);
+}
+.text-small {
+    font-size: clamp(15px, 1.15vw, 16px);
+}
+.text-caption {
+    font-size: 14px;
+}
+.text-caption-sm {
+    font-size: 12px;
+}
+
+/* 위 역할 8개로 안 잡히는 애매한 사이즈용 보조 스케일. 대체 아니고 추가. */
+.text-16 {
+    font-size: clamp(15px, 1.15vw, 16px);
+}
+.text-18 {
+    font-size: clamp(16px, 1.35vw, 18px);
+}
+.text-20 {
+    font-size: clamp(17px, 1.5vw, 20px);
+}
+.text-22 {
+    font-size: clamp(18px, 1.65vw, 22px);
+}
+.text-24 {
+    font-size: clamp(20px, 1.8vw, 24px);
+}
+.text-26 {
+    font-size: clamp(21px, 1.95vw, 26px);
+}
+.text-28 {
+    font-size: clamp(22px, 2.1vw, 28px);
+}
+.text-30 {
+    font-size: clamp(23px, 2.25vw, 30px);
+}
+.text-32 {
+    font-size: clamp(24px, 2.4vw, 32px);
+}
+.text-34 {
+    font-size: clamp(25px, 2.55vw, 34px);
+}
+.text-36 {
+    font-size: clamp(26px, 2.7vw, 36px);
+}
+.text-38 {
+    font-size: clamp(27px, 2.85vw, 38px);
+}
+.text-40 {
+    font-size: clamp(29px, 3vw, 40px);
+}
+.text-42 {
+    font-size: clamp(30px, 3.15vw, 42px);
+}
+.text-44 {
+    font-size: clamp(31px, 3.3vw, 44px);
+}
+.text-46 {
+    font-size: clamp(33px, 3.45vw, 46px);
+}
+.text-48 {
+    font-size: clamp(34px, 3.6vw, 48px);
+}
+
+.text-wrap-design {
+    white-space: normal;
+}
+@media (min-width: 1280px) {
+    .text-wrap-design {
+        white-space: pre-line;
+    }
 }
