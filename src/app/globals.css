@@ -1,0 +1,12 @@
+@import 'tailwindcss';
+
+@theme {
+    --color-dark: #3b2b1e;
+    --color-brown: #8d6a4d;
+    --color-cream: #fffbf6;
+    --color-beige: #ccb194;
+}
+
+body {
+  font-family: var(--font-asta-sans), var(--font-marcellus), sans-serif;
+}
