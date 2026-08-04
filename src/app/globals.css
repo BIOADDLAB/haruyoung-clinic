@@ -6,6 +6,11 @@
     --color-cream: #fffbf6;
     --color-beige: #ccb194;
 
+    /* 헤더 치수 토큰 (시안 실측) */
+    --spacing-rail: 104px;
+    --spacing-menu: 192px;
+    --spacing-search: 248px;
+
     --font-display: var(--font-marcellus), var(--font-cormorant-garamond), var(--font-asta-sans), sans-serif;
     --font-body: var(--font-asta-sans), var(--font-marcellus), sans-serif;
 }
@@ -109,5 +114,59 @@ body {
 @media (min-width: 1280px) {
     .text-wrap-design {
         white-space: pre-line;
+    }
+}
+
+/* 헤더: 모바일/태블릿 상단 바 64px, PC 좌측 레일 104px */
+.site-main {
+    padding-top: 64px;
+}
+@media (min-width: 1024px) {
+    .site-main {
+        padding-top: 0;
+        padding-left: var(--spacing-rail);
+    }
+}
+
+/* 접근성 - 모션 최소화 */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* 가로 스크롤 트랙 */
+.h-track[data-horizontal='true'] {
+    flex-direction: row;
+    height: 100%;
+    width: max-content;
+}
+.h-track[data-horizontal='true'] > .h-panel {
+    width: var(--pw);
+    height: 100dvh;
+}
+
+/* 푸터 리빌 */
+.footer-reveal-host {
+    position: relative;
+    z-index: 10;
+}
+@media (min-width: 1024px) {
+    .footer-reveal-host {
+        margin-bottom: 100dvh;
+    }
+    .footer-reveal {
+        position: fixed;
+        inset-inline: 0;
+        bottom: 0;
+        z-index: 0;
+        display: flex;
+        height: 100dvh;
+        flex-direction: column;
     }
 }
