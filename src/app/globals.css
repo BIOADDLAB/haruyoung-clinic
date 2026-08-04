@@ -12,12 +12,14 @@
     --spacing-search: 248px;
 
     --font-display: var(--font-marcellus), var(--font-cormorant-garamond), var(--font-asta-sans), sans-serif;
+    --font-family: var(--font-cormorant-garamond), var(--font-marcellus), sans-serif;
     --font-body: var(--font-asta-sans), var(--font-marcellus), sans-serif;
 }
 
 body {
     font-family: var(--font-body);
-    background: var(--color-cream);
+    /* background: var(--color-cream); */
+    background: #fff;
     color: var(--color-dark);
 }
 

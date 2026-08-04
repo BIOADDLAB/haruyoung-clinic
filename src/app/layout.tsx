@@ -62,7 +62,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="ko" className={`${marcellus.variable} ${cormorantGaramond.variable} ${astaSans.variable}`}>
-            <body>{children}</body>
+            <body className="">{children}</body>
         </html>
     );
 }
