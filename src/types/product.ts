@@ -1,11 +1,13 @@
 export type Product = {
     id: string;
-    name: string;
-    mainCategory: string;
+    menuCategory: string;
+    menuSlug: string;
     subCategory: string;
+    name: string;
     highlight: string;
     description: string;
-    price: number;
-    discountPrice: number;
-    eventId: string | null;
+    price: number | null;
+    order: number;
 };
+
+export type ProductSeed = Omit<Product, 'id'>;
