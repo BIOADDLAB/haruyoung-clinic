@@ -5,11 +5,11 @@
     --color-brown: #8d6a4d;
     --color-cream: #fffbf6;
     --color-beige: #ccb194;
+    --color-tan: #d3c0a8;
 
-    /* 헤더 치수 토큰 (시안 실측) */
-    --spacing-rail: 104px;
-    --spacing-menu: 192px;
-    --spacing-search: 248px;
+    --spacing-rail: 106px;
+    --spacing-menu: 247px;
+    --spacing-search: 247px;
 
     --font-display: var(--font-marcellus), var(--font-cormorant-garamond), var(--font-asta-sans), sans-serif;
     --font-family: var(--font-cormorant-garamond), var(--font-marcellus), sans-serif;
@@ -153,22 +153,11 @@ body {
     height: 100dvh;
 }
 
-/* 푸터 리빌 */
-.footer-reveal-host {
-    position: relative;
-    z-index: 10;
-}
-@media (min-width: 1024px) {
-    .footer-reveal-host {
-        margin-bottom: 100dvh;
-    }
-    .footer-reveal {
-        position: fixed;
-        inset-inline: 0;
-        bottom: 0;
-        z-index: 0;
-        display: flex;
-        height: 100dvh;
-        flex-direction: column;
-    }
+/* 푸터 — 가로 트랙 뒤에 깔아두고 트랙이 왼쪽으로 빠지면서 드러난다.
+   가로 모드에서는 HorizontalScroll 이 sticky 영역 안에 깔고,
+   모바일/태블릿에서는 일반 흐름으로 트랙 아래에 붙는다. */
+.footer-behind {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
 }

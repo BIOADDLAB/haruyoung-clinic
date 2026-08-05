@@ -39,6 +39,16 @@ export const CLINIC = {
     tel: '00-000-0000',
 } as const;
 
+/** TODO: 실제 카카오 채널 주소로 교체 */
+export const KAKAO_CHANNEL = 'https://pf.kakao.com/_haruyoung';
+
+/** 헤더 레일 하단 바로가기 — 상담예약은 전화연결, 바로예약은 예약 페이지, 카카오톡은 채널 */
+export const QUICK_LINKS = [
+    { icon: 'i-h-02', label: '상담예약', href: `tel:${CLINIC.tel.replace(/-/g, '')}`, external: true },
+    { icon: 'i-h-03', label: '바로예약', href: '/reservation', external: false },
+    { icon: 'i-h-05', label: '카카오톡', href: KAKAO_CHANNEL, external: true },
+] as const;
+
 export const POLICY_LINKS = [
     { label: '비급여수가표', href: '/treatments' },
     { label: '이용약관', href: '/terms' },
