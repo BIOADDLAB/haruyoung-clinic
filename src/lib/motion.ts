@@ -8,9 +8,9 @@ import type { Variants } from 'framer-motion';
 export const EASE = [0.22, 1, 0.36, 1] as const;
 
 export const DUR = {
-    fast: 0.4,
-    base: 0.6,
-    slow: 0.8,
+    fast: 0.6,
+    base: 0.9,
+    slow: 1.2,
 } as const;
 
 /** 화면에 80px 들어온 뒤 발동 — 가장자리에서 어색하게 터지는 것 방지 */
@@ -61,5 +61,5 @@ export const drawLine: Variants = {
 /** 리스트 부모 — 자식을 0.12s 간격으로 순차 등장 */
 export const stagger: Variants = {
     hidden: {},
-    show: { transition: { staggerChildren: 0.12 } },
+    show: { transition: { staggerChildren: 0.16 } },
 };
