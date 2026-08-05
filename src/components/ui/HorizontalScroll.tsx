@@ -47,7 +47,16 @@ export function Panel({
  * [2안] CSS scroll-snap + overflow-x-auto 로도 가능하지만
  * 세로 휠로 넘어가지 않아 시안의 스크롤 감각이 안 나와 채택하지 않음.
  */
-export default function HorizontalScroll({ children, footer }: { children: ReactNode; footer?: ReactNode }) {
+export default function HorizontalScroll({
+    children,
+    footer,
+    holdStart = 0,
+}: {
+    children: ReactNode;
+    footer?: ReactNode;
+    /** 트랙을 움직이기 전에 첫 패널을 제자리에 고정해 둘 스크롤 거리(px). 히어로 연출용 */
+    holdStart?: number;
+}) {
     const wrapRef = useRef<HTMLDivElement>(null);
     const trackRef = useRef<HTMLDivElement>(null);
     const [horizontal, setHorizontal] = useState(false);
@@ -97,19 +106,30 @@ export default function HorizontalScroll({ children, footer }: { children: React
             if (!hash) return;
             const el = trackRef.current?.querySelector<HTMLElement>(`#${CSS.escape(hash)}`);
             if (!el || !wrapRef.current) return;
-            window.scrollTo({ top: wrapRef.current.offsetTop + Math.min(el.offsetLeft, travel), behavior: 'smooth' });
+            window.scrollTo({
+                top: wrapRef.current.offsetTop + holdStart + Math.min(el.offsetLeft, travel),
+                behavior: 'smooth',
+            });
         };
         goto();
         window.addEventListener('hashchange', goto);
         return () => window.removeEventListener('hashchange', goto);
-    }, [travel]);
+    }, [travel, holdStart]);
 
     const { scrollYProgress } = useScroll({ target: wrapRef, offset: ['start start', 'end end'] });
-    const x = useTransform(scrollYProgress, [0, 1], [0, -travel]);
+
+    // 앞쪽 holdStart 구간은 x 를 0 으로 붙잡아 첫 패널을 핀 시킨다
+    const scrollLen = holdStart + travel;
+    const holdRatio = scrollLen > 0 ? holdStart / scrollLen : 0;
+    const x = useTransform(
+        scrollYProgress,
+        holdRatio > 0 ? [0, holdRatio, 1] : [0, 1],
+        holdRatio > 0 ? [0, 0, -travel] : [0, -travel],
+    );
 
     return (
         <>
-            <div ref={wrapRef} style={horizontal ? { height: travel + viewH } : undefined} className="relative">
+            <div ref={wrapRef} style={horizontal ? { height: scrollLen + viewH } : undefined} className="relative">
                 <div className={horizontal ? 'sticky top-0 h-dvh overflow-hidden' : ''}>
                     {horizontal && footer && <div className="footer-behind">{footer}</div>}
 

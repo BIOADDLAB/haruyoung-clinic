@@ -123,6 +123,8 @@ body {
 .site-main {
     padding-top: 64px;
 }
+.site-container {
+}
 @media (min-width: 1024px) {
     .site-main {
         padding-top: 0;
