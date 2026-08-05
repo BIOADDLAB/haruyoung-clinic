@@ -1,18 +1,17 @@
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import Image from 'next/image';
+import HorizontalScroll, { Panel } from '@/components/ui/HorizontalScroll';
 
 export default function Home() {
     return (
         <>
             <Header />
-            <div className="site-main">
-                <main className="relative bg-sand">
-                    <Image src="/images/bg-sub-05.jpg" alt="" fill sizes="100vw" className="object-cover" />
-                    <div className="relative"></div>
-                </main>
-                <Footer />
-            </div>
+            <main className="site-main bg-cream">
+                <HorizontalScroll footer={<Footer />}>
+                    <Panel className="bg-sand" />
+                    <Panel width={1184} className="bg-paper" />
+                </HorizontalScroll>
+            </main>
         </>
     );
 }
