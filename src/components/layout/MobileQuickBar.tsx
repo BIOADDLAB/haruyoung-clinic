@@ -39,7 +39,7 @@ export default function MobileQuickBar() {
                 )}
             </AnimatePresence>
 
-            <div className="fixed bottom-6 right-5 z-30 flex flex-col items-end gap-3 lg:hidden">
+            <div className="fixed  bottom-6 right-5 z-30 flex flex-col items-end gap-3 lg:hidden ">
                 <AnimatePresence>
                     {open && (
                         <motion.ul
@@ -96,7 +96,7 @@ export default function MobileQuickBar() {
                     onClick={() => setOpen((o) => !o)}
                     aria-expanded={open}
                     aria-label={open ? '빠른 실행 닫기' : '빠른 실행 열기'}
-                    className="flex h-14 w-14 items-center justify-center rounded-full bg-dark shadow-[0_12px_32px_rgba(59,43,30,0.3)] transition-transform duration-500 ease-brand active:scale-95"
+                    className="flex h-14 w-14 items-center justify-center rounded-full shadow-md bg-dark shadow-[0_12px_32px_rgba(59,43,30,0.3)] transition-transform duration-500 ease-brand active:scale-95"
                 >
                     <Image
                         src={open ? '/images/i-close.svg' : '/images/i-h-03.svg'}
