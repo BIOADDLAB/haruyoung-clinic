@@ -26,7 +26,7 @@ export default function HeroVisual() {
                     priority
                     quality={95}
                     sizes="125vw"
-                    className="object-cover"
+                    className="object-cover object-[50%] lg:object-center"
                 />
             </motion.div>
 

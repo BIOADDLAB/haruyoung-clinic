@@ -257,56 +257,74 @@ export default function Header() {
     );
 }
 
+/**
+ * 모바일 언어 전환.
+ * 트리거를 헤더 높이(h-16)로 잡아 top-full 이 헤더 밑선과 정확히 맞고,
+ * 드롭다운은 트리거 기준 가운데(left-1/2)에 붙는다.
+ * 바깥을 누르면 닫히도록 투명 레이어를 뒤에 깐다.
+ */
 function MobileLangTop({ value, onChange }: { value: LangCode; onChange: (v: LangCode) => void }) {
     const [open, setOpen] = useState(false);
     const reduced = useReducedMotion();
     const current = LANGS.find((l) => l.code === value)!;
 
     return (
-        <div className="relative flex h-16 items-center">
-            <button
-                type="button"
-                onClick={() => setOpen((o) => !o)}
-                aria-expanded={open}
-                aria-label={`언어 선택, 현재 ${current.name}`}
-                className={`font-display text-caption tracking-[0.12em] transition-colors duration-500 ease-brand ${
-                    open ? 'text-dark' : 'text-dark/70'
-                }`}
-            >
-                <span aria-hidden="true">{current.label}</span>
-            </button>
+        <>
+            {open && (
+                <button
+                    type="button"
+                    tabIndex={-1}
+                    aria-hidden
+                    onClick={() => setOpen(false)}
+                    className="fixed inset-0 z-0 cursor-default"
+                />
+            )}
 
-            <AnimatePresence>
-                {open && (
-                    <motion.ul
-                        initial={reduced ? false : { opacity: 0, y: -8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -8 }}
-                        transition={{ duration: DUR.fast, ease: EASE }}
-                        className="absolute right-0 top-full z-10 flex w-24 flex-col items-center gap-3 border-x border-b border-dark/10 bg-cream py-4 shadow-[0_10px_28px_rgba(59,43,30,0.12)]"
-                    >
-                        {LANGS.map((l) => (
-                            <li key={l.code}>
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        onChange(l.code);
-                                        setOpen(false);
-                                    }}
-                                    aria-pressed={value === l.code}
-                                    className={`font-display text-caption tracking-[0.12em] transition-colors duration-500 ease-brand ${
-                                        value === l.code ? 'border-b border-dark pb-0.5 text-dark' : 'text-dark/40'
-                                    }`}
-                                >
-                                    <span className="sr-only">{l.name}</span>
-                                    <span aria-hidden="true">{l.label}</span>
-                                </button>
-                            </li>
-                        ))}
-                    </motion.ul>
-                )}
-            </AnimatePresence>
-        </div>
+            <div className="relative z-10 flex h-16 items-center">
+                <button
+                    type="button"
+                    onClick={() => setOpen((o) => !o)}
+                    aria-expanded={open}
+                    aria-label={`언어 선택, 현재 ${current.name}`}
+                    className={`px-1 font-display text-caption tracking-[0.12em] transition-colors duration-500 ease-brand ${
+                        open ? 'text-dark' : 'text-dark/70'
+                    }`}
+                >
+                    <span aria-hidden="true">{current.label}</span>
+                </button>
+
+                <AnimatePresence>
+                    {open && (
+                        <motion.ul
+                            initial={reduced ? false : { opacity: 0, y: -6 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -6 }}
+                            transition={{ duration: DUR.fast, ease: EASE }}
+                            className="absolute left-1/2 top-full flex w-16 -translate-x-1/2 flex-col items-center divide-y divide-dark/10 border border-dark/10 bg-cream shadow-[0_8px_20px_rgba(59,43,30,0.1)]"
+                        >
+                            {LANGS.map((l) => (
+                                <li key={l.code} className="w-full">
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            onChange(l.code);
+                                            setOpen(false);
+                                        }}
+                                        aria-pressed={value === l.code}
+                                        className={`w-full py-2.5 font-display text-caption-sm tracking-[0.12em] transition-colors duration-500 ease-brand ${
+                                            value === l.code ? 'bg-dark/5 text-dark' : 'text-dark/45'
+                                        }`}
+                                    >
+                                        <span className="sr-only">{l.name}</span>
+                                        <span aria-hidden="true">{l.label}</span>
+                                    </button>
+                                </li>
+                            ))}
+                        </motion.ul>
+                    )}
+                </AnimatePresence>
+            </div>
+        </>
     );
 }
 

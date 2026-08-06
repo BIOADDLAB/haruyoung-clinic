@@ -5,7 +5,7 @@ import { CLINIC, POLICY_LINKS } from '@/data/site';
 export default function Footer() {
     return (
         <footer className="flex flex-col bg-dark text-cream lg:h-dvh">
-            <div className="relative h-[50vh] w-full shrink-0 lg:h-auto lg:min-h-0 lg:flex-1">
+            <div className="relative h-[32vh] w-full shrink-0 sm:h-[40vh] lg:h-auto lg:min-h-0 lg:flex-1">
                 <Image
                     src="/images/bg-main.jpg"
                     alt="하루영의원 1층 리셉션 라운지 전경"

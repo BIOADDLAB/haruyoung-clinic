@@ -289,7 +289,6 @@ export default function Home() {
                             {/* 카테고리 */}
                             <div className="bg-cream px-6 py-16 lg:h-[55%] lg:px-0 lg:py-0">
                                 <div className="flex h-full items-center">
-                                    {/* 프로모션과 같은 828 컨테이너 · 같은 200/11/617 축 */}
                                     <div className="mx-auto flex w-full flex-col gap-10 lg:max-w-[828px] lg:flex-row lg:items-start lg:gap-[11px]">
                                         <Reveal variants={slideRight} className="shrink-0 lg:w-[200px]">
                                             <h2 className="font-display text-24">Category</h2>
