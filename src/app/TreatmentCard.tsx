@@ -49,7 +49,7 @@ export default function TreatmentCard({ en, n, desc, alt }: { en: string; n: str
             className="flex h-[198px] w-[288px] overflow-hidden rounded-tl-[13px] bg-paper py-[7px] pl-[11px] pr-[8px] text-dark"
         >
             <div className="flex w-[133px] shrink-0 flex-col">
-                <span aria-hidden="true" className="mt-1 h-2 w-2 rounded-full bg-dark/50" />
+                <span aria-hidden="true" className="mt-1 h-2 w-2 rounded-full bg-dark" />
                 <h3 className="mt-6.5 font-gara text-22 font-bold italic leading-[1.15] lg:pl-2">{en}</h3>
                 <p className="mt-3.25 whitespace-pre-line text-caption-sm leading-[1.7] text-dark lg:pl-2">{desc}</p>
             </div>
