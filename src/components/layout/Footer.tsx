@@ -27,7 +27,7 @@ export default function Footer() {
             </div>
 
             <div className="footer-info px-6 pb-24 pt-14 lg:px-14 lg:py-10">
-                <div className="footer-row ml-auto flex w-full max-w-[1440px] flex-col gap-12 lg:gap-10">
+                <div className="footer-row mx-auto flex w-full max-w-[1440px] flex-col gap-12 lg:gap-10">
                     <div className="footer-left flex flex-col gap-8 lg:flex-row lg:gap-5">
                         {/* #TODO: 개원 후 주소 확정되면 아래 iframe 으로 교체
                         <iframe

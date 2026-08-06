@@ -51,7 +51,7 @@ export default function Header() {
             const term = q.trim();
             if (!term) return;
             setPanel(null);
-            // #TODO: 시술목록 페이지 구현 후 검색 결과 연결
+            // TODO: 시술목록 페이지 구현 후 검색 결과 연결
             router.push(`/treatments?q=${encodeURIComponent(term)}`);
         },
         [router],
@@ -134,6 +134,12 @@ export default function Header() {
                         className="fixed inset-x-0 bottom-0 top-16 z-40 overflow-y-auto bg-cream px-6 py-8 lg:hidden"
                     >
                         {panel === 'menu' ? (
+                            /* [2안] 언어 전환을 메뉴 패널 상단 세그먼트로 두려면
+                               위 MobileLangTop 을 주석하고 아래 MobileLangSeg 주석을 푼다
+                            <>
+                                <MobileLangSeg value={lang} onChange={setLang} />
+                                <MenuNav onNavigate={close} />
+                            </> */
                             <MenuNav onNavigate={close} />
                         ) : (
                             <SearchForm
@@ -148,6 +154,7 @@ export default function Header() {
                 )}
             </AnimatePresence>
 
+            {/* ── PC 딤 레이어 — 레일·패널(z-50) 아래에 깔려 본문만 어두워진다 ── */}
             <AnimatePresence>
                 {panel !== null && (
                     <motion.button
@@ -257,6 +264,13 @@ export default function Header() {
     );
 }
 
+/**
+ * 모바일 언어 전환.
+ * [1안 — 채택] 상단 바에서 검색 왼쪽. 현재 언어 코드가 항상 보이고,
+ *              누르면 헤더 바로 아래로 목록이 내려온다. 메뉴를 열 필요가 없다.
+ *              트리거를 헤더 높이(h-16)로 잡아서 top-full 이 헤더 밑선과 정확히 맞는다.
+ * [2안] 함수 아래 주석 — 메뉴 패널 상단 세그먼트 캡슐.
+ */
 function MobileLangTop({ value, onChange }: { value: LangCode; onChange: (v: LangCode) => void }) {
     const [open, setOpen] = useState(false);
     const reduced = useReducedMotion();
@@ -283,7 +297,7 @@ function MobileLangTop({ value, onChange }: { value: LangCode; onChange: (v: Lan
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -8 }}
                         transition={{ duration: DUR.fast, ease: EASE }}
-                        className="absolute -right-7 top-full z-10 flex w-24 flex-col items-center gap-3 border-x border-b border-dark/10 bg-cream py-4 shadow-[0_10px_28px_rgba(59,43,30,0.12)] rounded-b-sm"
+                        className="absolute right-0 top-full z-10 flex w-24 flex-col items-center gap-3 border-x border-b border-dark/10 bg-cream py-4 shadow-[0_10px_28px_rgba(59,43,30,0.12)]"
                     >
                         {LANGS.map((l) => (
                             <li key={l.code}>
@@ -310,6 +324,47 @@ function MobileLangTop({ value, onChange }: { value: LangCode; onChange: (v: Lan
     );
 }
 
+/* ────────────────────────────────────────────────────────────────
+[2안] 메뉴 패널 상단 세그먼트 캡슐
+
+상단 바를 건드리지 않아 로고·검색·햄버거 간격이 시안 그대로 유지된다.
+대신 언어를 바꾸려면 메뉴를 먼저 열어야 한다.
+
+쓰려면 상단 바의 <MobileLangTop /> 을 주석하고,
+모바일 패널의 <MobileLangSeg /> 주석을 푼 뒤 아래 함수 주석도 푼다.
+
+function MobileLangSeg({ value, onChange }: { value: LangCode; onChange: (v: LangCode) => void }) {
+    return (
+        <div className="mb-9 flex items-center gap-1 rounded-full border border-dark/15 p-1">
+            {LANGS.map((l) => (
+                <button
+                    key={l.code}
+                    type="button"
+                    onClick={() => onChange(l.code)}
+                    aria-pressed={value === l.code}
+                    className={`flex-1 rounded-full py-2 font-display text-caption tracking-[0.12em] transition-colors duration-500 ease-brand ${
+                        value === l.code ? 'bg-dark text-cream' : 'text-dark/45'
+                    }`}
+                >
+                    <span className="sr-only">{l.name}</span>
+                    <span aria-hidden="true">{l.label}</span>
+                </button>
+            ))}
+        </div>
+    );
+}
+──────────────────────────────────────────────────────────────── */
+
+/**
+ * 레일 언어 전환.
+ * [1안 — 채택] 아이콘 아래로 KO / EN / CN 이 세로로 펼쳐진다.
+ *              레일 폭(106px) 안에서 끝나므로 본문이 밀리지 않고,
+ *              레일 하단이 bottom 기준이라 다른 바로가기 위치도 그대로다.
+ *              평소에도 현재 언어 코드가 아이콘 아래 보여서 한 번 덜 누른다.
+ * [2안] 함수 아래 주석 — 레일 오른쪽으로 캡슐 팝오버.
+ *
+ * TODO: 다국어 라우팅 붙으면 setState 대신 locale 전환으로 교체
+ */
 function RailLang({ value, onChange }: { value: LangCode; onChange: (v: LangCode) => void }) {
     const [open, setOpen] = useState(false);
     const reduced = useReducedMotion();
@@ -369,18 +424,81 @@ function RailLang({ value, onChange }: { value: LangCode; onChange: (v: LangCode
     );
 }
 
+/* ────────────────────────────────────────────────────────────────
+[2안] 레일 오른쪽 캡슐 팝오버
+
+아이콘은 그대로 두고 옆으로 캡슐이 미끄러져 나온다.
+레일 높이를 전혀 건드리지 않아 세로가 짧은 노트북에서 안전하다.
+대신 메뉴 패널이 열려 있을 때 패널 위로 겹친다.
+
+function RailLang({ value, onChange }: { value: LangCode; onChange: (v: LangCode) => void }) {
+    const [open, setOpen] = useState(false);
+    const reduced = useReducedMotion();
+    const current = LANGS.find((l) => l.code === value)!;
+
+    return (
+        <div className="relative flex flex-col items-center">
+            <button
+                type="button"
+                onClick={() => setOpen((o) => !o)}
+                aria-expanded={open}
+                aria-label={`언어 선택, 현재 ${current.name}`}
+                className="flex flex-col items-center transition-opacity duration-500 ease-brand hover:opacity-70"
+            >
+                <Image src="/images/i-h-01.svg" alt="" width={34} height={34} />
+                <span aria-hidden="true" className="font-display text-caption-sm tracking-[0.1em]">
+                    {current.label}
+                </span>
+            </button>
+
+            <AnimatePresence>
+                {open && (
+                    <motion.ul
+                        initial={reduced ? false : { opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -10 }}
+                        transition={{ duration: DUR.fast, ease: EASE }}
+                        className="absolute left-full top-1/2 z-10 ml-2 flex -translate-y-1/2 items-center gap-1 rounded-full border border-dark/10 bg-cream px-2.5 py-2 shadow-[0_10px_30px_rgba(59,43,30,0.14)]"
+                    >
+                        {LANGS.map((l) => (
+                            <li key={l.code}>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        onChange(l.code);
+                                        setOpen(false);
+                                    }}
+                                    aria-pressed={value === l.code}
+                                    className={`rounded-full px-2.5 py-1 font-display text-caption-sm tracking-[0.1em] transition-colors duration-500 ease-brand ${
+                                        value === l.code ? 'bg-dark text-cream' : 'text-dark/50 hover:text-dark'
+                                    }`}
+                                >
+                                    <span className="sr-only">{l.name}</span>
+                                    <span aria-hidden="true">{l.label}</span>
+                                </button>
+                            </li>
+                        ))}
+                    </motion.ul>
+                )}
+            </AnimatePresence>
+        </div>
+    );
+}
+──────────────────────────────────────────────────────────────── */
+
+/**
+ * 전체 메뉴.
+ * 그룹에 마우스를 올리면 제목 투명도가 80% → 100% 로 올라가고
+ * 제목 끝의 갈색 원이 점에서 커지며 나타난다. 항목은 개별 hover 로 진해진다.
+ *
+ * 모바일에서는 레일이 없으므로 로그인을 하단에 둔다 (언어 전환은 상단 바).
+ */
 function MenuNav({ onNavigate }: { onNavigate: () => void }) {
     const reduced = useReducedMotion();
     const pathname = usePathname();
 
     return (
         <nav aria-label="전체 메뉴" className="flex h-full flex-col justify-between lg:py-10 lg:pl-10 lg:pr-7.5">
-            {/* 모바일 전용 — 레일에 있던 로그인을 여기서 받는다 */}
-            <div className=" flex justify-end pb-8 mb-0lg:hidden">
-                <Link href="/login" onClick={onNavigate} className="text-caption font-semibold">
-                    <span className="border-b border-dark/80 pb-1">로그인</span>
-                </Link>
-            </div>
             <motion.div
                 variants={stagger}
                 initial={reduced ? false : 'hidden'}
@@ -432,7 +550,14 @@ function MenuNav({ onNavigate }: { onNavigate: () => void }) {
                 })}
             </motion.div>
 
-            <div className="mt-10 flex justify-center lg:mt-0 pb-10">
+            {/* 모바일 전용 — 레일에 있던 로그인을 여기서 받는다 */}
+            <div className="mt-14 flex justify-center border-t border-dark/15 pt-6 lg:hidden">
+                <Link href="/login" onClick={onNavigate} className="text-caption font-semibold">
+                    <span className="border-b border-dark pb-1">로그인</span>
+                </Link>
+            </div>
+
+            <div className="mt-12 flex justify-center lg:mt-0">
                 <Image src="/images/logo-sub.svg" alt="하루영의원" width={120} height={34} />
             </div>
         </nav>

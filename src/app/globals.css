@@ -209,3 +209,13 @@ body {
         gap: 0;
     }
 }
+
+/* 인트로 배경 — 가운데가 밝은 따뜻한 필드. 단색 크림은 값싸 보인다 */
+.bg-intro {
+    background-color: var(--color-dark);
+    background-image: radial-gradient(
+        ellipse 62% 52% at 50% 44%,
+        color-mix(in oklab, var(--color-brown) 62%, transparent) 0%,
+        transparent 72%
+    );
+}
