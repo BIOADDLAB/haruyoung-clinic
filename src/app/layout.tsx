@@ -22,7 +22,7 @@ const astaSans = Asta_Sans({
 });
 
 // #TODO: 도메인 확정되면 실제 주소로 교체
-const SITE_URL = 'https://haruyoung.vercel.app/';
+const SITE_URL = 'https://haruyoung-clinic.vercel.app/';
 const TITLE = '하루영의원 | 하루의 쉼표가 만드는 영원한 시간';
 const DESCRIPTION =
     '하루영의원은 바쁜 일상 속 잠시 멈춰 선 시간처럼, 피부에 가장 편안한 휴식을 선사합니다. 오직 당신만을 위해 설계된 맞춤 케어로 자연스러운 아름다움이 오래도록 이어지도록 설계합니다.';
