@@ -38,14 +38,6 @@ export function Panel({
 
 /**
  * 세로 스크롤을 가로 이동으로 바꾸는 sticky 트랙.
- * 히어로부터 마지막 섹션까지 한 줄로 이어 붙인다.
- *
- * 푸터는 아래로 이어지지 않는다. sticky 영역 뒤(z-0)에 미리 깔아두고
- * 트랙(z-10)이 왼쪽으로 완전히 빠져나가면서 드러나게 한다.
- * 그래서 이동량은 (합계 - 가용폭) 이 아니라 트랙 폭 '전체' 다.
- *
- * [2안] CSS scroll-snap + overflow-x-auto 로도 가능하지만
- * 세로 휠로 넘어가지 않아 시안의 스크롤 감각이 안 나와 채택하지 않음.
  */
 export default function HorizontalScroll({
     children,

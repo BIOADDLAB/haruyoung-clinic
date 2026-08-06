@@ -1,6 +1,5 @@
 import { MENU_CATEGORIES } from '@/constants/categories';
 
-/** 시안 메뉴 노출 순서 (constants/categories.ts 의 등록 순서와 다름) */
 const TREATMENT_ORDER = ['lifting', 'pigment', 'acne', 'petit', 'care', 'hair', 'body', 'booster'] as const;
 
 const treatments = TREATMENT_ORDER.map((slug) => {
@@ -24,7 +23,7 @@ export const MENU_GROUPS = [
 
 export const CLINIC = {
     name: '하루영의원',
-    /** TODO: 개원 전이라 미확정. 확정되면 여기만 고치면 푸터 표기와 지도 쿼리가 함께 바뀐다 */
+    /** #TODO: 개원 전이라 미확정. 확정되면 여기만 고치면 푸터 표기와 지도 쿼리가 함께 바뀐다 */
     address: '서울 강남구 언주로 538 대웅빌딩 1층',
     subway: '9호선 선정릉역 4번 출구 도보 11분',
     parking: '무료주차 / 발렛 이용 시 3,000원',

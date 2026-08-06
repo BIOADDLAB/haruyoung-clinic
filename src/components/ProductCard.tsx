@@ -2,8 +2,6 @@
 
 import type { Product } from '@/types/product';
 
-// 방문자 시술 페이지와 관리자 목록이 같은 카드를 쓴다.
-// 디자인 시안 나오면 이 파일만 고치면 양쪽에 동시 반영됨.
 export default function ProductCard({
     p,
     checked,

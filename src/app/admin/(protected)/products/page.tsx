@@ -54,12 +54,24 @@ export default function ProductsPage() {
     const [editing, setEditing] = useState<Product | null>(null);
     const sensors = useSensors(useSensor(PointerSensor));
 
+    /** 저장·삭제 후 다시 불러올 때 쓴다 */
     const load = async () => {
         setAll(await getProducts());
         setLoading(false);
     };
+
+    // 첫 로드. effect 본문에서 load() 를 그대로 부르면 lint 가 동기 setState 로 잡는다.
+    // then 안에서 바꾸고, 언마운트되면 반영하지 않는다.
     useEffect(() => {
-        load();
+        let alive = true;
+        getProducts().then((data) => {
+            if (!alive) return;
+            setAll(data);
+            setLoading(false);
+        });
+        return () => {
+            alive = false;
+        };
     }, []);
 
     const list = all.filter((p) => p.menuSlug === menu);
@@ -97,7 +109,7 @@ export default function ProductsPage() {
             <div className="mt-6">
                 <ProductForm
                     key={editing?.id ?? 'new'}
-                    initial={editing}
+                    initial={editing ?? undefined}
                     allProducts={all}
                     onSaved={onSaved}
                     onCancel={() => setEditing(null)}

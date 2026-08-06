@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import Link from 'next/link';
 import MoreView from '@/components/ui/MoreView';
 import CategoryGrid from './CategoryGrid';
 import HeroVisual, { HERO_HOLD } from './HeroVisual';
@@ -8,7 +7,7 @@ import TreatmentCard from './TreatmentCard';
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
 import HorizontalScroll, { Panel } from '@/components/ui/HorizontalScroll';
-import { Icon, IconArrow } from '@/components/ui/Icons';
+import { Icon } from '@/components/ui/Icons';
 import PhotoGallery, { type GalleryPhoto } from '@/components/ui/PhotoGallery';
 import Reveal from '@/components/ui/Reveal';
 import { RevealGroup } from '@/components/ui/RevealGroup';
@@ -81,6 +80,7 @@ const TREATMENTS = [
         alt: '하루영의원 스킨부스터 시술에 사용되는 세럼 방울',
     },
 ];
+
 const SPACE_PHOTOS: GalleryPhoto[] = [
     {
         src: '/images/img-tour-01.jpg',
@@ -141,7 +141,7 @@ export default function Home() {
                             alt=""
                             fill
                             quality={95}
-                            sizes="(min-width:1024px) 1184px, 100vw"
+                            sizes="(min-width:1024px) 1184px, 1184px"
                             className="object-cover"
                         />
 
@@ -199,7 +199,7 @@ export default function Home() {
                             alt=""
                             fill
                             quality={95}
-                            sizes="(min-width:1024px) 1498px, 1080px"
+                            sizes="(min-width:1024px) 1498px, 1498px"
                             className="object-cover"
                         />
                         {/* 원본이 세로 730px 뿐이라 모바일에서 확대된다. 오버레이로 노이즈를 눌러준다 */}
@@ -242,9 +242,11 @@ export default function Home() {
                             alt=""
                             fill
                             quality={95}
-                            sizes="(min-width:1024px) 1080px, 100vw"
+                            sizes="(min-width:1024px) 1080px, 1080px"
                             className="object-cover"
                         />
+                        {/* 원본이 세로 730px 뿐이라 모바일에서 확대된다. 밝은 층으로 노이즈를 눌러준다 */}
+                        <span aria-hidden="true" className="absolute inset-0 bg-cream/55 lg:hidden" />
 
                         <div className="relative flex h-full flex-col justify-center px-6 py-20 lg:px-0 lg:py-0">
                             <div className="mx-auto w-full lg:max-w-[843px]">
@@ -258,7 +260,6 @@ export default function Home() {
                                             }
                                         </p>
                                     </div>
-                                    <p className="whitespace-normal text-caption leading-[1.9] text-dark/70 lg:whitespace-pre-line"></p>
                                 </Reveal>
 
                                 <PhotoGallery
@@ -270,7 +271,6 @@ export default function Home() {
                     </Panel>
 
                     {/* 프로모션 + 카테고리 */}
-                    {/* 프로모션 + 카테고리 */}
                     <Panel width={1088}>
                         <div className="flex h-full flex-col">
                             {/* 프로모션 */}
@@ -280,7 +280,7 @@ export default function Home() {
                                     alt=""
                                     fill
                                     quality={95}
-                                    sizes="(min-width:1024px) 1088px, 1080px"
+                                    sizes="(min-width:1024px) 1088px, 1050px"
                                     className="object-cover"
                                 />
                                 <PromotionBoard />
@@ -289,7 +289,7 @@ export default function Home() {
                             {/* 카테고리 */}
                             <div className="bg-cream px-6 py-16 lg:h-[55%] lg:px-0 lg:py-0">
                                 <div className="flex h-full items-center">
-                                    {/* 프로모션과 같은 828 컨테이너 · 같은 155/56/617 축 */}
+                                    {/* 프로모션과 같은 828 컨테이너 · 같은 200/11/617 축 */}
                                     <div className="mx-auto flex w-full flex-col gap-10 lg:max-w-[828px] lg:flex-row lg:items-start lg:gap-[11px]">
                                         <Reveal variants={slideRight} className="shrink-0 lg:w-[200px]">
                                             <h2 className="font-display text-24">Category</h2>
