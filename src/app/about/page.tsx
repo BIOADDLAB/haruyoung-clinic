@@ -85,47 +85,89 @@ export default function AboutPage() {
                             className="object-cover"
                         />
 
-                        <div className=" relative mx-auto flex h-full w-full max-w-[708px] items-center px-6 py-20 lg:px-0 lg:py-0">
-                            <div className="flex w-full flex-col gap-14 lg:flex-row lg:items-start lg:gap-[33px]">
-                                <div className="flex flex-col justify-between gap-20 lg:h-[529px] lg:w-[360px] lg:shrink-0 lg:gap-0">
+                        <div className="relative mx-auto flex h-full w-full max-w-[708px] items-center px-6 py-16 lg:px-0 lg:py-0">
+                            <div className="flex w-full flex-col items-center gap-10 lg:flex-row lg:items-start lg:gap-[33px]">
+                                {/* ===== 텍스트 + 모바일 이미지 ===== */}
+                                <div className="flex w-full flex-col items-center lg:h-[529px] lg:w-[360px] lg:shrink-0 lg:items-start lg:justify-between">
+                                    {/* 1. 영어 타이틀 */}
                                     <Reveal
                                         as="p"
                                         variants={fadeUpSlow}
-                                        className="font-gara text-34 font-bold italic leading-[38px] text-dark"
+                                        className="text-center font-gara text-[26px] font-bold italic leading-[30px] text-dark lg:text-left lg:text-34 lg:leading-[38px]"
                                     >
                                         A Moment of Pause,
                                         <br />
                                         Timeless Beauty
                                     </Reveal>
 
-                                    <div>
+                                    {/* 2. 모바일 전용 이미지 (겹침 유지) */}
+                                    <Reveal
+                                        variants={slideLeft}
+                                        delay={0.1}
+                                        className="relative mt-9 h-[280px] w-[230px] lg:hidden"
+                                    >
+                                        {/* 아래쪽 큰 이미지 */}
+                                        <div className="absolute bottom-0 left-0 h-[190px] w-[155px] overflow-hidden rounded-bl-[50px]">
+                                            <Image
+                                                src="/images/img-sub-01.jpg"
+                                                alt="하루영의원 케어를 상징하는 패브릭 위의 꽃"
+                                                fill
+                                                quality={90}
+                                                sizes="155px"
+                                                className="object-cover"
+                                            />
+                                        </div>
+
+                                        {/* 위쪽 작은 이미지 */}
+                                        <div className="absolute right-0 top-0 z-10 h-[140px] w-[115px] overflow-hidden rounded-t-full">
+                                            <Image
+                                                src="/images/img-sub-02.jpg"
+                                                alt="하루영의원 시술실 리넨 침구 클로즈업"
+                                                fill
+                                                quality={90}
+                                                sizes="115px"
+                                                className="object-cover"
+                                            />
+                                        </div>
+                                    </Reveal>
+
+                                    {/* 3. 한국어 제목 + 본문 */}
+                                    <div className="mt-9 w-full max-w-[320px] text-center lg:mt-0 lg:max-w-none lg:text-left">
                                         <Reveal
                                             as="h1"
                                             variants={fadeUpSlow}
-                                            className="text-24 font-bold leading-[34px]"
+                                            className="text-[21px] font-bold leading-[29px] lg:text-24 lg:leading-[34px]"
                                         >
                                             피부를 위한 가장 깊은 쉼을
                                             <br />
                                             설계합니다.
                                         </Reveal>
+
                                         <Reveal
                                             as="p"
                                             delay={0.15}
-                                            className="mt-[30px] whitespace-normal text-samll font-medium leading-[24px] text-dark lg:whitespace-pre-line"
+                                            className="mt-5 text-[14px] font-medium leading-[22px] text-dark lg:mt-[30px] lg:text-samll lg:leading-[24px]"
                                         >
-                                            {
-                                                '하루영은 단순한 시술을 넘어, 피부가 가장 편안한 순간을\n경험할 수 있도록 설계합니다. 오직 당신만을 위한\n맞춤 케어로 시간이 지나도 자연스러운 아름다움이\n오래도록 이어지는 휴식을 선사합니다.'
-                                            }
+                                            하루영은 단순한 시술을 넘어,
+                                            <br />
+                                            피부가 가장 편안한 순간을 경험할 수 있도록 설계합니다.
+                                            <br />
+                                            오직 당신만을 위한 맞춤 케어로
+                                            <br />
+                                            시간이 지나도 자연스러운 아름다움이
+                                            <br />
+                                            오래도록 이어지는 휴식을 선사합니다.
                                         </Reveal>
                                     </div>
                                 </div>
 
+                                {/* ===== 웹 전용 이미지 (lg 이상) ===== */}
                                 <Reveal
                                     variants={slideLeft}
                                     delay={0.1}
-                                    className="relative h-[324px] w-full self-start lg:h-[398px] lg:w-[315px] lg:shrink-0"
+                                    className="relative hidden h-[398px] w-[315px] shrink-0 self-start lg:block"
                                 >
-                                    <div className="absolute bottom-0 left-0 h-[216px] w-[175px] overflow-hidden rounded-bl-[56px] lg:h-[267px] lg:w-[216px] lg:rounded-bl-[70px]">
+                                    <div className="absolute bottom-0 left-0 h-[267px] w-[216px] overflow-hidden rounded-bl-[70px]">
                                         <Image
                                             src="/images/img-sub-01.jpg"
                                             alt="하루영의원 케어를 상징하는 패브릭 위의 꽃"
@@ -135,7 +177,7 @@ export default function AboutPage() {
                                             className="object-cover"
                                         />
                                     </div>
-                                    <div className="absolute right-0 top-0 z-10 h-[156px] w-[126px] overflow-hidden rounded-t-full lg:h-[192px] lg:w-[155px]">
+                                    <div className="absolute right-0 top-0 z-10 h-[192px] w-[155px] overflow-hidden rounded-t-full">
                                         <Image
                                             src="/images/img-sub-02.jpg"
                                             alt="하루영의원 시술실 리넨 침구 클로즈업"
@@ -161,56 +203,77 @@ export default function AboutPage() {
                             className="object-cover"
                         />
 
-                        <div className="relative mx-auto flex h-full w-full max-w-[550px] items-center px-6 py-20 lg:px-0 lg:py-0">
-                            <div className="flex w-full flex-col gap-12 lg:flex-row lg:items-end lg:gap-12">
-                                <div className="lg:w-[263px] lg:shrink-0">
+                        <div className="relative mx-auto flex h-full w-full max-w-[550px] items-center px-6 py-16 lg:px-0 lg:py-0">
+                            <div className="flex w-full flex-col items-center gap-10 lg:flex-row lg:items-end lg:gap-12">
+                                {/* ===== 왼쪽 텍스트 영역 ===== */}
+                                <div className="flex w-full flex-col items-center lg:w-[263px] lg:shrink-0 lg:items-start">
+                                    {/* 1. 타이틀 */}
                                     <Reveal
                                         as="h1"
                                         variants={fadeUpSlow}
-                                        className="font-display text-24 leading-[34px]"
+                                        className="text-center font-display text-[22px] leading-[30px] lg:text-left lg:text-24 lg:leading-[34px]"
                                     >
                                         HARU YOUNG
                                         <br />
                                         Specialist
                                     </Reveal>
 
-                                    <Reveal delay={0.1} className="mt-[109px] flex items-end gap-2">
-                                        <p>
+                                    {/* 2. 모바일 전용 프로필 이미지 (제목 바로 아래) */}
+                                    <Reveal variants={slideLeft} delay={0.1} className="mt-9 lg:hidden">
+                                        <div
+                                            role="img"
+                                            aria-label="하루영의원 홍길동 대표원장 프로필 사진"
+                                            className="h-[260px] w-[175px] rounded-full bg-[#d9d9d9]"
+                                        />
+                                    </Reveal>
+
+                                    {/* 3. 이름 + 서명 */}
+                                    <Reveal
+                                        delay={0.1}
+                                        className="mt-9 flex items-end justify-center gap-2 lg:mt-[109px] lg:justify-start"
+                                    >
+                                        <p className="text-center lg:text-left">
                                             <span className="block font-display text-caption-sm tracking-[0.18em] text-dark/70">
                                                 HARUYOUNG
                                             </span>
-                                            <span className="mt-2.5 block text-24 font-bold">
+                                            <span className="mt-2.5 block text-[22px] font-bold lg:text-24">
                                                 홍길동 <span className="text-16 font-normal">대표원장</span>
                                             </span>
                                         </p>
                                         <Icon name="i-sig" width={129} height={37} className="pb-1" />
                                     </Reveal>
 
+                                    {/* 4. 구분선 */}
                                     <Reveal
                                         variants={drawLine}
                                         delay={0.2}
-                                        className="mt-[26px] h-px w-[46px] origin-left bg-dark/40"
+                                        className="mt-6 h-px w-[46px] origin-left bg-dark/40 lg:mt-[26px]"
                                     />
 
-                                    <RevealGroup as="ul" className="mt-[33px]">
+                                    {/* 5. 경력 리스트 */}
+                                    <RevealGroup as="ul" className="mt-7 text-center lg:mt-[33px] lg:text-left">
                                         {CAREERS.map((c) => (
-                                            <RevealItem as="li" key={c} className="text-small leading-[35px] text-dark">
+                                            <RevealItem
+                                                as="li"
+                                                key={c}
+                                                className="text-small leading-[32px] text-dark lg:leading-[35px]"
+                                            >
                                                 {c}
                                             </RevealItem>
                                         ))}
                                     </RevealGroup>
                                 </div>
 
-                                {/* #TODO: 원장 프로필 사진 확보 시 이미지 교체 */}
+                                {/* ===== 웹 전용 프로필 이미지 ===== */}
                                 <Reveal
                                     variants={slideLeft}
                                     delay={0.15}
-                                    className="self-center lg:mb-[13px] lg:self-end"
+                                    className="hidden self-end lg:mb-[13px] lg:block"
                                 >
                                     <div
                                         role="img"
                                         aria-label="하루영의원 홍길동 대표원장 프로필 사진"
-                                        className="h-[300px] w-[200px] rounded-full bg-[#d9d9d9] lg:h-[357px] lg:w-[239px]"
+                                        className="h-[357px] w-[239px] rounded-full bg-[#d9d9d9]"
                                     />
                                 </Reveal>
                             </div>
