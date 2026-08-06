@@ -90,18 +90,19 @@ export default function HorizontalScroll({
         };
     }, [measure]);
 
-    // 해시 진입: /about#specialist 같은 링크로 특정 패널까지 스크롤
     useEffect(() => {
         if (!travel) return;
+        let first = true;
         const goto = () => {
+            const wrap = wrapRef.current;
+            if (!wrap) return;
             const hash = window.location.hash.slice(1);
-            if (!hash) return;
-            const el = trackRef.current?.querySelector<HTMLElement>(`#${CSS.escape(hash)}`);
-            if (!el || !wrapRef.current) return;
+            const el = hash ? trackRef.current?.querySelector<HTMLElement>(`#${CSS.escape(hash)}`) : null;
             window.scrollTo({
-                top: wrapRef.current.offsetTop + holdStart + Math.min(el.offsetLeft, travel),
-                behavior: 'smooth',
+                top: el ? wrap.offsetTop + holdStart + Math.min(el.offsetLeft, travel) : wrap.offsetTop,
+                behavior: first ? 'auto' : 'smooth',
             });
+            first = false;
         };
         goto();
         window.addEventListener('hashchange', goto);

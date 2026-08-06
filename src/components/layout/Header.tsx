@@ -423,7 +423,7 @@ function MenuNav({ onNavigate }: { onNavigate: () => void }) {
 
                             <ul aria-labelledby={id} className="ml-[2px] mt-3 flex flex-col gap-2.5">
                                 {group.items.map((item) => {
-                                    const current = item.href.split('#')[0] === pathname;
+                                    const current = item.href === pathname;
                                     return (
                                         <li key={item.href}>
                                             <Link
