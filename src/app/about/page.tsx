@@ -28,7 +28,6 @@ const CAREERS = [
     '대한레이저피부모발학회',
 ];
 
-/** 메인 Space 와 같은 48열 벤또. 컨테이너 폭만 843 → 1004 로 다르다 */
 const SPACE_PHOTOS: GalleryPhoto[] = [
     {
         src: '/images/img-tour-01.jpg',
@@ -86,7 +85,7 @@ export default function AboutPage() {
                             className="object-cover"
                         />
 
-                        <div className="relative mx-auto flex h-full w-full max-w-[708px] items-center px-6 py-20 lg:px-0 lg:py-0">
+                        <div className=" relative mx-auto flex h-full w-full max-w-[708px] items-center px-6 py-20 lg:px-0 lg:py-0">
                             <div className="flex w-full flex-col gap-14 lg:flex-row lg:items-start lg:gap-[33px]">
                                 <div className="flex flex-col justify-between gap-20 lg:h-[529px] lg:w-[360px] lg:shrink-0 lg:gap-0">
                                     <Reveal

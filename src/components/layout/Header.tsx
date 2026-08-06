@@ -379,7 +379,7 @@ function RailLang({ value, onChange }: { value: LangCode; onChange: (v: LangCode
                 className="flex flex-col items-center transition-opacity duration-500 ease-brand hover:opacity-70"
             >
                 <Image src="/images/i-h-01.svg" alt="" width={34} height={34} />
-                <span aria-hidden="true" className="font-display text-caption-sm tracking-[0.1em]">
+                <span aria-hidden="true" className="text-caption-sm tracking-[0.1em]">
                     {current.label}
                 </span>
             </button>
