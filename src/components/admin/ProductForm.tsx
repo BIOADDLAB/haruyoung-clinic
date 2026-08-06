@@ -6,7 +6,18 @@ import { MENU_CATEGORIES } from '@/constants/categories';
 import { addProduct, updateProduct } from '@/lib/products';
 import type { Product } from '@/types/product';
 
-export default function ProductForm({ initial, allProducts }: { initial?: Product; allProducts: Product[] }) {
+export default function ProductForm({
+    initial,
+    allProducts,
+    onSaved,
+    onCancel,
+}: {
+    initial?: Product;
+    allProducts: Product[];
+    /** 목록 페이지에 인라인으로 박혀 있을 때만 넘어온다. 없으면 단독 페이지처럼 이동 */
+    onSaved?: () => void;
+    onCancel?: () => void;
+}) {
     const router = useRouter();
     const [menuSlug, setMenuSlug] = useState(initial?.menuSlug ?? MENU_CATEGORIES[0].slug);
     const [subCategory, setSubCategory] = useState(initial?.subCategory ?? '');
@@ -45,8 +56,12 @@ export default function ProductForm({ initial, allProducts }: { initial?: Produc
             } else {
                 await addProduct(data);
             }
-            router.push('/admin/products');
-            router.refresh();
+            if (onSaved) {
+                onSaved();
+            } else {
+                router.push('/admin/products');
+                router.refresh();
+            }
         } finally {
             setBusy(false);
         }
@@ -200,7 +215,7 @@ export default function ProductForm({ initial, allProducts }: { initial?: Produc
                 <div className="flex items-center justify-end gap-2.5 border-t border-black/[0.04] bg-neutral-50/50 px-7 py-4">
                     <button
                         type="button"
-                        onClick={() => router.back()}
+                        onClick={() => (onCancel ? onCancel() : router.back())}
                         className="rounded-xl border border-neutral-200 bg-white px-5 py-2.5 text-sm font-medium text-neutral-600 transition hover:bg-neutral-50 hover:text-neutral-800"
                     >
                         취소
