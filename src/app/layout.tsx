@@ -3,14 +3,15 @@ import { Marcellus, Cormorant_Garamond, Asta_Sans } from 'next/font/google';
 import './globals.css';
 
 const marcellus = Marcellus({
-    weight: '400',
+    weight: ['400'],
     subsets: ['latin'],
     variable: '--font-marcellus',
 });
 
 // 임시 애플 가라몬드 대체, 사용처 적음
 const cormorantGaramond = Cormorant_Garamond({
-    weight: '400',
+    weight: ['400', '600', '700'],
+    style: ['normal', 'italic'],
     subsets: ['latin'],
     variable: '--font-cormorant-garamond',
 });

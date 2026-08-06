@@ -16,7 +16,7 @@
     --spacing-search: 247px;
 
     --font-display: var(--font-marcellus), var(--font-cormorant-garamond), var(--font-asta-sans), sans-serif;
-    --font-family: var(--font-cormorant-garamond), var(--font-marcellus), sans-serif;
+    --font-gara: var(--font-cormorant-garamond), var(--font-marcellus), sans-serif;
     --font-body: var(--font-asta-sans), var(--font-marcellus), sans-serif;
 }
 
@@ -27,8 +27,16 @@ body {
     color: var(--color-dark);
 }
 
+body.overflow-hidden {
+    overflow: hidden;
+}
+
 .font-display {
     font-family: var(--font-display);
+}
+
+.font-gara {
+    font-family: var(--font-gara);
 }
 
 /* 역할별 타입 스케일 (Design Guide 기준, 그대로 유지) */

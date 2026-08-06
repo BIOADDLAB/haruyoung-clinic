@@ -2,16 +2,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { CLINIC, POLICY_LINKS } from '@/data/site';
 
-/**
- * 가로 트랙 뒤에 미리 깔려 있다가, 트랙이 왼쪽으로 빠지면서 드러나는 푸터.
- *
- * 폭 구간이 3개다. 1455 이상 고정값은 globals.css 의 .footer-* 규칙이 담당한다.
- *  - wide(≥1455) : 시안 기준. 맵 412 / 정보 435 / 로고 순으로 한 줄, 정보부 330px 고정
- *  - lg(1024~1454) : 맵+정보 한 줄, 로고 줄은 아래로. 높이는 내용에 맡긴다
- *  - ~1023 : 전부 세로 스택
- *
- * 모바일에는 우하단 플로팅 버튼이 떠 있으므로 pb-24 로 그만큼 자리를 비워둔다.
- */
 export default function Footer() {
     return (
         <footer className="flex flex-col bg-dark text-cream lg:h-dvh">
@@ -47,54 +37,62 @@ export default function Footer() {
 
                         <ul className="footer-list flex w-full flex-col gap-2.5 lg:min-w-0 lg:flex-1">
                             <li className="flex items-center gap-7 border-b border-cream/90 pb-3.5 pl-3">
-                                <h4 className="font-display text-caption">Location</h4>
-                                <p className="text-caption font-semibold">{CLINIC.address}</p>
+                                <h4 className="font-display text-caption w-[55px] tracking-wide">Location</h4>
+                                <p className="text-caption tracking-wide">{CLINIC.address}</p>
                             </li>
-
-                            <li className="flex items-center gap-7 border-b border-cream/90 pb-3.5 pl-3">
-                                <h4 className="shrink-0 text-caption font-bold">진료시간</h4>
-                                <div className="flex flex-col">
-                                    {CLINIC.hours.map((h) => (
-                                        <p key={h.day} className="flex gap-2.5">
-                                            {/* 화면에는 글자를 벌려 보여주고, 읽히는 문장은 sr-only 로 따로 준다 */}
-                                            <span className="sr-only">
-                                                {h.aria} {h.time}
-                                            </span>
-                                            <span
-                                                aria-hidden="true"
-                                                className="flex w-[43px] shrink-0 justify-between text-caption font-semibold"
+                            <li className="flex items-center gap-5 border-b border-cream/90 pb-3.5 pl-3">
+                                <h4 className="shrink-0 text-caption w-[55px]  tracking-wide">진료시간</h4>
+                                {/* 640 에서 옆에 붙이면 시간이 세 줄로 쪼개진다. lg 부터 나란히 */}
+                                <div className="flex min-w-0 flex-col gap-3 lg:flex-row lg:items-center lg:gap-7">
+                                    <div className="flex flex-col">
+                                        {CLINIC.hours.map((h) => (
+                                            <p key={h.day} className="flex gap-2.5">
+                                                {/* 화면에는 글자를 벌려 보여주고, 읽히는 문장은 sr-only 로 따로 준다 */}
+                                                <span className="sr-only">
+                                                    {h.aria} {h.time}
+                                                </span>
+                                                <span
+                                                    aria-hidden="true"
+                                                    className="flex w-[43px] shrink-0 justify-between text-caption  tracking-wide"
+                                                >
+                                                    {[...h.day.replace(/\s/g, '')].map((c) => (
+                                                        <span key={c}>{c}</span>
+                                                    ))}
+                                                </span>
+                                                <span
+                                                    aria-hidden="true"
+                                                    className="whitespace-nowrap text-caption  tracking-wide"
+                                                >
+                                                    {h.time}
+                                                </span>
+                                            </p>
+                                        ))}
+                                    </div>
+                                    <div className="shrink-0">
+                                        {CLINIC.hourNotes.map((n) => (
+                                            <p
+                                                key={n}
+                                                className="flex items-center gap-1.5 whitespace-nowrap text-caption  tracking-wide"
                                             >
-                                                {[...h.day.replace(/\s/g, '')].map((c) => (
-                                                    <span key={c}>{c}</span>
-                                                ))}
-                                            </span>
-                                            <span aria-hidden="true" className="text-caption font-medium">
-                                                {h.time}
-                                            </span>
-                                        </p>
-                                    ))}
-                                </div>
-                                <div>
-                                    {CLINIC.hourNotes.map((n) => (
-                                        <p key={n} className="flex items-center gap-1.5 text-caption font-semibold">
-                                            <span
-                                                aria-hidden="true"
-                                                className="h-1 w-1 shrink-0 rounded-full bg-cream"
-                                            />
-                                            {n}
-                                        </p>
-                                    ))}
+                                                <span
+                                                    aria-hidden="true"
+                                                    className="h-1 w-1 shrink-0 rounded-full bg-cream"
+                                                />
+                                                {n}
+                                            </p>
+                                        ))}
+                                    </div>
                                 </div>
                             </li>
 
                             <li className="flex items-center gap-7 border-b border-cream/90 pb-3.5 pl-3">
-                                <h4 className="shrink-0 text-caption font-bold">지하철</h4>
-                                <p className="text-caption font-semibold">{CLINIC.subway}</p>
+                                <h4 className="shrink-0 text-caption   w-[55px]">지하철</h4>
+                                <p className="text-caption tracking-wide">{CLINIC.subway}</p>
                             </li>
 
                             <li className="flex items-center gap-7 border-b border-cream/90 pb-3.5 pl-3">
-                                <h4 className="shrink-0 text-caption font-bold">주차</h4>
-                                <p className="text-caption font-semibold">{CLINIC.parking}</p>
+                                <h4 className="shrink-0 text-caption  w-[55px]">주차</h4>
+                                <p className="text-caption tracking-wide">{CLINIC.parking}</p>
                             </li>
                         </ul>
                     </div>
