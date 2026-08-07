@@ -9,6 +9,7 @@ import MobileQuickBar from './MobileQuickBar';
 import { useCart } from '@/components/cart/CartProvider';
 import { LANGS, MENU_GROUPS, QUICK_LINKS, type LangCode } from '@/data/site';
 import { DUR, EASE, fadeUp, stagger } from '@/lib/motion';
+import { useMounted } from '@/lib/useMounted';
 
 const PANEL_W = 247;
 
@@ -288,19 +289,21 @@ export default function Header({ dark }: { dark?: boolean }) {
     );
 }
 
-/** 레일 장바구니. 담긴 개수를 배지로 띄운다 */
-/** 레일 장바구니. 로그인과 같은 밑줄 형태, 담긴 개수만 괄호로 붙인다 */
+/** 레일 장바구니. 개수는 localStorage 기반이라 마운트 전에는 숨긴다 */
 function CartRailLink({ dark }: { dark?: boolean }) {
     const { count } = useCart();
+    const mounted = useMounted();
 
     return (
         <Link href="/cart" className="text-center text-caption-sm font-semibold">
             <span className={`border-b pb-1 ${dark ? 'border-cream' : 'border-dark'}`}>
-                장바구니{count > 0 && ` (${count})`}
+                장바구니
+                {mounted && count > 0 && ` (${count})`}
             </span>
         </Link>
     );
 }
+
 /**
  * 모바일 언어 전환.
  * 트리거를 헤더 높이(h-16)로 잡아 top-full 이 헤더 밑선과 정확히 맞고,

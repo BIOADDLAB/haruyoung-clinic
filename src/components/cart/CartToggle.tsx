@@ -40,7 +40,7 @@ export default function CartToggle({ item, origin }: { item: CartItem; origin?: 
             {origin && origin > item.price && (
                 <span className="text-caption text-dark/40 line-through">{origin.toLocaleString()}원</span>
             )}
-            <span className="text-22 font-bold">{item.price.toLocaleString()}원</span>
+            <span className="text-lead font-bold">{item.price.toLocaleString()}원</span>
         </button>
     );
 }
