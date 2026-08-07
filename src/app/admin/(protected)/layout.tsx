@@ -18,6 +18,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                 {n.label}
                             </Link>
                         ))}
+                        <Link href="/admin/promotions">프로모션 관리</Link>
                     </nav>
                 </div>
 
