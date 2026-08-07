@@ -4,9 +4,18 @@ export type CartItem = {
     key: string;
     name: string;
     price: number;
-    /** 시술이 속한 대메뉴 또는 '프로모션' */
     category: string;
 };
+
+/** 대기 → 확정 → 완료. 취소는 어느 단계에서든 가능 */
+export const RESERVATION_STATUS = {
+    pending: '대기',
+    confirmed: '확정',
+    done: '완료',
+    canceled: '취소',
+} as const;
+
+export type ReservationStatus = keyof typeof RESERVATION_STATUS;
 
 export type Reservation = {
     id: string;
@@ -21,8 +30,10 @@ export type Reservation = {
     date: string;
     /** 'HH:mm' */
     time: string;
-    /** 합계. 담긴 게 없으면 0 */
     total: number;
+    status: ReservationStatus;
+    /** 통화 내용 등 원내 메모. 고객에게 보이지 않는다 */
+    memo: string;
     createdAt: number;
 };
 

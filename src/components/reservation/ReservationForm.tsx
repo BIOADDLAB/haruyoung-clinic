@@ -4,14 +4,18 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Calendar from './Calendar';
+import DoneModal from './DoneModal';
 import { slotsOf } from './slots';
 import { useCart } from '@/components/cart/CartProvider';
 import { MENU_CATEGORIES } from '@/constants/categories';
 import { VISIT_TYPES } from '@/data/site';
 import { addReservation } from '@/lib/reservations';
 
+// const field =
+//     'w-full border border-dark/20 bg-transparent px-4 py-3 text-caption text-dark outline-none transition-colors duration-500 ease-brand placeholder:text-dark/35 focus:border-dark/50';
+
 const field =
-    'w-full border border-dark/20 bg-transparent px-4 py-3 text-caption text-dark outline-none transition-colors duration-500 ease-brand placeholder:text-dark/35 focus:border-dark/50';
+    'w-full border-b border-dark/25 bg-transparent px-1 py-3 text-caption text-dark outline-none transition-colors duration-500 ease-brand placeholder:text-dark/35 focus:border-dark';
 
 /** 010-1234-5678 형태로 자동 정리 */
 function formatPhone(v: string) {
@@ -35,6 +39,7 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
     const [agreePrivacy, setAgreePrivacy] = useState(false);
     const [agreeAge, setAgreeAge] = useState(false);
     const [busy, setBusy] = useState(false);
+    const [done, setDone] = useState(false);
 
     const slots = slotsOf(date);
 
@@ -58,11 +63,12 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
                 date,
                 time,
                 total: withCategory ? 0 : total,
+                status: 'pending',
+                memo: '',
                 createdAt: Date.now(),
             });
             if (!withCategory) clear();
-            alert('예약이 접수되었습니다. 확인 후 연락드리겠습니다.');
-            router.push('/');
+            setDone(true);
         } catch {
             alert('예약 접수에 실패했습니다. 잠시 후 다시 시도해주세요.');
         } finally {
@@ -191,6 +197,17 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
             >
                 {busy ? '접수 중…' : '시술 예약하기'}
             </button>
+
+            <DoneModal
+                open={done}
+                name={name}
+                date={date}
+                time={time}
+                onClose={() => {
+                    setDone(false);
+                    router.push('/');
+                }}
+            />
         </div>
     );
 }

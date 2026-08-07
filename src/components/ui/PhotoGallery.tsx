@@ -9,7 +9,6 @@ import { DUR, EASE, fadeIn, stagger, VIEWPORT } from '@/lib/motion';
 export type GalleryPhoto = {
     src: string;
     alt: string;
-    /** 그리드 배치용. 레이아웃은 페이지가 정하고 이 컴포넌트는 인터랙션만 맡는다 */
     className?: string;
 };
 
@@ -17,14 +16,11 @@ const PHOTO = { rest: { scale: 1 }, hover: { scale: 1.06 } };
 const SCRIM = { rest: { opacity: 0 }, hover: { opacity: 1 } };
 const CTA = { rest: { opacity: 0, y: 10 }, hover: { opacity: 1, y: 0 } };
 
-/** 이만큼 끌거나 이 속도를 넘기면 넘긴 것으로 본다 */
 const SWIPE_DISTANCE = 70;
 const SWIPE_VELOCITY = 400;
 
-/** 사진 원본 비율. img-tour-* 전부 1624x836 */
 const RATIO = 1624 / 836;
 
-/** 서버에서 false, 클라이언트에서 true. effect 안 setState 없이 마운트를 판정한다 */
 const noopSubscribe = () => () => {};
 const useMounted = () =>
     useSyncExternalStore(
@@ -33,12 +29,6 @@ const useMounted = () =>
         () => false,
     );
 
-/**
- * 클릭하면 원본이 뜨는 사진 갤러리.
- * 호버하면 사진이 천천히 확대되고 아래에서 그라데이션과 버튼이 올라온다.
- * 모달에서는 PC 는 좌우 버튼, 모바일은 스와이프로 넘긴다.
- * 배치는 photos[].className 으로 페이지가 지정한다.
- */
 export default function PhotoGallery({ photos, className }: { photos: GalleryPhoto[]; className?: string }) {
     const [index, setIndex] = useState<number | null>(null);
     const reduced = useReducedMotion();
@@ -129,8 +119,6 @@ export default function PhotoGallery({ photos, className }: { photos: GalleryPho
                 ))}
             </motion.ul>
 
-            {/* 모달은 body 로 포털한다. 가로 트랙에 transform 이 걸려 있어서 그 안에 두면
-                fixed 가 뷰포트가 아니라 트랙 기준이 되고 sticky 의 overflow-hidden 에 잘린다 */}
             {mounted &&
                 createPortal(
                     <AnimatePresence>

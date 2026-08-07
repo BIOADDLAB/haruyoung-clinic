@@ -41,7 +41,6 @@ function readStored(): CartItem[] {
 }
 
 export default function CartProvider({ children }: { children: ReactNode }) {
-    // useState 초기화 함수는 첫 렌더에 한 번만 돈다. effect 에서 setState 할 필요가 없다
     const [items, setItems] = useState<CartItem[]>(readStored);
     const [toasts, setToasts] = useState<Toast[]>([]);
     const reduced = useReducedMotion();
@@ -49,12 +48,9 @@ export default function CartProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-        } catch {
-            // 용량 초과 등은 무시. 담기 자체를 막을 이유는 없다
-        }
+        } catch {}
     }, [items]);
 
-    // 토스트는 3초 뒤 오래된 것부터 사라진다
     useEffect(() => {
         if (toasts.length === 0) return;
         const t = setTimeout(() => setToasts((list) => list.slice(1)), 3000);
@@ -100,7 +96,7 @@ export default function CartProvider({ children }: { children: ReactNode }) {
         <Ctx.Provider value={value}>
             {children}
 
-            {/* 담기 피드백 — 우하단에서 위로 쌓인다. 모바일 퀵바(64) 위에 얹는다 */}
+            {/* 담기 — 우하단에서 위로 쌓인다. 모바일 퀵바(64) 위에 얹는다 */}
             <div className="pointer-events-none fixed bottom-24 right-5 z-70 flex flex-col-reverse gap-2 lg:bottom-8">
                 <AnimatePresence initial={false}>
                     {toasts.map((t) => (

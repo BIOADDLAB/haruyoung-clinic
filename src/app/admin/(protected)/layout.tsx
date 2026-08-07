@@ -1,7 +1,11 @@
 import Link from 'next/link';
 import { logoutAdmin } from '../actions';
 
-const NAV = [{ href: '/admin/products', label: '수가표 관리' }];
+const NAV = [
+    { href: '/admin/products', label: '수가표 관리' },
+    { href: '/admin/promotions', label: '프로모션 관리' },
+    { href: '/admin/reservations', label: '예약 관리' },
+];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     return (
@@ -18,7 +22,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                 {n.label}
                             </Link>
                         ))}
-                        <Link href="/admin/promotions">프로모션 관리</Link>
                     </nav>
                 </div>
 

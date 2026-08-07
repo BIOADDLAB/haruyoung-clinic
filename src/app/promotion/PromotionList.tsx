@@ -28,7 +28,6 @@ export default function PromotionList() {
         <div className="pb-28 lg:pb-24">
             <p className="px-6 pt-8 text-small font-semibold lg:pl-12 lg:pt-16">{month}월 promotion</p>
 
-            {/* 사진영역 895x421 (시안 실측). 시술 페이지보다 크다 */}
             {/* TODO: 프로모션 대표 이미지 확보 시 next/image 로 교체 */}
             <div
                 role="img"
@@ -66,7 +65,6 @@ export default function PromotionList() {
     );
 }
 
-/** 카드 800x130. 부제와 마감일이 한 줄에서 좌우로 갈린다 (시안 실측) */
 function PromotionCard({ p }: { p: Promotion }) {
     const { has, toggle } = useCart();
     const key = `promotion:${p.id}`;

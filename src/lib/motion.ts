@@ -1,7 +1,6 @@
 import type { Variants } from 'framer-motion';
 
 /**
- * 애니메이션 컨셉 — "머무는 한 순간(A Moment of Pause)"
  * 요소는 튀어나오지 않고, 정지해 있던 것이 천천히 초점이 맞듯 떠오른다.
  * 전 구간 동일 이징 / 0.4~0.8s / framer-motion 단일 사용.
  */

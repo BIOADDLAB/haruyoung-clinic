@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { EASE } from '@/lib/motion';
 
+
+// #ISSUE: 보류
 const COUNT_FROM = 10; // 10 → 0 으로 수렴. 0 은 OO 로 읽힌다
 const ENTER = 0.6; // 등장
 const SPIN = 1.0; // 모래시계가 한 바퀴 도는 시간

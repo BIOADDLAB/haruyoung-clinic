@@ -23,7 +23,6 @@ export default function PromotionBoard() {
 
     return (
         <div className="relative flex h-full items-center">
-            {/* 카테고리와 같은 828 컨테이너 · 같은 155/56/617 축 */}
             <div className="mx-auto flex w-full flex-col gap-8 lg:max-w-[828px] lg:flex-row lg:items-start lg:gap-[11px]">
                 <Reveal variants={slideRight} className="shrink-0 lg:w-[200px]">
                     <h2 className="font-display text-24">Promotion</h2>
@@ -48,7 +47,6 @@ export default function PromotionBoard() {
                     onMouseLeave={() => setHot(false)}
                     className="w-full lg:w-[617px] lg:shrink-0"
                 >
-                    {/* 모바일 2열 / PC 3열. 구간이 바뀌면 선 규칙도 같이 리셋해야 어긋나지 않는다 */}
                     <RevealGroup as="ul" className="grid grid-cols-2 lg:grid-cols-3">
                         {PROMOTIONS.map((label, i) => (
                             <RevealItem

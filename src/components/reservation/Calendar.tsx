@@ -1,14 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { toKey } from './slots';
 import { RESERVATION_HOURS, RESERVATION_MAX_DAYS } from '@/data/site';
 
 const WEEK = ['일', '월', '화', '수', '목', '금', '토'];
-
-/** 로컬 기준 'YYYY-MM-DD'. toISOString 은 UTC 라 하루 밀린다 */
-export function toKey(d: Date) {
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-}
 
 export default function Calendar({ value, onChange }: { value: string; onChange: (v: string) => void }) {
     const today = new Date();
@@ -29,7 +25,7 @@ export default function Calendar({ value, onChange }: { value: string; onChange:
     const nextDisabled = cursor.getFullYear() === last.getFullYear() && cursor.getMonth() === last.getMonth();
 
     return (
-        <div>
+        <div className="w-full max-w-[520px]">
             <div className="flex items-center justify-between px-2">
                 <button
                     type="button"

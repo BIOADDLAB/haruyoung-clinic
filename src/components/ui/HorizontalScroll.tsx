@@ -3,13 +3,8 @@
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 
-const RAIL = 106; // PC 좌측 헤더 레일 폭
+const RAIL = 106;
 
-/**
- * 가로 스크롤 패널 1칸.
- * width 를 생략하면 뷰포트 폭(레일 제외)을 채운다 — 히어로처럼 꽉 차는 패널용.
- * 고정 폭(--pw)은 트랙이 가로 모드일 때만 globals.css 규칙으로 적용된다.
- */
 export function Panel({
     id,
     width,

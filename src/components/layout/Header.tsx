@@ -13,7 +13,7 @@ import { useMounted } from '@/lib/useMounted';
 
 const PANEL_W = 247;
 
-/** 검색창이 비어 있을 때 바로 누를 수 있는 추천어 */
+/** 검색창이 비어 있을 때 바로 누를 수 있는 추천어 관리자에서 직접 입력 불가 */
 const SEARCH_SUGGESTIONS = ['리프팅', '스킨부스터', '여드름치료', '제모'] as const;
 
 type PanelKind = 'menu' | 'search' | null;
@@ -30,17 +30,14 @@ export default function Header({ dark }: { dark?: boolean }) {
     const router = useRouter();
     const reduced = useReducedMotion();
 
-    /** dark 레일에서는 단색 SVG 아이콘을 흰색으로 뒤집는다 */
     const iconTone = dark ? 'brightness-0 invert' : undefined;
 
-    // 라우트가 바뀌면 패널을 닫는다 (effect 대신 렌더 중 상태 조정)
     const [lastPath, setLastPath] = useState(pathname);
     if (lastPath !== pathname) {
         setLastPath(pathname);
         setPanel(null);
     }
 
-    // 모바일 전체 오버레이일 때만 배경 스크롤 잠금 (PC 가로 스크롤은 유지)
     useEffect(() => {
         document.body.classList.toggle('max-lg:overflow-hidden', panel !== null);
         return () => document.body.classList.remove('max-lg:overflow-hidden');
@@ -60,7 +57,7 @@ export default function Header({ dark }: { dark?: boolean }) {
             const term = q.trim();
             if (!term) return;
             setPanel(null);
-            // TODO: 검색 결과 페이지 구현 후 연결
+            // #TODO: 검색 결과 페이지 구현 후 연결
             router.push(`/treatments?q=${encodeURIComponent(term)}`);
         },
         [router],
@@ -101,13 +98,11 @@ export default function Header({ dark }: { dark?: boolean }) {
 
     return (
         <>
-            {/* ── 모바일 · 태블릿 상단 바 ─────────────────────── */}
             <header className="fixed inset-x-0 top-0 z-50 flex h-16 items-center justify-between border-b border-dark/10 bg-cream px-5 lg:hidden">
                 <Link href="/" aria-label="하루영의원 홈으로">
                     <Image src="/images/logo-sub.svg" alt="하루영의원" width={110} height={24} priority />
                 </Link>
                 <div className="flex items-center gap-4">
-                    {/* 언어 전환은 검색 왼쪽. 모바일에서 가장 흔한 자리이고 메뉴를 열지 않아도 바꿀 수 있다 */}
                     <MobileLangTop value={lang} onChange={setLang} />
 
                     <button
@@ -156,7 +151,6 @@ export default function Header({ dark }: { dark?: boolean }) {
                 )}
             </AnimatePresence>
 
-            {/* ── PC 딤 레이어 — 레일·패널(z-50) 아래에 깔려 본문만 어두워진다 ── */}
             <AnimatePresence>
                 {panel !== null && (
                     <motion.button
@@ -170,7 +164,6 @@ export default function Header({ dark }: { dark?: boolean }) {
                 )}
             </AnimatePresence>
 
-            {/* ── PC 좌측 레일 ───────────────────────────────── */}
             <header
                 className={`fixed left-0 top-0 z-50 hidden h-dvh lg:flex ${dark ? 'bg-dark text-cream' : 'bg-cream'}`}
             >
@@ -215,7 +208,6 @@ export default function Header({ dark }: { dark?: boolean }) {
                         </button>
                     </div>
 
-                    {/* 레일 하단은 bottom 기준으로 붙어 있어서, 언어 목록이 펼쳐지면 위로 자란다 */}
                     <nav aria-label="빠른 메뉴" className="flex flex-col gap-6.5">
                         <RailLang value={lang} onChange={setLang} dark={dark} />
 
@@ -304,12 +296,6 @@ function CartRailLink({ dark }: { dark?: boolean }) {
     );
 }
 
-/**
- * 모바일 언어 전환.
- * 트리거를 헤더 높이(h-16)로 잡아 top-full 이 헤더 밑선과 정확히 맞고,
- * 드롭다운은 트리거 기준 가운데(left-1/2)에 붙는다.
- * 바깥을 누르면 닫히도록 투명 레이어를 뒤에 깐다.
- */
 function MobileLangTop({ value, onChange }: { value: LangCode; onChange: (v: LangCode) => void }) {
     const [open, setOpen] = useState(false);
     const reduced = useReducedMotion();
@@ -375,12 +361,6 @@ function MobileLangTop({ value, onChange }: { value: LangCode; onChange: (v: Lan
     );
 }
 
-/**
- * 레일 언어 전환. 아이콘 아래로 KO / EN / CN 이 세로로 펼쳐진다.
- * 레일 하단이 bottom 기준이라 펼쳐져도 다른 바로가기 위치가 그대로다.
- *
- * TODO: 다국어 라우팅 붙으면 setState 대신 locale 전환으로 교체
- */
 function RailLang({ value, onChange, dark }: { value: LangCode; onChange: (v: LangCode) => void; dark?: boolean }) {
     const [open, setOpen] = useState(false);
     const reduced = useReducedMotion();
@@ -450,19 +430,12 @@ function RailLang({ value, onChange, dark }: { value: LangCode; onChange: (v: La
     );
 }
 
-/**
- * 전체 메뉴.
- * 그룹에 마우스를 올리면 제목 투명도가 80% → 100% 로 올라가고
- * 제목 끝의 갈색 원이 점에서 커지며 나타난다. 항목은 개별 hover 로 진해진다.
- *
- * 모바일에서는 레일이 없으므로 장바구니·로그인을 상단에 둔다 (언어 전환은 상단 바).
- */
 function MenuNav({ onNavigate }: { onNavigate: () => void }) {
     const reduced = useReducedMotion();
     const pathname = usePathname();
 
     return (
-        <nav aria-label="전체 메뉴" className="flex h-full flex-col justify-between lg:py-10 lg:pl-10 lg:pr-7.5">
+        <nav aria-label="전체 메뉴" className="flex h-full flex-col justify-between lg:py-10 lg:pl-10 lg:pr-7.5 ">
             {/* 모바일 전용 — 레일에 있던 장바구니·로그인을 여기서 받는다 */}
             <div className="mb-2 flex items-center justify-end gap-5 lg:hidden">
                 <Link href="/cart" onClick={onNavigate} className="text-caption font-semibold">
@@ -487,7 +460,6 @@ function MenuNav({ onNavigate }: { onNavigate: () => void }) {
                                 id={id}
                                 className="relative w-full border-b border-dark/50 pb-1 font-display text-small opacity-80 transition-opacity duration-500 ease-brand group-hover:opacity-100"
                             >
-                                {/* 호버시 갈색원 생김 */}
                                 <span className="relative inline-block">
                                     <span className="absolute right-0 top-3 h-3 w-3 -translate-y-1/2 translate-x-1/4 scale-0 rounded-full bg-tan opacity-0 transition duration-700 ease-brand group-hover:scale-100 group-hover:opacity-100" />
                                     <span className="relative text-lead">{group.title}</span>
@@ -496,7 +468,6 @@ function MenuNav({ onNavigate }: { onNavigate: () => void }) {
 
                             <ul aria-labelledby={id} className="ml-[2px] mt-3 flex flex-col gap-2.5">
                                 {group.items.map((item) => {
-                                    // 해시가 붙은 섹션 링크는 페이지가 아니다. 정확히 같은 경로만 표시한다
                                     const current = item.href === pathname;
                                     return (
                                         <li key={item.href}>
@@ -509,7 +480,6 @@ function MenuNav({ onNavigate }: { onNavigate: () => void }) {
                                                 }`}
                                             >
                                                 {item.label}
-                                                {/* 밑줄 — 왼쪽에서 오른쪽으로 그어진다. 현재 페이지는 처음부터 그어져 있다 */}
                                                 <span
                                                     className={`absolute inset-x-0 bottom-0 h-px origin-left bg-dark transition-transform duration-500 ease-brand group-hover/item:scale-x-100 ${
                                                         current ? 'scale-x-100' : 'scale-x-0'

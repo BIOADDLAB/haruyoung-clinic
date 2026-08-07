@@ -4,7 +4,7 @@ import { closestCenter, DndContext, PointerSensor, useSensor, useSensors, type D
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useEffect, useState } from 'react';
-import PromotionForm from '@/components/admin/ProductForm';
+import PromotionForm from './PromotionForm';
 import { deletePromotion, getPromotions, reorderPromotions } from '@/lib/promotions';
 import { daysLeft, discountRate, type Promotion } from '@/types/promotion';
 

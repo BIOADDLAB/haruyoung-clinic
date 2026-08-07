@@ -4,11 +4,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { SUB_NAV } from '@/data/site';
 
-/**
- * 시술·프로모션 페이지의 2차 내비.
- * PC 는 메인 레일 오른쪽에 붙는 277px 세로 목록, 모바일은 상단바 아래 가로 스크롤 탭이다.
- * 항목 x 162(레일+56) · 행간 37 은 시안 실측값.
- */
 export default function SubNav() {
     const pathname = usePathname();
 

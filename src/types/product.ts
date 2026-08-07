@@ -2,6 +2,7 @@ export type Product = {
     id: string;
     menuCategory: string;
     menuSlug: string;
+    mainCategory: string;
     subCategory: string;
     name: string;
     highlight: string;

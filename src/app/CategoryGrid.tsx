@@ -34,7 +34,6 @@ export default function CategoryGrid({ items }: { items: readonly CategoryItem[]
                             whileFocus={reduced ? undefined : 'hover'}
                             className="relative block"
                         >
-                            {/* 카드 바깥으로 3px 벌어진 테두리. 146x97 -> 152x103 */}
                             <motion.span
                                 variants={LINE}
                                 transition={{ duration: DUR.fast, ease: EASE }}

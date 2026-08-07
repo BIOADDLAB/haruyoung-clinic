@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
-import ReservationForm from '@/components/reservation/ReservationForm';
 import Header from '@/components/layout/Header';
+import SidePanel from '@/components/layout/SidePanel';
+import ReservationForm from '@/components/reservation/ReservationForm';
 
 export const metadata: Metadata = {
     title: '바로예약',
@@ -12,10 +13,10 @@ export default function ReservationPage() {
     return (
         <>
             <Header dark />
+            <SidePanel title="바로예약" />
 
-            <main className="site-main min-h-dvh bg-cream">
-                <div className="mx-auto flex max-w-[1200px] flex-col gap-12 px-6 pb-28 pt-10 lg:flex-row lg:gap-24 lg:px-12 lg:pb-24 lg:pt-16">
-                    <h1 className="shrink-0 text-24 font-bold lg:w-[240px]">바로예약</h1>
+            <main className="site-sub min-h-dvh bg-cream">
+                <div className="px-6 pb-28 pt-8 lg:pb-24 lg:pl-12 lg:pr-0 lg:pt-16">
                     <ReservationForm withCategory />
                 </div>
             </main>

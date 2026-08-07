@@ -42,7 +42,6 @@ export default function Footer() {
                             </li>
                             <li className="flex items-center gap-5 border-b border-cream/40 pb-3.5 pl-3">
                                 <h4 className="shrink-0 text-caption w-[55px]  tracking-wide">진료시간</h4>
-                                {/* 640 에서 옆에 붙이면 시간이 세 줄로 쪼개진다. lg 부터 나란히 */}
                                 <div className="flex min-w-0 flex-col gap-3 lg:flex-row lg:items-center lg:gap-7">
                                     <div className="flex flex-col">
                                         {CLINIC.hours.map((h) => (

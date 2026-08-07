@@ -87,9 +87,7 @@ export default function AboutPage() {
 
                         <div className="relative mx-auto flex h-full w-full max-w-[738px] items-center px-6 pb-36 pt-20 lg:px-0 lg:py-0">
                             <div className="flex w-full flex-col items-center gap-10 lg:flex-row lg:items-start lg:gap-[33px]">
-                                {/* ===== 텍스트 + 모바일 이미지 ===== */}
                                 <div className="flex w-full flex-col items-center lg:h-[529px] lg:w-[360px] lg:shrink-0 lg:items-start lg:justify-between">
-                                    {/* 1. 영어 타이틀 */}
                                     <Reveal
                                         as="p"
                                         variants={fadeUpSlow}
@@ -100,7 +98,7 @@ export default function AboutPage() {
                                         Timeless Beauty
                                     </Reveal>
 
-                                    {/* 2. 모바일 전용 이미지 (겹침 유지) */}
+                                    {/* 모바일 전용 이미지 (겹침 유지) */}
                                     <Reveal
                                         variants={slideLeft}
                                         delay={0.1}
@@ -131,7 +129,7 @@ export default function AboutPage() {
                                         </div>
                                     </Reveal>
 
-                                    {/* 3. 한국어 제목 + 본문 */}
+                                    {/* 한국어 제목 + 본문 */}
                                     <div className="mt-9 w-full max-w-[320px] text-center lg:mt-0 lg:max-w-none lg:text-left">
                                         <Reveal
                                             as="h1"
@@ -161,7 +159,7 @@ export default function AboutPage() {
                                     </div>
                                 </div>
 
-                                {/* ===== 웹 전용 이미지 (lg 이상) ===== */}
+                                {/*  웹 전용 이미지 (lg 이상)  */}
                                 <Reveal
                                     variants={slideLeft}
                                     delay={0.1}
@@ -205,9 +203,9 @@ export default function AboutPage() {
 
                         <div className="relative mx-auto flex h-full w-full max-w-[550px] items-center px-6 py-16 lg:px-0 lg:py-0">
                             <div className="flex w-full flex-col items-center gap-10 lg:flex-row lg:items-end lg:gap-12">
-                                {/* ===== 왼쪽 텍스트 영역 ===== */}
+                                {/*  왼쪽 텍스트 영역  */}
                                 <div className="flex w-full flex-col items-center lg:w-[263px] lg:shrink-0 lg:items-start">
-                                    {/* 1. 타이틀 */}
+                                    {/* 타이틀 */}
                                     <Reveal
                                         as="h1"
                                         variants={fadeUpSlow}
@@ -218,7 +216,7 @@ export default function AboutPage() {
                                         Specialist
                                     </Reveal>
 
-                                    {/* 2. 모바일 전용 프로필 이미지 (제목 바로 아래) */}
+                                    {/* 모바일 전용 프로필 이미지 (제목 바로 아래) */}
                                     <Reveal variants={slideLeft} delay={0.1} className="mt-9 lg:hidden">
                                         <div
                                             role="img"
@@ -227,7 +225,7 @@ export default function AboutPage() {
                                         />
                                     </Reveal>
 
-                                    {/* 3. 이름 + 서명 */}
+                                    {/* 이름 + 서명 */}
                                     <Reveal
                                         delay={0.1}
                                         className="mt-9 flex items-end justify-center gap-2 lg:mt-[109px] lg:justify-start"
@@ -243,14 +241,14 @@ export default function AboutPage() {
                                         <Icon name="i-sig" width={129} height={37} className="pb-1" />
                                     </Reveal>
 
-                                    {/* 4. 구분선 */}
+                                    {/* 구분선 */}
                                     <Reveal
                                         variants={drawLine}
                                         delay={0.2}
                                         className="mt-6 h-px w-[46px] origin-left bg-dark/40 lg:mt-[26px]"
                                     />
 
-                                    {/* 5. 경력 리스트 */}
+                                    {/* 경력 리스트 */}
                                     <RevealGroup as="ul" className="mt-7 text-center lg:mt-[33px] lg:text-left">
                                         {CAREERS.map((c) => (
                                             <RevealItem
@@ -264,7 +262,7 @@ export default function AboutPage() {
                                     </RevealGroup>
                                 </div>
 
-                                {/* ===== 웹 전용 프로필 이미지 ===== */}
+                                {/*  웹 전용 프로필 이미지  */}
                                 <Reveal
                                     variants={slideLeft}
                                     delay={0.15}

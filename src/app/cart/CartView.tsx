@@ -3,10 +3,12 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useCart } from '@/components/cart/CartProvider';
+import { useMounted } from '@/lib/useMounted';
 import ReservationForm from '@/components/reservation/ReservationForm';
 
 export default function CartView() {
     const { items, remove } = useCart();
+    const mounted = useMounted();
     const [picked, setPicked] = useState<string[]>([]);
 
     const allOn = items.length > 0 && picked.length === items.length;
@@ -15,6 +17,9 @@ export default function CartView() {
 
     const toggle = (key: string) =>
         setPicked((list) => (list.includes(key) ? list.filter((k) => k !== key) : [...list, key]));
+
+    // localStorage 기반이라 마운트 전에는 목록을 그리지 않는다
+    if (!mounted) return <div className="w-full max-w-[800px]" />;
 
     return (
         <div className="w-full max-w-[800px]">
@@ -38,7 +43,7 @@ export default function CartView() {
             </div>
 
             {items.length === 0 ? (
-                <div className="mt-10 border border-beige px-6 py-16 text-center">
+                <div className="mt-5 rounded-lg border border-beige px-6 py-16 text-center">
                     <p className="text-caption text-dark/60">장바구니가 비어 있습니다.</p>
                     <Link href="/promotion" className="mt-5 inline-block text-caption font-semibold">
                         <span className="border-b border-dark pb-0.5">시술 둘러보기</span>
@@ -47,7 +52,7 @@ export default function CartView() {
             ) : (
                 <ul className="mt-5 flex flex-col gap-4">
                     {items.map((i) => (
-                        <li key={i.key} className="border border-beige p-6">
+                        <li key={i.key} className="rounded-lg border border-beige p-6">
                             <p className="text-caption-sm text-dark/50">{i.category}</p>
                             <h2 className="mt-2 text-20 font-bold">{i.name}</h2>
                             <div className="mt-6 flex justify-end">
@@ -67,7 +72,7 @@ export default function CartView() {
 
             <Link
                 href="/promotion"
-                className="mt-6 block bg-dark/8 py-3.5 text-center text-caption transition-colors duration-500 ease-brand hover:bg-dark/15"
+                className="mt-6 block rounded-lg bg-dark/8 py-3.5 text-center text-caption transition-colors duration-500 ease-brand hover:bg-dark/15"
             >
                 다른 상품 추가하기
             </Link>
