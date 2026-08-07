@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Marcellus, Cormorant_Garamond, Asta_Sans } from 'next/font/google';
 import './globals.css';
+import CartProvider from '@/components/cart/CartProvider';
 
 const marcellus = Marcellus({
     weight: ['400'],
@@ -63,7 +64,9 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="ko" className={`${marcellus.variable} ${cormorantGaramond.variable} ${astaSans.variable}`}>
-            <body className="">{children}</body>
+            <body>
+                <CartProvider>{children}</CartProvider>
+            </body>
         </html>
     );
 }

@@ -67,3 +67,31 @@ export const POLICY_LINKS = [
     { label: '이용약관', href: '/terms' },
     { label: '개인정보처리방침', href: '/privacy' },
 ] as const;
+
+/** 시술·프로모션 페이지 좌측 서브 내비. 시안 순서 그대로 */
+export const SUB_NAV = [
+    { label: '프로모션', href: '/promotion' },
+    ...['lifting', 'pigment', 'acne', 'petit', 'care', 'hair', 'body', 'booster'].map((slug) => {
+        const c = MENU_CATEGORIES.find((m) => m.slug === slug)!;
+        return { label: c.name, href: `/treatments/${c.slug}` };
+    }),
+] as const;
+
+/** 방문 형태 */
+export const VISIT_TYPES = ['초진', '재진'] as const;
+
+/**
+ * 요일별 예약 가능 구간. 0=일 … 6=토. 없는 요일은 휴진이다.
+ * lunch 가 true 면 13:00~14:00 슬롯을 뺀다 (월·토는 점심시간 없이 진료).
+ */
+export const RESERVATION_HOURS: Record<number, { start: string; end: string; lunch: boolean }> = {
+    1: { start: '13:00', end: '21:00', lunch: false },
+    2: { start: '10:00', end: '19:00', lunch: true },
+    3: { start: '10:00', end: '19:00', lunch: true },
+    4: { start: '10:00', end: '19:00', lunch: true },
+    5: { start: '13:00', end: '21:00', lunch: false },
+    6: { start: '10:00', end: '15:00', lunch: false },
+};
+
+/** 오늘부터 이만큼 뒤까지만 예약을 받는다 */
+export const RESERVATION_MAX_DAYS = 60;

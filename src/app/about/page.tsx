@@ -85,7 +85,7 @@ export default function AboutPage() {
                             className="object-cover"
                         />
 
-                        <div className="relative mx-auto flex h-full w-full max-w-[708px] items-center px-6 py-16 lg:px-0 lg:py-0">
+                        <div className="relative mx-auto flex h-full w-full max-w-[738px] items-center px-6 pb-36 pt-20 lg:px-0 lg:py-0">
                             <div className="flex w-full flex-col items-center gap-10 lg:flex-row lg:items-start lg:gap-[33px]">
                                 {/* ===== 텍스트 + 모바일 이미지 ===== */}
                                 <div className="flex w-full flex-col items-center lg:h-[529px] lg:w-[360px] lg:shrink-0 lg:items-start lg:justify-between">

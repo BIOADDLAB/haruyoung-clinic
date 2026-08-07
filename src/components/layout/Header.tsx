@@ -5,9 +5,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
+import MobileQuickBar from './MobileQuickBar';
+import { useCart } from '@/components/cart/CartProvider';
 import { LANGS, MENU_GROUPS, QUICK_LINKS, type LangCode } from '@/data/site';
 import { DUR, EASE, fadeUp, stagger } from '@/lib/motion';
-import MobileQuickBar from './MobileQuickBar';
 
 const PANEL_W = 247;
 
@@ -16,13 +17,20 @@ const SEARCH_SUGGESTIONS = ['리프팅', '스킨부스터', '여드름치료', '
 
 type PanelKind = 'menu' | 'search' | null;
 
-export default function Header() {
+/**
+ * @param dark 시술·프로모션·예약 페이지용. PC 레일 배경이 dark 로 뒤집힌다.
+ *             모바일 상단 바와 열린 패널은 두 경우 모두 cream 이다.
+ */
+export default function Header({ dark }: { dark?: boolean }) {
     const [panel, setPanel] = useState<PanelKind>(null);
     const [keyword, setKeyword] = useState('');
     const [lang, setLang] = useState<LangCode>('ko');
     const pathname = usePathname();
     const router = useRouter();
     const reduced = useReducedMotion();
+
+    /** dark 레일에서는 단색 SVG 아이콘을 흰색으로 뒤집는다 */
+    const iconTone = dark ? 'brightness-0 invert' : undefined;
 
     // 라우트가 바뀌면 패널을 닫는다 (effect 대신 렌더 중 상태 조정)
     const [lastPath, setLastPath] = useState(pathname);
@@ -51,7 +59,7 @@ export default function Header() {
             const term = q.trim();
             if (!term) return;
             setPanel(null);
-            // TODO: 시술목록 페이지 구현 후 검색 결과 연결
+            // TODO: 검색 결과 페이지 구현 후 연결
             router.push(`/treatments?q=${encodeURIComponent(term)}`);
         },
         [router],
@@ -95,11 +103,10 @@ export default function Header() {
             {/* ── 모바일 · 태블릿 상단 바 ─────────────────────── */}
             <header className="fixed inset-x-0 top-0 z-50 flex h-16 items-center justify-between border-b border-dark/10 bg-cream px-5 lg:hidden">
                 <Link href="/" aria-label="하루영의원 홈으로">
-                    <Image src="/images/logo-sub.svg" alt="하루영의원" width={110} height={24} />
+                    <Image src="/images/logo-sub.svg" alt="하루영의원" width={110} height={24} priority />
                 </Link>
                 <div className="flex items-center gap-4">
-                    {/* [1안 — 채택] 언어 전환은 검색 왼쪽. 모바일에서 가장 흔한 자리이고
-                        메뉴를 열지 않아도 바꿀 수 있다 */}
+                    {/* 언어 전환은 검색 왼쪽. 모바일에서 가장 흔한 자리이고 메뉴를 열지 않아도 바꿀 수 있다 */}
                     <MobileLangTop value={lang} onChange={setLang} />
 
                     <button
@@ -148,6 +155,7 @@ export default function Header() {
                 )}
             </AnimatePresence>
 
+            {/* ── PC 딤 레이어 — 레일·패널(z-50) 아래에 깔려 본문만 어두워진다 ── */}
             <AnimatePresence>
                 {panel !== null && (
                     <motion.button
@@ -162,11 +170,19 @@ export default function Header() {
             </AnimatePresence>
 
             {/* ── PC 좌측 레일 ───────────────────────────────── */}
-            <header className="fixed left-0 top-0 z-50 hidden h-dvh bg-cream lg:flex">
+            <header
+                className={`fixed left-0 top-0 z-50 hidden h-dvh lg:flex ${dark ? 'bg-dark text-cream' : 'bg-cream'}`}
+            >
                 <div className="flex h-full w-rail flex-col justify-between px-4 py-11.5">
                     <div className="flex flex-col items-center justify-center">
                         <Link href="/" className="mb-10" aria-label="하루영의원 홈으로">
-                            <Image src="/images/logo.svg" alt="하루영의원" width={74} height={44} />
+                            <Image
+                                src="/images/logo.svg"
+                                alt="하루영의원"
+                                width={74}
+                                height={44}
+                                className={iconTone}
+                            />
                         </Link>
 
                         <button
@@ -181,6 +197,7 @@ export default function Header() {
                                 alt=""
                                 width={22}
                                 height={22}
+                                className={iconTone}
                             />
                             <span className="mt-3 font-display text-caption">MENU</span>
                         </button>
@@ -192,14 +209,14 @@ export default function Header() {
                             aria-label={panel === 'search' ? '바로검색 닫기' : '바로검색 열기'}
                             className="flex flex-col items-center"
                         >
-                            <Image src="/images/i-search.svg" alt="" width={22} height={22} />
+                            <Image src="/images/i-search.svg" alt="" width={22} height={22} className={iconTone} />
                             <span className="mt-1.25 text-caption-sm font-semibold">바로검색</span>
                         </button>
                     </div>
 
                     {/* 레일 하단은 bottom 기준으로 붙어 있어서, 언어 목록이 펼쳐지면 위로 자란다 */}
                     <nav aria-label="빠른 메뉴" className="flex flex-col gap-6.5">
-                        <RailLang value={lang} onChange={setLang} />
+                        <RailLang value={lang} onChange={setLang} dark={dark} />
 
                         {QUICK_LINKS.map((l) =>
                             l.external ? (
@@ -210,7 +227,13 @@ export default function Header() {
                                     rel={l.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                                     className="flex flex-col items-center transition-opacity duration-500 ease-brand hover:opacity-70"
                                 >
-                                    <Image src={`/images/${l.icon}.svg`} alt="" width={34} height={34} />
+                                    <Image
+                                        src={`/images/${l.icon}.svg`}
+                                        alt=""
+                                        width={34}
+                                        height={34}
+                                        className={iconTone}
+                                    />
                                     <span className="text-caption-sm font-semibold">{l.label}</span>
                                 </a>
                             ) : (
@@ -219,21 +242,29 @@ export default function Header() {
                                     href={l.href}
                                     className="flex flex-col items-center transition-opacity duration-500 ease-brand hover:opacity-70"
                                 >
-                                    <Image src={`/images/${l.icon}.svg`} alt="" width={34} height={34} />
+                                    <Image
+                                        src={`/images/${l.icon}.svg`}
+                                        alt=""
+                                        width={34}
+                                        height={34}
+                                        className={iconTone}
+                                    />
                                     <span className="text-caption-sm font-semibold">{l.label}</span>
                                 </Link>
                             ),
                         )}
 
+                        <CartRailLink dark={dark} />
+
                         <Link href="/login" className="text-center text-caption-sm font-semibold">
-                            <span className="border-b border-dark pb-1">로그인</span>
+                            <span className={`border-b pb-1 ${dark ? 'border-cream' : 'border-dark'}`}>로그인</span>
                         </Link>
                     </nav>
                 </div>
 
                 <AnimatePresence initial={false} mode="wait">
                     {panel !== null && (
-                        <motion.div key={panel} {...expand} className="overflow-hidden bg-cream">
+                        <motion.div key={panel} {...expand} className="overflow-hidden bg-cream text-dark">
                             <div style={{ width: PANEL_W }} className="h-full">
                                 {panel === 'menu' ? (
                                     <MenuNav onNavigate={close} />
@@ -257,6 +288,19 @@ export default function Header() {
     );
 }
 
+/** 레일 장바구니. 담긴 개수를 배지로 띄운다 */
+/** 레일 장바구니. 로그인과 같은 밑줄 형태, 담긴 개수만 괄호로 붙인다 */
+function CartRailLink({ dark }: { dark?: boolean }) {
+    const { count } = useCart();
+
+    return (
+        <Link href="/cart" className="text-center text-caption-sm font-semibold">
+            <span className={`border-b pb-1 ${dark ? 'border-cream' : 'border-dark'}`}>
+                장바구니{count > 0 && ` (${count})`}
+            </span>
+        </Link>
+    );
+}
 /**
  * 모바일 언어 전환.
  * 트리거를 헤더 높이(h-16)로 잡아 top-full 이 헤더 밑선과 정확히 맞고,
@@ -328,10 +372,19 @@ function MobileLangTop({ value, onChange }: { value: LangCode; onChange: (v: Lan
     );
 }
 
-function RailLang({ value, onChange }: { value: LangCode; onChange: (v: LangCode) => void }) {
+/**
+ * 레일 언어 전환. 아이콘 아래로 KO / EN / CN 이 세로로 펼쳐진다.
+ * 레일 하단이 bottom 기준이라 펼쳐져도 다른 바로가기 위치가 그대로다.
+ *
+ * TODO: 다국어 라우팅 붙으면 setState 대신 locale 전환으로 교체
+ */
+function RailLang({ value, onChange, dark }: { value: LangCode; onChange: (v: LangCode) => void; dark?: boolean }) {
     const [open, setOpen] = useState(false);
     const reduced = useReducedMotion();
     const current = LANGS.find((l) => l.code === value)!;
+
+    const idle = dark ? 'text-cream/45 hover:text-cream/75' : 'text-dark/40 hover:text-dark/70';
+    const active = dark ? 'border-b border-cream pb-0.5 text-cream' : 'border-b border-dark pb-0.5 text-dark';
 
     return (
         <div className="flex flex-col items-center">
@@ -355,9 +408,7 @@ function RailLang({ value, onChange }: { value: LangCode; onChange: (v: LangCode
                                         }}
                                         aria-pressed={value === l.code}
                                         className={`font-display text-caption-sm tracking-[0.12em] transition-colors duration-500 ease-brand ${
-                                            value === l.code
-                                                ? 'border-b border-dark pb-0.5 text-dark'
-                                                : 'text-dark/40 hover:text-dark/70'
+                                            value === l.code ? active : idle
                                         }`}
                                     >
                                         <span className="sr-only">{l.name}</span>
@@ -366,7 +417,10 @@ function RailLang({ value, onChange }: { value: LangCode; onChange: (v: LangCode
                                 </li>
                             ))}
                         </ul>
-                        <span aria-hidden="true" className="mx-auto mb-3.5 block h-px w-6 bg-dark/20" />
+                        <span
+                            aria-hidden="true"
+                            className={`mx-auto mb-3.5 block h-px w-6 ${dark ? 'bg-cream/25' : 'bg-dark/20'}`}
+                        />
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -378,8 +432,14 @@ function RailLang({ value, onChange }: { value: LangCode; onChange: (v: LangCode
                 aria-label={`언어 선택, 현재 ${current.name}`}
                 className="flex flex-col items-center transition-opacity duration-500 ease-brand hover:opacity-70"
             >
-                <Image src="/images/i-h-01.svg" alt="" width={34} height={34} />
-                <span aria-hidden="true" className="text-caption-sm tracking-[0.1em]">
+                <Image
+                    src="/images/i-h-01.svg"
+                    alt=""
+                    width={34}
+                    height={34}
+                    className={dark ? 'brightness-0 invert' : undefined}
+                />
+                <span aria-hidden="true" className="font-display text-caption-sm tracking-[0.1em]">
                     {current.label}
                 </span>
             </button>
@@ -387,14 +447,24 @@ function RailLang({ value, onChange }: { value: LangCode; onChange: (v: LangCode
     );
 }
 
+/**
+ * 전체 메뉴.
+ * 그룹에 마우스를 올리면 제목 투명도가 80% → 100% 로 올라가고
+ * 제목 끝의 갈색 원이 점에서 커지며 나타난다. 항목은 개별 hover 로 진해진다.
+ *
+ * 모바일에서는 레일이 없으므로 장바구니·로그인을 상단에 둔다 (언어 전환은 상단 바).
+ */
 function MenuNav({ onNavigate }: { onNavigate: () => void }) {
     const reduced = useReducedMotion();
     const pathname = usePathname();
 
     return (
         <nav aria-label="전체 메뉴" className="flex h-full flex-col justify-between lg:py-10 lg:pl-10 lg:pr-7.5">
-            {/* 모바일 전용 — 레일에 있던 로그인을 여기서 받는다 */}
-            <div className="mb-2 flex justify-end lg:hidden">
+            {/* 모바일 전용 — 레일에 있던 장바구니·로그인을 여기서 받는다 */}
+            <div className="mb-2 flex items-center justify-end gap-5 lg:hidden">
+                <Link href="/cart" onClick={onNavigate} className="text-caption font-semibold">
+                    <span className="border-b border-dark pb-1">장바구니</span>
+                </Link>
                 <Link href="/login" onClick={onNavigate} className="text-caption font-semibold">
                     <span className="border-b border-dark pb-1">로그인</span>
                 </Link>
@@ -423,6 +493,7 @@ function MenuNav({ onNavigate }: { onNavigate: () => void }) {
 
                             <ul aria-labelledby={id} className="ml-[2px] mt-3 flex flex-col gap-2.5">
                                 {group.items.map((item) => {
+                                    // 해시가 붙은 섹션 링크는 페이지가 아니다. 정확히 같은 경로만 표시한다
                                     const current = item.href === pathname;
                                     return (
                                         <li key={item.href}>
@@ -435,6 +506,7 @@ function MenuNav({ onNavigate }: { onNavigate: () => void }) {
                                                 }`}
                                             >
                                                 {item.label}
+                                                {/* 밑줄 — 왼쪽에서 오른쪽으로 그어진다. 현재 페이지는 처음부터 그어져 있다 */}
                                                 <span
                                                     className={`absolute inset-x-0 bottom-0 h-px origin-left bg-dark transition-transform duration-500 ease-brand group-hover/item:scale-x-100 ${
                                                         current ? 'scale-x-100' : 'scale-x-0'

@@ -34,7 +34,7 @@ export default function HeroVisual() {
 
             <motion.div
                 style={reduced ? undefined : { y, opacity }}
-                className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center text-cream"
+                className="absolute inset-0 flex flex-col items-center justify-center px-6 pb-16 text-center text-cream lg:pb-0"
             >
                 <motion.div
                     initial={reduced ? false : { opacity: 0, y: 36 }}
