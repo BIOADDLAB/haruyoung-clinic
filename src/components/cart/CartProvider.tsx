@@ -8,6 +8,9 @@ import type { CartItem } from '@/types/reservation';
 
 const STORAGE_KEY = 'haruyoung.cart';
 
+/** 토스트가 떠 있는 시간. 진행바 길이와 같은 값을 쓴다 */
+const TOAST_MS = 3000;
+
 type Toast = { id: number; name: string };
 
 type CartValue = {
@@ -97,6 +100,9 @@ export default function CartProvider({ children }: { children: ReactNode }) {
             {children}
 
             {/* 담기 — 우하단에서 위로 쌓인다. 모바일 퀵바(64) 위에 얹는다 */}
+            {/* ── 담기 피드백 [1안 — 채택] 진행바 달린 스낵바 ──────────────
+                우하단에서 위로 쌓인다. 아래 진행바가 줄어들며 남은 시간을 보여준다.
+                [2안] [3안] 은 파일 하단 주석 참고 */}
             <div className="pointer-events-none fixed bottom-24 right-5 z-70 flex flex-col-reverse gap-2 lg:bottom-8">
                 <AnimatePresence initial={false}>
                     {toasts.map((t) => (
@@ -106,15 +112,42 @@ export default function CartProvider({ children }: { children: ReactNode }) {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -8 }}
                             transition={{ duration: DUR.fast, ease: EASE }}
-                            className="pointer-events-auto flex items-center gap-4 border border-dark/10 bg-cream px-5 py-3.5 shadow-[0_10px_28px_rgba(59,43,30,0.16)]"
+                            className="pointer-events-auto relative w-[320px] max-w-[calc(100vw-40px)] overflow-hidden border border-dark/10 bg-cream shadow-[0_10px_28px_rgba(59,43,30,0.16)]"
                         >
-                            <p className="text-caption">
-                                <span className="font-semibold">시술이 추가됐어요!</span>
-                                <span className="ml-2 text-dark/60">장바구니를 확인해 보세요.</span>
-                            </p>
-                            <Link href="/cart" className="shrink-0 text-caption font-semibold">
-                                <span className="border-b border-dark pb-0.5">장바구니</span>
-                            </Link>
+                            <div className="flex items-center gap-4 px-5 py-4">
+                                <span
+                                    aria-hidden="true"
+                                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-dark"
+                                >
+                                    <svg
+                                        viewBox="0 0 12 12"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        className="h-3 w-3 text-cream"
+                                    >
+                                        <path d="M1 6l3.5 3.5L11 2" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                </span>
+
+                                <div className="min-w-0 flex-1">
+                                    <p className="text-caption font-semibold">시술이 추가됐어요!</p>
+                                    <p className="mt-0.5 truncate text-caption-sm text-dark/55">{t.name}</p>
+                                </div>
+
+                                <Link href="/cart" className="shrink-0 text-caption font-semibold">
+                                    <span className="border-b border-dark pb-0.5">보기</span>
+                                </Link>
+                            </div>
+
+                            {/* 남은 시간. TOAST_MS 와 같은 값이어야 어긋나지 않는다 */}
+                            <motion.span
+                                aria-hidden="true"
+                                initial={{ scaleX: 1 }}
+                                animate={{ scaleX: 0 }}
+                                transition={{ duration: TOAST_MS / 1000, ease: 'linear' }}
+                                className="absolute inset-x-0 bottom-0 block h-0.5 origin-left bg-dark/35"
+                            />
                         </motion.div>
                     ))}
                 </AnimatePresence>
