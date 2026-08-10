@@ -25,24 +25,42 @@ function SortableCard({
         <div
             ref={setNodeRef}
             style={{ transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.5 : 1 }}
-            className={`flex items-center gap-3 rounded-lg border bg-white p-4 shadow-sm ${
-                editing ? 'border-[#3a322c] ring-1 ring-[#3a322c]' : 'border-black/5'
+            className={`w-full max-w-[800px] rounded-lg border bg-cream p-6 ${
+                editing ? 'border-dark ring-1 ring-dark' : 'border-beige'
             }`}
         >
-            <button {...attributes} {...listeners} className="cursor-grab text-neutral-400">
-                ⠿
-            </button>
-            <div className="flex-1">
-                <div className="text-sm text-neutral-500">{p.subCategory || '(중제목 없음)'}</div>
-                <div className="font-medium">{p.name}</div>
+            {/* 홈 시술 카드와 같은 규격: 폭 800 · p-6 · 제목 20 · 부제 16 brown · 설명 14 · 가격 22 */}
+            <div className="flex items-start gap-3">
+                <button {...attributes} {...listeners} className="cursor-grab pt-1 text-dark/35">
+                    ⠿
+                </button>
+
+                <div className="min-w-0 flex-1">
+                    <p className="text-caption-sm text-dark/45">
+                        {p.mainCategory || '(대분류 없음)'}
+                        {p.subCategory && ` · ${p.subCategory}`}
+                    </p>
+                    <h3 className="mt-1 whitespace-pre-line text-20 font-bold text-dark">{p.name}</h3>
+                    {p.highlight && <p className="mt-2 text-small font-medium text-brown">{p.highlight}</p>}
+                    {p.description && (
+                        <p className="mt-6 whitespace-pre-line text-caption leading-[1.7] text-dark/85">
+                            {p.description}
+                        </p>
+                    )}
+                </div>
             </div>
-            <div className="text-sm">{p.price === null ? '-' : p.price.toLocaleString() + '원'}</div>
-            <button onClick={() => onEdit(p)} className="text-sm text-blue-600">
-                수정
-            </button>
-            <button onClick={() => onDelete(p.id)} className="text-sm text-red-500">
-                삭제
-            </button>
+
+            <div className="mt-3 flex items-center justify-end gap-5">
+                <button onClick={() => onEdit(p)} className="text-caption text-dark/55 hover:text-dark">
+                    수정
+                </button>
+                <button onClick={() => onDelete(p.id)} className="text-caption text-red-500">
+                    삭제
+                </button>
+                <span className="text-22 font-bold text-dark">
+                    {p.price === null ? '가격 문의' : `${p.price.toLocaleString()}원`}
+                </span>
+            </div>
         </div>
     );
 }
@@ -103,7 +121,7 @@ export default function ProductsPage() {
 
     return (
         <div>
-            <h1 className="text-3xl font-bold text-[#3a322c]">수가표 관리</h1>
+            <h1 className="text-2xl font-bold text-[#3a322c] lg:text-3xl">수가표 관리</h1>
 
             {/* 폼: key로 편집 대상 바뀔 때 폼 리셋 */}
             <div className="mt-6">
@@ -117,12 +135,12 @@ export default function ProductsPage() {
             </div>
 
             {/* 대메뉴 탭 */}
-            <div className="mt-8 flex flex-wrap gap-2">
+            <div className="-mx-5 mt-8 flex gap-2 overflow-x-auto px-5 [scrollbar-width:none] lg:mx-0 lg:flex-wrap lg:px-0 [&::-webkit-scrollbar]:hidden">
                 {MENU_CATEGORIES.map((c) => (
                     <button
                         key={c.slug}
                         onClick={() => setMenu(c.slug)}
-                        className={`rounded-full px-4 py-1.5 text-sm ${
+                        className={`shrink-0 whitespace-nowrap rounded-full px-4 py-1.5 text-sm ${
                             menu === c.slug ? 'bg-[#3a322c] text-white' : 'border border-black/10 bg-white'
                         }`}
                     >

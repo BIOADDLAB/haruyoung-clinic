@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getReservations, updateReservation } from '@/lib/reservations';
+import { deleteReservation, getReservations, updateReservation } from '@/lib/reservations';
 import { RESERVATION_STATUS, type Reservation, type ReservationStatus } from '@/types/reservation';
 
 const TONE: Record<ReservationStatus, string> = {
@@ -42,18 +42,28 @@ export default function ReservationsPage() {
         await updateReservation(id, data);
     };
 
+    /**
+     * 삭제. 보통 병원에서는 기록 보존 때문에 '취소' 상태로만 남기고 지우지 않는다.
+     * 테스트 데이터나 중복 접수를 정리할 때만 쓰도록 확인을 두 번 받는다.
+     */
+    const remove = async (r: Reservation) => {
+        if (!confirm(`${r.name} (${r.date} ${r.time}) 예약을 완전히 삭제할까요?\n기록이 남지 않습니다.`)) return;
+        setAll((prev) => prev.filter((x) => x.id !== r.id));
+        await deleteReservation(r.id);
+    };
+
     if (loading) return <div>불러오는 중...</div>;
 
     return (
         <div>
-            <h1 className="text-3xl font-bold text-[#3a322c]">예약 관리</h1>
+            <h1 className="text-2xl font-bold text-[#3a322c] lg:text-3xl">예약 관리</h1>
 
-            <div className="mt-6 flex flex-wrap gap-2">
+            <div className="-mx-5 mt-6 flex gap-2 overflow-x-auto px-5 [scrollbar-width:none] lg:mx-0 lg:flex-wrap lg:px-0 [&::-webkit-scrollbar]:hidden">
                 {FILTERS.map((f) => (
                     <button
                         key={f.key}
                         onClick={() => setFilter(f.key)}
-                        className={`rounded-full px-4 py-1.5 text-sm ${
+                        className={`shrink-0 whitespace-nowrap rounded-full px-4 py-1.5 text-sm ${
                             filter === f.key ? 'bg-[#3a322c] text-white' : 'border border-black/10 bg-white'
                         }`}
                     >
@@ -70,30 +80,31 @@ export default function ReservationsPage() {
                     const open = openId === r.id;
                     return (
                         <div key={r.id} className="rounded-lg border border-black/5 bg-white shadow-sm">
-                            <button
-                                onClick={() => setOpenId(open ? null : r.id)}
-                                className="flex w-full items-center gap-4 p-4 text-left"
-                            >
-                                <span
-                                    className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-medium ${TONE[r.status]}`}
-                                >
-                                    {RESERVATION_STATUS[r.status]}
-                                </span>
-                                <span className="w-36 shrink-0 text-sm">
-                                    {r.date} {r.time}
-                                </span>
-                                <span className="w-24 shrink-0 font-medium">{r.name}</span>
-                                <span className="w-36 shrink-0 text-sm text-neutral-500">{r.phone}</span>
-                                <span className="flex-1 truncate text-sm text-neutral-500">
+                            <button onClick={() => setOpenId(open ? null : r.id)} className="w-full p-4 text-left">
+                                {/* 모바일은 2줄로 접고, PC 는 한 줄로 편다 */}
+                                <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                                    <span
+                                        className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-medium ${TONE[r.status]}`}
+                                    >
+                                        {RESERVATION_STATUS[r.status]}
+                                    </span>
+                                    <span className="shrink-0 text-sm">
+                                        {r.date} {r.time}
+                                    </span>
+                                    <span className="shrink-0 font-medium">{r.name}</span>
+                                    <span className="shrink-0 text-sm text-neutral-500">{r.phone}</span>
+                                    <span className="ml-auto shrink-0 text-sm">
+                                        {r.total > 0 ? `${r.total.toLocaleString()}원` : '-'}
+                                    </span>
+                                    <span className="shrink-0 text-neutral-400">{open ? '▲' : '▼'}</span>
+                                </div>
+
+                                <p className="mt-2 truncate text-sm text-neutral-500">
                                     {r.visitType}
                                     {r.category && ` · ${r.category}`}
                                     {r.items.length > 0 && ` · ${r.items[0].name}`}
                                     {r.items.length > 1 && ` 외 ${r.items.length - 1}건`}
-                                </span>
-                                <span className="shrink-0 text-sm">
-                                    {r.total > 0 ? `${r.total.toLocaleString()}원` : '-'}
-                                </span>
-                                <span className="shrink-0 text-neutral-400">{open ? '▲' : '▼'}</span>
+                                </p>
                             </button>
 
                             {open && (
@@ -131,6 +142,12 @@ export default function ReservationsPage() {
                                         >
                                             전화 걸기
                                         </a>
+                                        <button
+                                            onClick={() => remove(r)}
+                                            className="rounded-full border border-red-200 px-3 py-1 text-xs text-red-500"
+                                        >
+                                            삭제
+                                        </button>
                                     </div>
 
                                     {/* 통화 내용 메모. blur 될 때만 저장해 입력 중 쓰기를 줄인다 */}

@@ -26,29 +26,46 @@ function SortableCard({
         <div
             ref={setNodeRef}
             style={{ transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.5 : 1 }}
-            className={`flex items-center gap-3 rounded-lg border bg-white p-4 shadow-sm ${
-                editing ? 'border-[#3a322c] ring-1 ring-[#3a322c]' : 'border-black/5'
+            className={`w-full max-w-[800px] rounded-lg border bg-cream p-6 ${
+                editing ? 'border-dark ring-1 ring-dark' : 'border-beige'
             }`}
         >
-            <button {...attributes} {...listeners} className="cursor-grab text-neutral-400">
-                ⠿
-            </button>
-            <div className="flex-1">
-                <div className="text-sm text-neutral-500">
-                    {p.until} · {left < 0 ? '마감됨' : `${left}일 남음`}
-                </div>
-                <div className="font-medium">{p.name}</div>
+            {/* 홈 프로모션 카드와 같은 규격 */}
+            <div className="flex items-start gap-3">
+                <button {...attributes} {...listeners} className="cursor-grab pt-1 text-dark/35">
+                    ⠿
+                </button>
+                <h3 className="min-w-0 flex-1 text-20 font-bold text-dark">{p.name}</h3>
             </div>
-            <div className="text-sm">
-                {discountRate(p) > 0 && <span className="mr-2 text-rose-500">{discountRate(p)}%</span>}
-                {p.price.toLocaleString()}원
+
+            <div className="mt-4 flex items-baseline justify-between gap-6">
+                <p className="text-small font-medium text-brown">{p.highlight}</p>
+                <p className="shrink-0 text-caption text-dark/60">
+                    ~{p.until} ({left < 0 ? '마감됨' : left === 0 ? '오늘 마감' : `${left}일 남음`})
+                </p>
             </div>
-            <button onClick={() => onEdit(p)} className="text-sm text-blue-600">
-                수정
-            </button>
-            <button onClick={() => onDelete(p.id)} className="text-sm text-red-500">
-                삭제
-            </button>
+
+            {p.description && (
+                <p className="mt-6 whitespace-pre-line text-caption leading-[1.7] text-dark/85">{p.description}</p>
+            )}
+
+            <div className="mt-3 flex items-center justify-end gap-5">
+                <button onClick={() => onEdit(p)} className="text-caption text-dark/55 hover:text-dark">
+                    수정
+                </button>
+                <button onClick={() => onDelete(p.id)} className="text-caption text-red-500">
+                    삭제
+                </button>
+                {discountRate(p) > 0 && (
+                    <span className="flex h-6 items-center rounded-full bg-dark px-3 text-caption-sm font-semibold text-cream">
+                        {discountRate(p)}%
+                    </span>
+                )}
+                {p.originPrice > p.price && (
+                    <span className="text-caption text-dark/45 line-through">{p.originPrice.toLocaleString()}원</span>
+                )}
+                <span className="text-24 font-bold text-dark">{p.price.toLocaleString()}원</span>
+            </div>
         </div>
     );
 }
@@ -103,7 +120,7 @@ export default function PromotionsPage() {
 
     return (
         <div>
-            <h1 className="text-3xl font-bold text-[#3a322c]">프로모션 관리</h1>
+            <h1 className="text-2xl font-bold text-[#3a322c] lg:text-3xl">프로모션 관리</h1>
 
             <div className="mt-6">
                 <PromotionForm

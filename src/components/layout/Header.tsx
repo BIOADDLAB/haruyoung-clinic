@@ -138,7 +138,7 @@ export default function Header({ dark }: { dark?: boolean }) {
                     <motion.div
                         key={panel}
                         {...slideDown}
-                        className="fixed inset-x-0 bottom-0 top-16 z-45 overflow-y-auto bg-cream px-6 py-8 lg:hidden"
+                        className="fixed inset-x-0 bottom-0 top-16 z-45 overflow-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden bg-cream px-6 py-8 lg:hidden"
                     >
                         {panel === 'menu' ? (
                             <MenuNav onNavigate={close} onLogin={() => setAuth(true)} />
@@ -562,7 +562,7 @@ function MenuNav({ onNavigate, onLogin }: { onNavigate: () => void; onLogin: () 
                 })}
             </motion.div>
 
-            <div className="mt-12 flex justify-center pb-10 lg:mt-0 lg:pb-0">
+            <div className="!mt-12 flex justify-center !pb-10 lg:mt-0 lg:pb-0">
                 <Image src="/images/logo-sub.svg" alt="하루영의원" width={120} height={34} />
             </div>
         </nav>

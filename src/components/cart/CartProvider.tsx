@@ -99,10 +99,6 @@ export default function CartProvider({ children }: { children: ReactNode }) {
         <Ctx.Provider value={value}>
             {children}
 
-            {/* 담기 — 우하단에서 위로 쌓인다. 모바일 퀵바(64) 위에 얹는다 */}
-            {/* ── 담기 피드백 [1안 — 채택] 진행바 달린 스낵바 ──────────────
-                우하단에서 위로 쌓인다. 아래 진행바가 줄어들며 남은 시간을 보여준다.
-                [2안] [3안] 은 파일 하단 주석 참고 */}
             <div className="pointer-events-none fixed bottom-24 right-5 z-70 flex flex-col-reverse gap-2 lg:bottom-8">
                 <AnimatePresence initial={false}>
                     {toasts.map((t) => (

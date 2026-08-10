@@ -53,7 +53,7 @@ export default function PromotionForm({
     return (
         <div className="w-full max-w-4xl">
             <div className="mb-8">
-                <h2 className="text-2xl font-bold tracking-tight text-[#3a322c]">
+                <h2 className="text-xl font-bold tracking-tight text-[#3a322c] sm:text-2xl">
                     {initial ? '프로모션 수정' : '프로모션 추가'}
                 </h2>
                 <p className="mt-1 text-sm text-neutral-500">마감일이 지나면 사이트에서 자동으로 내려갑니다.</p>
@@ -140,7 +140,7 @@ export default function PromotionForm({
                     {rate > 0 && <p className="text-sm text-neutral-500">화면에 {rate}% 할인으로 표시됩니다.</p>}
                 </div>
 
-                <div className="flex items-center justify-end gap-2.5 border-t border-black/[0.04] bg-neutral-50/50 px-6 py-4 sm:px-8">
+                <div className="flex flex-col-reverse gap-2.5 border-t border-black/[0.04] bg-neutral-50/50 px-6 py-4 sm:flex-row sm:justify-end sm:px-8">
                     <button
                         type="button"
                         onClick={() => onCancel?.()}
