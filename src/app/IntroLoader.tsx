@@ -5,22 +5,27 @@ import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from '
 import { EASE } from '@/lib/motion';
 
 const FAST_MS = 110;
-const SLOW_MS = 1100;
-const HOLD_MS = 1430;
+const SLOW_MS = 1240;
+const HOLD_MS = 1010;
 const SLOW_FROM = 3;
 
 const READY_TIMEOUT_MS = 1500;
 
-/** 세션당 1회 노출용 키 */
+/** 세션당 1회 노출용 키. */
 const SEEN_KEY = 'haruyoung:intro-seen';
 
 const tickOf = (n: number) => (n <= SLOW_FROM ? SLOW_MS : FAST_MS);
 
-/** 빠른 구간은 전환도 짧게. 다음 숫자가 오기 전에 끝나야 잔상이 안 뭉갠다 */
-const swapOf = (n: number) => (n <= SLOW_FROM ? 0.5 : 0.16);
+/**
+ * 숫자 전환 시간.
+ * 빠른 구간은 짧게 — 다음 숫자가 오기 전에 끝나야 잔상이 안 뭉갠다.
+ * 마지막 00 은 길게 — 툭 뜨지 않고 천천히 내려앉는다.
+ */
+const swapOf = (n: number) => (n === 0 ? 0.7 : n <= SLOW_FROM ? 0.5 : 0.16);
 
 const noopSubscribe = () => () => {};
 
+/** 이번 세션에 이미 봤는지. 저장소 접근이 막혀 있으면 본 것으로 친다 */
 function hasSeen() {
     if (typeof window === 'undefined') return true;
     try {
@@ -64,11 +69,12 @@ export default function IntroLoader() {
         return () => clearTimeout(t);
     }, [open, ready]);
 
-    // 카운트다운. 숫자마다 간격이 달라 setInterval 을 쓸 수 없다
+    // 카운트다운. 숫자마다 간격이 달라 setInterval 을 쓸 수 없다.
+    // 00 까지 내려간 뒤 HOLD_MS 동안 머물다 닫는다
     useEffect(() => {
         if (!open || !ready) return;
 
-        if (count <= 1) {
+        if (count <= 0) {
             timer.current = setTimeout(close, HOLD_MS);
         } else {
             timer.current = setTimeout(() => setCount((n) => n - 1), tickOf(count));
