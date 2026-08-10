@@ -44,6 +44,6 @@ next-env.d.ts
 scripts/data/*.csv
 products-backup-*.json
 
-# macOS 리소스 포크
+# macOS 리소스포크
 ._*
 .DS_Store
