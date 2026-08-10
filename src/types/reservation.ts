@@ -1,10 +1,11 @@
-/** 장바구니에 담기는 최소 정보. 시술과 프로모션 모두 이 모양으로 눕힌다 */
 export type CartItem = {
     /** 'product:{id}' 또는 'promotion:{id}'. 두 컬렉션의 id 가 겹칠 수 있어 접두어를 붙인다 */
     key: string;
     name: string;
     price: number;
     category: string;
+    /** 프로모션만 채운다. 할인 전 가격. 없거나 price 와 같으면 할인이 없는 것 */
+    originPrice?: number;
 };
 
 /** 대기 → 확정 → 완료. 취소는 어느 단계에서든 가능 */

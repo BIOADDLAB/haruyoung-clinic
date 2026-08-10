@@ -10,17 +10,12 @@ import { useCart } from '@/components/cart/CartProvider';
 import { MENU_CATEGORIES } from '@/constants/categories';
 import { VISIT_TYPES } from '@/data/site';
 import { addReservation } from '@/lib/reservations';
+import PrivacyModal from '@/components/ui/PrivacyModal';
 
 const field =
     'w-full border-b border-dark/20 bg-transparent px-1 py-3.5 text-caption text-dark outline-none transition-colors duration-500 ease-brand placeholder:text-dark/35 focus:border-dark';
 
-/** 010-1234-5678 형태로 자동 정리 */
-function formatPhone(v: string) {
-    const n = v.replace(/\D/g, '').slice(0, 11);
-    if (n.length < 4) return n;
-    if (n.length < 8) return `${n.slice(0, 3)}-${n.slice(3)}`;
-    return `${n.slice(0, 3)}-${n.slice(3, 7)}-${n.slice(7)}`;
-}
+const cleanPhone = (v: string) => v.replace(/[^\d+-]/g, '').slice(0, 20);
 
 /** @param withCategory 장바구니 없이 바로예약할 때만 카테고리를 고른다 */
 export default function ReservationForm({ withCategory }: { withCategory?: boolean }) {
@@ -40,9 +35,11 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
 
     const slots = slotsOf(date);
 
+    const [privacy, setPrivacy] = useState(false);
+
     const submit = async () => {
         if (!name.trim()) return alert('이름을 입력해주세요.');
-        if (phone.replace(/\D/g, '').length < 10) return alert('연락처를 정확히 입력해주세요.');
+        if (phone.replace(/\D/g, '').length < 8) return alert('연락처를 정확히 입력해주세요.');
         if (!visitType) return alert('방문 형태를 선택해주세요.');
         if (withCategory && !category) return alert('카테고리를 선택해주세요.');
         if (!date) return alert('예약 일자를 선택해주세요.');
@@ -98,10 +95,10 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
                         </span>
                         <input
                             type="tel"
-                            inputMode="numeric"
+                            inputMode="tel"
                             value={phone}
-                            onChange={(e) => setPhone(formatPhone(e.target.value))}
-                            placeholder="연락처를 입력해주세요."
+                            onChange={(e) => setPhone(cleanPhone(e.target.value))}
+                            placeholder="숫자만 입력해주세요."
                             className={field}
                         />
                     </label>
@@ -199,12 +196,13 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
                                 onChange={setAgreePrivacy}
                                 label="(필수) 개인정보 수집 이용 동의"
                             />
-                            <Link
-                                href="/privacy"
+                            <button
+                                type="button"
+                                onClick={() => setPrivacy(true)}
                                 className="shrink-0 text-caption-sm text-dark/50 underline underline-offset-2 transition-colors duration-500 ease-brand hover:text-dark"
                             >
                                 상세보기
-                            </Link>
+                            </button>
                         </div>
 
                         <div>
@@ -241,6 +239,7 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
                     router.push('/');
                 }}
             />
+            <PrivacyModal open={privacy} onClose={() => setPrivacy(false)} />
         </div>
     );
 }

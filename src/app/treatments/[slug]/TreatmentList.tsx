@@ -6,6 +6,8 @@ import { RevealGroup, RevealItem } from '@/components/ui/RevealGroup';
 import { fadeUp } from '@/lib/motion';
 import { getProducts } from '@/lib/products';
 import type { Product } from '@/types/product';
+import Image from 'next/image';
+import { TREATMENT_BANNER } from '@/data/site';
 
 export default function TreatmentList({ slug, categoryName }: { slug: string; categoryName: string }) {
     const [list, setList] = useState<Product[] | null>(null);
@@ -40,12 +42,17 @@ export default function TreatmentList({ slug, categoryName }: { slug: string; ca
     return (
         <div className="pb-28 lg:pb-24">
             {/* #TODO: 카테고리 대표 이미지로 교체 */}
-            <div
-                role="img"
-                aria-label={`하루영의원 ${categoryName} 대표 이미지`}
-                className="flex aspect-[896/195] w-full max-w-[896px] items-center justify-center bg-[#d9d9d9] text-caption text-dark/50"
-            >
-                사진영역
+            {/* 배너 892x194. 원본 그대로 받아서 모바일에서도 확대되지 않는다 */}
+            <div className="relative aspect-[892/194] w-full max-w-[892px] overflow-hidden">
+                <Image
+                    src={`/images/${TREATMENT_BANNER[slug] ?? 'bg-tre-01'}.jpg`}
+                    alt={`하루영의원 ${categoryName}`}
+                    fill
+                    priority
+                    quality={92}
+                    sizes="(min-width:1024px) 892px, 892px"
+                    className="object-cover"
+                />
             </div>
 
             {list === null ? (

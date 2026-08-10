@@ -95,3 +95,18 @@ export const RESERVATION_HOURS: Record<number, { start: string; end: string; lun
 
 /** 오늘부터 이만큼 뒤까지만 예약을 받는다 */
 export const RESERVATION_MAX_DAYS = 60;
+
+/**
+ * 시술 페이지 배너. 892×194.
+ * 번호는 SUB_NAV 순서를 따른다. 새 카테고리가 생기면 여기에 한 줄 추가한다.
+ */
+export const TREATMENT_BANNER: Record<string, string> = {
+    lifting: 'bg-tre-01',
+    pigment: 'bg-tre-02',
+    acne: 'bg-tre-03',
+    petit: 'bg-tre-04',
+    care: 'bg-tre-05',
+    hair: 'bg-tre-06',
+    body: 'bg-tre-07',
+    booster: 'bg-tre-08',
+};

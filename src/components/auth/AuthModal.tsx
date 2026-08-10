@@ -2,27 +2,21 @@
 
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { isLoginIdTaken, signIn, signUp } from '@/lib/members';
 import { DUR, EASE } from '@/lib/motion';
 import { useMounted } from '@/lib/useMounted';
+import PrivacyModal from '@/components/ui/PrivacyModal';
 
 const field =
     'w-full border-b border-dark/25 bg-transparent px-1 py-2.5 text-caption text-dark outline-none transition-colors duration-500 ease-brand placeholder:text-dark/35 focus:border-dark';
 
-/** 010-1234-5678 형태로 자동 정리 */
-function formatPhone(v: string) {
-    const n = v.replace(/\D/g, '').slice(0, 11);
-    if (n.length < 4) return n;
-    if (n.length < 8) return `${n.slice(0, 3)}-${n.slice(3)}`;
-    return `${n.slice(0, 3)}-${n.slice(3, 7)}-${n.slice(7)}`;
-}
+/** 숫자와 +, - 만 받는다. 국가마다 형식이 달라 하이픈을 자동으로 넣지 않는다 */
+const cleanPhone = (v: string) => v.replace(/[^\d+-]/g, '').slice(0, 20);
 
-/** 아이디는 영문 소문자·숫자 4~16자. Firebase Auth 이메일로 변환되므로 특수문자를 막는다 */
 const ID_RULE = /^[a-z0-9]{4,16}$/;
 
-/** 로그인과 회원가입을 한 모달에서 전환한다. 페이지 이동이 없어 흐름이 끊기지 않는다 */
 export default function AuthModal({ open, onClose }: { open: boolean; onClose: () => void }) {
     const reduced = useReducedMotion();
     const mounted = useMounted();
@@ -37,16 +31,35 @@ export default function AuthModal({ open, onClose }: { open: boolean; onClose: (
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState('');
 
+    const [privacy, setPrivacy] = useState(false);
+
+    /**
+     * 닫으면서 초기 상태로 되돌린다.
+     * 안 그러면 다음에 열 때 회원가입 화면이 그대로 뜬다.
+     * effect 가 아니라 닫는 행동 자체가 초기화 시점이라 여기에 둔다.
+     */
+    const reset = useCallback(() => {
+        setMode('login');
+        setLoginId('');
+        setPw('');
+        setPw2('');
+        setName('');
+        setPhone('');
+        setAgree(false);
+        setError('');
+        onClose();
+    }, [onClose]);
+
     useEffect(() => {
         if (!open) return;
         document.body.classList.add('overflow-hidden');
-        const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+        const onKey = (e: KeyboardEvent) => e.key === 'Escape' && reset();
         window.addEventListener('keydown', onKey);
         return () => {
             document.body.classList.remove('overflow-hidden');
             window.removeEventListener('keydown', onKey);
         };
-    }, [open, onClose]);
+    }, [open, reset]);
 
     const swap = (next: 'login' | 'signup') => {
         setMode(next);
@@ -62,12 +75,12 @@ export default function AuthModal({ open, onClose }: { open: boolean; onClose: (
             if (mode === 'login') {
                 if (!loginId.trim() || !pw) return setError('아이디와 비밀번호를 입력해주세요.');
                 await signIn(loginId, pw);
-                onClose();
+                reset();
                 return;
             }
 
             if (!name.trim()) return setError('이름을 입력해주세요.');
-            if (phone.replace(/\D/g, '').length < 10) return setError('연락처를 정확히 입력해주세요.');
+            if (phone.replace(/\D/g, '').length < 8) return setError('연락처를 정확히 입력해주세요.');
             if (!ID_RULE.test(loginId.trim().toLowerCase()))
                 return setError('아이디는 영문 소문자와 숫자 4~16자입니다.');
             if (pw.length < 6) return setError('비밀번호는 6자 이상이어야 합니다.');
@@ -82,7 +95,8 @@ export default function AuthModal({ open, onClose }: { open: boolean; onClose: (
                 password: pw,
                 createdAt: Date.now(),
             });
-            onClose();
+            alert(`${name.trim()}님, 가입이 완료되었습니다.`);
+            reset();
         } catch {
             setError(mode === 'login' ? '아이디 또는 비밀번호가 올바르지 않습니다.' : '가입에 실패했습니다.');
         } finally {
@@ -104,7 +118,7 @@ export default function AuthModal({ open, onClose }: { open: boolean; onClose: (
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: DUR.fast, ease: EASE }}
-                    onClick={onClose}
+                    onClick={reset}
                     className="fixed inset-0 z-60 flex items-center justify-center bg-dark/70 px-6 py-10 backdrop-blur-sm"
                 >
                     <motion.div
@@ -143,10 +157,10 @@ export default function AuthModal({ open, onClose }: { open: boolean; onClose: (
                                             </span>
                                             <input
                                                 type="tel"
-                                                inputMode="numeric"
+                                                inputMode="tel"
                                                 value={phone}
-                                                onChange={(e) => setPhone(formatPhone(e.target.value))}
-                                                placeholder="연락처를 입력해주세요."
+                                                onChange={(e) => setPhone(cleanPhone(e.target.value))}
+                                                placeholder="숫자만 입력해주세요."
                                                 className={field}
                                             />
                                         </label>
@@ -228,9 +242,13 @@ export default function AuthModal({ open, onClose }: { open: boolean; onClose: (
                                         </span>
                                         <span className="text-caption">(필수) 개인정보 수집 이용 동의</span>
                                     </button>
-                                    <Link href="/privacy" className="shrink-0 text-caption-sm text-dark/60 underline">
+                                    <button
+                                        type="button"
+                                        onClick={() => setPrivacy(true)}
+                                        className="shrink-0 text-caption-sm text-dark/60 underline"
+                                    >
                                         상세보기
-                                    </Link>
+                                    </button>
                                 </div>
                             )}
 
@@ -262,6 +280,7 @@ export default function AuthModal({ open, onClose }: { open: boolean; onClose: (
                             </button>
                         </div>
                     </motion.div>
+                    <PrivacyModal open={privacy} onClose={() => setPrivacy(false)} />
                 </motion.div>
             )}
         </AnimatePresence>,

@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useCart } from '@/components/cart/CartProvider';
 import { RevealGroup, RevealItem } from '@/components/ui/RevealGroup';
@@ -28,13 +29,17 @@ export default function PromotionList() {
         <div className="pb-28 lg:pb-24">
             <p className="px-6 pt-8 text-small font-semibold lg:pl-12 lg:pt-16">{month}월 promotion</p>
 
-            {/* TODO: 프로모션 대표 이미지 확보 시 next/image 로 교체 */}
-            <div
-                role="img"
-                aria-label="하루영의원 프로모션 대표 이미지"
-                className="mt-9 flex aspect-[895/421] w-full max-w-[895px] items-center justify-center bg-[#d9d9d9] text-caption text-dark/50"
-            >
-                사진영역
+            {/* 배너 892x420 */}
+            <div className="relative mt-9 aspect-[892/420] w-full max-w-[892px] overflow-hidden">
+                <Image
+                    src="/images/bg-pro.jpg"
+                    alt="하루영의원 프로모션"
+                    fill
+                    priority
+                    quality={92}
+                    sizes="(min-width:1024px) 892px, 892px"
+                    className="object-cover"
+                />
             </div>
 
             <div className="px-6 lg:pl-12 lg:pr-0">
@@ -90,7 +95,15 @@ function PromotionCard({ p }: { p: Promotion }) {
             <div className="mt-3 flex justify-end">
                 <button
                     type="button"
-                    onClick={() => toggle({ key, name: p.name, price: p.price, category: '프로모션' })}
+                    onClick={() =>
+                        toggle({
+                            key,
+                            name: p.name,
+                            price: p.price,
+                            category: '프로모션',
+                            originPrice: p.originPrice,
+                        })
+                    }
                     aria-pressed={on}
                     aria-label={`${p.name} ${on ? '장바구니에서 빼기' : '장바구니에 담기'}`}
                     className="flex items-center transition-opacity duration-500 ease-brand hover:opacity-70"

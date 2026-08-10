@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import AdminAuth from './AdminAuth';
 import AdminNav from './AdminNav';
 import { logoutAdmin } from '../actions';
 
@@ -37,7 +38,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 </form>
             </aside>
 
-            <main className="flex-1 px-5 py-8 lg:px-12 lg:py-10">{children}</main>
+            {/* Firestore 규칙이 request.auth 를 보므로 Firebase 로그인 후에 내용을 그린다 */}
+            <main className="flex-1 px-5 py-8 lg:px-12 lg:py-10">
+                <AdminAuth>{children}</AdminAuth>
+            </main>
         </div>
     );
 }

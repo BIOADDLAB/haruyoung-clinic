@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useCart } from '@/components/cart/CartProvider';
-import { useMounted } from '@/lib/useMounted';
 import ReservationForm from '@/components/reservation/ReservationForm';
+import { useMounted } from '@/lib/useMounted';
 
 export default function CartView() {
     const { items, remove } = useCart();
@@ -14,6 +14,10 @@ export default function CartView() {
     const allOn = items.length > 0 && picked.length === items.length;
     const pickedItems = items.filter((i) => picked.includes(i.key));
     const pickedTotal = pickedItems.reduce((sum, i) => sum + i.price, 0);
+
+    // 담은 시점의 정가 합계. 아낀 금액을 보여주는 데 쓴다
+    const pickedOrigin = pickedItems.reduce((sum, i) => sum + (i.originPrice ?? i.price), 0);
+    const saved = pickedOrigin - pickedTotal;
 
     const toggle = (key: string) =>
         setPicked((list) => (list.includes(key) ? list.filter((k) => k !== key) : [...list, key]));
@@ -56,6 +60,10 @@ export default function CartView() {
                 <ul className="mt-6 flex flex-col gap-3">
                     {items.map((i) => {
                         const isPicked = picked.includes(i.key);
+                        // 프로모션은 담을 때 정가를 함께 넣는다. 할인율은 저장하지 않고 매번 계산한다
+                        const origin = i.originPrice ?? 0;
+                        const rate = origin > i.price ? Math.round((1 - i.price / origin) * 100) : 0;
+
                         return (
                             <li
                                 key={i.key}
@@ -73,12 +81,25 @@ export default function CartView() {
                                         </h2>
                                     </div>
 
-                                    <Check
-                                        checked={isPicked}
-                                        onChange={() => toggle(i.key)}
-                                        label={`${i.price.toLocaleString()}원`}
-                                        strong
-                                    />
+                                    <div className="flex shrink-0 flex-col items-end gap-1.5">
+                                        {rate > 0 && (
+                                            <div className="flex items-center gap-2">
+                                                <span className="flex h-6 items-center rounded-full bg-dark px-3 text-caption-sm font-semibold text-cream">
+                                                    {rate}%
+                                                </span>
+                                                <span className="text-caption text-dark/45 line-through">
+                                                    {origin.toLocaleString()}원
+                                                </span>
+                                            </div>
+                                        )}
+
+                                        <Check
+                                            checked={isPicked}
+                                            onChange={() => toggle(i.key)}
+                                            label={`${i.price.toLocaleString()}원`}
+                                            strong
+                                        />
+                                    </div>
                                 </div>
                             </li>
                         );
@@ -106,6 +127,14 @@ export default function CartView() {
                             <dt className="text-caption text-dark/60">선택한 시술 개수</dt>
                             <dd className="text-caption font-medium">{pickedItems.length}개</dd>
                         </div>
+
+                        {saved > 0 && (
+                            <div className="flex items-center justify-between">
+                                <dt className="text-caption text-dark/60">할인 금액</dt>
+                                <dd className="text-caption font-medium text-brown">-{saved.toLocaleString()}원</dd>
+                            </div>
+                        )}
+
                         <div className="flex items-end justify-between border-t border-beige pt-4">
                             <dt className="text-caption font-semibold">총 결제 예상 금액</dt>
                             <dd className="text-22 font-bold tracking-tight">

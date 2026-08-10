@@ -199,7 +199,7 @@ export default function Home() {
                             alt=""
                             fill
                             quality={95}
-                            sizes="(min-width:1024px) 1498px, 1498px"
+                            sizes="(min-width:1024px) 1080px, 1080px"
                             className="object-cover"
                         />
                         {/* 원본이 세로 730px 뿐이라 모바일에서 확대된다. 오버레이로 노이즈를 눌러준다 */}

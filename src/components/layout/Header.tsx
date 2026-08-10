@@ -291,65 +291,51 @@ export default function Header({ dark }: { dark?: boolean }) {
  * 로그인 전에는 '로그인', 후에는 이름과 로그아웃을 보여준다.
  * 판정이 끝나기 전(ready=false)에는 아무것도 그리지 않아 깜빡임을 막는다.
  */
+/**
+ * 레일 로그인 영역.
+ * 로그인 전에는 '로그인', 후에는 '로그아웃'.
+ * 판정이 끝나기 전(ready=false)에는 아무것도 그리지 않아 깜빡임을 막는다.
+ */
 function RailAuth({ dark, onLogin }: { dark?: boolean; onLogin: () => void }) {
     const { member, ready } = useAuthMember();
     const line = dark ? 'border-cream' : 'border-dark';
 
     if (!ready) return <span className="h-5" />;
 
-    if (!member) {
-        return (
-            <button type="button" onClick={onLogin} className="text-center text-caption-sm font-semibold">
-                <span className={`border-b pb-1 ${line}`}>로그인</span>
-            </button>
-        );
-    }
-
     return (
-        <div className="flex flex-col items-center gap-2">
-            <span className="text-center text-caption-sm font-semibold">{member.name}님</span>
-            <button
-                type="button"
-                onClick={() => signOutMember()}
-                className={`text-caption-sm ${dark ? 'text-cream/60' : 'text-dark/55'}`}
-            >
-                <span className={`border-b pb-0.5 ${dark ? 'border-cream/40' : 'border-dark/30'}`}>로그아웃</span>
-            </button>
-        </div>
+        <button
+            type="button"
+            onClick={() => (member ? signOutMember() : onLogin())}
+            className="text-center text-caption-sm font-semibold"
+        >
+            <span className={`border-b pb-1 ${line}`}>{member ? '로그아웃' : '로그인'}</span>
+        </button>
     );
 }
 
-/** 모바일 메뉴 하단 로그인 영역 */
+/** 모바일 메뉴 로그인 영역. 로그인 전에는 '로그인', 후에는 '로그아웃' */
 function MobileAuth({ onNavigate, onLogin }: { onNavigate: () => void; onLogin: () => void }) {
     const { member, ready } = useAuthMember();
 
     if (!ready) return <span />;
 
-    if (!member) {
-        return (
-            <button
-                type="button"
-                onClick={() => {
-                    onNavigate();
-                    onLogin();
-                }}
-                className="text-caption font-semibold"
-            >
-                <span className="border-b border-dark pb-1">로그인</span>
-            </button>
-        );
-    }
-
     return (
-        <div className="flex items-center gap-4">
-            <span className="text-caption font-semibold">{member.name}님</span>
-            <button type="button" onClick={() => signOutMember()} className="text-caption text-dark/55">
-                <span className="border-b border-dark/30 pb-0.5">로그아웃</span>
-            </button>
-        </div>
+        <button
+            type="button"
+            onClick={() => {
+                if (member) {
+                    signOutMember();
+                    return;
+                }
+                onNavigate();
+                onLogin();
+            }}
+            className="text-caption font-semibold"
+        >
+            <span className="border-b border-dark pb-1">{member ? '로그아웃' : '로그인'}</span>
+        </button>
     );
 }
-
 /** 레일 장바구니. 개수는 localStorage 기반이라 마운트 전에는 숨긴다 */
 function CartRailLink({ dark }: { dark?: boolean }) {
     const { count } = useCart();
@@ -430,72 +416,97 @@ function MobileLangTop({ value, onChange }: { value: LangCode; onChange: (v: Lan
     );
 }
 
+/**
+ * 레일 언어 전환.
+ * 레일 오른쪽으로 캡슐 팝오버가 미끄러져 나온다.
+ * 세로로 펼치면 레일 높이가 늘어나 아래 항목들이 밀리므로 옆으로 편다.
+ *
+ * 레일에 overflow-y-auto 가 걸려 있어 absolute 로 두면 잘린다.
+ * 버튼 위치를 재서 fixed 로 띄운다.
+ *
+ * TODO: 다국어 라우팅 붙으면 setState 대신 locale 전환으로 교체
+ */
 function RailLang({ value, onChange, dark }: { value: LangCode; onChange: (v: LangCode) => void; dark?: boolean }) {
     const [open, setOpen] = useState(false);
+    const [pos, setPos] = useState({ top: 0, left: 0 });
+    const btnRef = useRef<HTMLButtonElement>(null);
     const reduced = useReducedMotion();
     const current = LANGS.find((l) => l.code === value)!;
 
-    const idle = dark ? 'text-cream/45 hover:text-cream/75' : 'text-dark/40 hover:text-dark/70';
-    const active = dark ? 'border-b border-cream pb-0.5 text-cream' : 'border-b border-dark pb-0.5 text-dark';
+    const openAt = () => {
+        const r = btnRef.current?.getBoundingClientRect();
+        if (r) setPos({ top: r.top + r.height / 2, left: r.right + 8 });
+        setOpen((o) => !o);
+    };
 
     return (
-        <div className="flex flex-col items-center">
-            <AnimatePresence initial={false}>
+        <>
+            {open && (
+                <button
+                    type="button"
+                    tabIndex={-1}
+                    aria-hidden
+                    onClick={() => setOpen(false)}
+                    className="fixed inset-0 z-55 cursor-default"
+                />
+            )}
+
+            <div className="flex flex-col items-center">
+                <button
+                    ref={btnRef}
+                    type="button"
+                    onClick={openAt}
+                    aria-expanded={open}
+                    aria-label={`언어 선택, 현재 ${current.name}`}
+                    className="flex flex-col items-center transition-opacity duration-500 ease-brand hover:opacity-70"
+                >
+                    <Image
+                        src="/images/i-h-01.svg"
+                        alt=""
+                        width={34}
+                        height={34}
+                        className={dark ? 'brightness-0 invert' : undefined}
+                    />
+                    <span aria-hidden="true" className="font-display text-caption-sm tracking-[0.1em]">
+                        {current.label}
+                    </span>
+                </button>
+            </div>
+
+            <AnimatePresence>
                 {open && (
-                    <motion.div
-                        initial={reduced ? false : { height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
+                    <motion.ul
+                        initial={reduced ? false : { opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -10 }}
                         transition={{ duration: DUR.fast, ease: EASE }}
-                        className="w-full overflow-hidden"
+                        style={{ top: pos.top, left: pos.left }}
+                        className="fixed z-56 flex -translate-y-1/2 items-center gap-1 rounded-full border border-dark/10 bg-cream px-2.5 py-2 shadow-[0_10px_30px_rgba(59,43,30,0.14)]"
                     >
-                        <ul className="flex flex-col items-center gap-2.5 pb-3.5">
-                            {LANGS.map((l) => (
-                                <li key={l.code}>
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            onChange(l.code);
-                                            setOpen(false);
-                                        }}
-                                        aria-pressed={value === l.code}
-                                        className={`font-display text-caption-sm tracking-[0.12em] transition-colors duration-500 ease-brand ${
-                                            value === l.code ? active : idle
-                                        }`}
-                                    >
-                                        <span className="sr-only">{l.name}</span>
-                                        <span aria-hidden="true">{l.label}</span>
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
-                        <span
-                            aria-hidden="true"
-                            className={`mx-auto mb-3.5 block h-px w-6 ${dark ? 'bg-cream/25' : 'bg-dark/20'}`}
-                        />
-                    </motion.div>
+                        {LANGS.map((l) => (
+                            <li key={l.code}>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        onChange(l.code);
+                                        setOpen(false);
+                                    }}
+                                    aria-pressed={value === l.code}
+                                    className={`rounded-full px-2.5 py-1 font-display text-caption-sm tracking-[0.1em] transition-colors duration-500 ease-brand ${
+                                        value === l.code
+                                            ? 'bg-dark text-cream'
+                                            : 'text-dark/50 hover:bg-dark/8 hover:text-dark'
+                                    }`}
+                                >
+                                    <span className="sr-only">{l.name}</span>
+                                    <span aria-hidden="true">{l.label}</span>
+                                </button>
+                            </li>
+                        ))}
+                    </motion.ul>
                 )}
             </AnimatePresence>
-
-            <button
-                type="button"
-                onClick={() => setOpen((o) => !o)}
-                aria-expanded={open}
-                aria-label={`언어 선택, 현재 ${current.name}`}
-                className="flex flex-col items-center transition-opacity duration-500 ease-brand hover:opacity-70"
-            >
-                <Image
-                    src="/images/i-h-01.svg"
-                    alt=""
-                    width={34}
-                    height={34}
-                    className={dark ? 'brightness-0 invert' : undefined}
-                />
-                <span aria-hidden="true" className="font-display text-caption-sm tracking-[0.1em]">
-                    {current.label}
-                </span>
-            </button>
-        </div>
+        </>
     );
 }
 
@@ -505,11 +516,8 @@ function MenuNav({ onNavigate, onLogin }: { onNavigate: () => void; onLogin: () 
 
     return (
         <nav aria-label="전체 메뉴" className="flex h-full flex-col justify-between lg:py-10 lg:pl-10 lg:pr-7.5 ">
-            {/* 모바일 전용 — 레일에 있던 장바구니·로그인을 여기서 받는다 */}
             <div className="mb-2 flex items-center justify-end gap-5 lg:hidden">
-                <Link href="/cart" onClick={onNavigate} className="text-caption font-semibold">
-                    <span className="border-b border-dark pb-1">장바구니</span>
-                </Link>
+                <MobileCartLink onNavigate={onNavigate} />
                 <MobileAuth onNavigate={onNavigate} onLogin={onLogin} />
             </div>
 
@@ -635,5 +643,20 @@ function SearchForm({
                 ))}
             </ul>
         </section>
+    );
+}
+
+/** 모바일 메뉴 장바구니. 개수는 localStorage 기반이라 마운트 전에는 숨긴다 */
+function MobileCartLink({ onNavigate }: { onNavigate: () => void }) {
+    const { count } = useCart();
+    const mounted = useMounted();
+
+    return (
+        <Link href="/cart" onClick={onNavigate} className="text-caption font-semibold">
+            <span className="border-b border-dark pb-1">
+                장바구니
+                {mounted && count > 0 && ` (${count})`}
+            </span>
+        </Link>
     );
 }

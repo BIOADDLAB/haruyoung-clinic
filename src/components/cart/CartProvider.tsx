@@ -51,12 +51,15 @@ export default function CartProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-        } catch {}
+        } catch {
+            // 용량 초과·프라이빗 모드 등. 저장 못 해도 담기는 되어야 한다
+        }
     }, [items]);
 
+    // 토스트는 3초 뒤 오래된 것부터 사라진다
     useEffect(() => {
         if (toasts.length === 0) return;
-        const t = setTimeout(() => setToasts((list) => list.slice(1)), 3000);
+        const t = setTimeout(() => setToasts((list) => list.slice(1)), TOAST_MS);
         return () => clearTimeout(t);
     }, [toasts]);
 

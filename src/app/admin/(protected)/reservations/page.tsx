@@ -11,6 +11,14 @@ const TONE: Record<ReservationStatus, string> = {
     canceled: 'bg-rose-100 text-rose-700',
 };
 
+/** 상태 변경 버튼. 선택된 것은 채우고, 나머지는 그 상태의 색을 테두리로만 보여준다 */
+const PICK: Record<ReservationStatus, { on: string; off: string }> = {
+    pending: { on: 'bg-amber-500 text-white', off: 'border border-amber-300 text-amber-700 bg-white' },
+    confirmed: { on: 'bg-blue-600 text-white', off: 'border border-blue-300 text-blue-700 bg-white' },
+    done: { on: 'bg-neutral-600 text-white', off: 'border border-neutral-300 text-neutral-600 bg-white' },
+    canceled: { on: 'bg-rose-500 text-white', off: 'border border-rose-300 text-rose-600 bg-white' },
+};
+
 const FILTERS = [
     { key: 'all', label: '전체' },
     ...Object.entries(RESERVATION_STATUS).map(([k, v]) => ({ key: k, label: v })),
@@ -127,10 +135,8 @@ export default function ReservationsPage() {
                                             <button
                                                 key={s}
                                                 onClick={() => patch(r.id, { status: s })}
-                                                className={`rounded-full px-3 py-1 text-xs ${
-                                                    r.status === s
-                                                        ? 'bg-[#3a322c] text-white'
-                                                        : 'border border-black/10 bg-white'
+                                                className={`rounded-full px-3 py-1 text-xs transition ${
+                                                    r.status === s ? PICK[s].on : PICK[s].off
                                                 }`}
                                             >
                                                 {RESERVATION_STATUS[s]}
@@ -151,15 +157,7 @@ export default function ReservationsPage() {
                                     </div>
 
                                     {/* 통화 내용 메모. blur 될 때만 저장해 입력 중 쓰기를 줄인다 */}
-                                    <textarea
-                                        defaultValue={r.memo}
-                                        onBlur={(e) => {
-                                            if (e.target.value !== r.memo) patch(r.id, { memo: e.target.value });
-                                        }}
-                                        rows={3}
-                                        placeholder="통화 내용, 변경 요청 등을 기록하세요."
-                                        className="mt-3 w-full resize-none rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm outline-none focus:border-[#3a322c]/30"
-                                    />
+                                    <MemoBox value={r.memo} onSave={(memo) => patch(r.id, { memo })} />
 
                                     <p className="mt-2 text-xs text-neutral-400">
                                         접수 {new Date(r.createdAt).toLocaleString('ko-KR')}
@@ -172,6 +170,61 @@ export default function ReservationsPage() {
             </div>
 
             {list.length === 0 && <p className="mt-6 text-neutral-400">해당하는 예약이 없습니다.</p>}
+        </div>
+    );
+}
+
+/**
+ * 통화 메모.
+ * 자동 저장은 저장됐는지 알 수 없어서 버튼을 둔다.
+ * 내용이 바뀌었을 때만 버튼이 활성화되고, 저장하면 '저장됨'이 잠시 뜬다.
+ */
+function MemoBox({ value, onSave }: { value: string; onSave: (v: string) => Promise<void> | void }) {
+    const [text, setText] = useState(value);
+    const [busy, setBusy] = useState(false);
+    const [saved, setSaved] = useState(false);
+
+    const dirty = text !== value;
+
+    // '저장됨'은 2초 뒤 사라진다
+    useEffect(() => {
+        if (!saved) return;
+        const t = setTimeout(() => setSaved(false), 2000);
+        return () => clearTimeout(t);
+    }, [saved]);
+
+    const save = async () => {
+        setBusy(true);
+        try {
+            await onSave(text);
+            setSaved(true);
+        } finally {
+            setBusy(false);
+        }
+    };
+
+    return (
+        <div className="mt-3">
+            <textarea
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                rows={3}
+                placeholder="통화 내용, 변경 요청 등을 기록하세요."
+                className="w-full resize-none rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm outline-none focus:border-[#3a322c]/30"
+            />
+
+            <div className="mt-2 flex items-center justify-end gap-3">
+                {saved && <span className="text-xs text-emerald-600">저장됨</span>}
+                {dirty && !saved && <span className="text-xs text-neutral-400">저장되지 않음</span>}
+
+                <button
+                    onClick={save}
+                    disabled={!dirty || busy}
+                    className="rounded-full bg-[#3a322c] px-4 py-1.5 text-xs text-white transition disabled:opacity-30"
+                >
+                    {busy ? '저장 중…' : '메모 저장'}
+                </button>
+            </div>
         </div>
     );
 }
