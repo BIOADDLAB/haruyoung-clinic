@@ -4,12 +4,14 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { EASE } from '@/lib/motion';
 
-const FAST_MS = 180;
-const SLOW_MS = 1000;
-const HOLD_MS = 1240;
+const FAST_MS = 110;
+const SLOW_MS = 1100;
+const HOLD_MS = 1430;
 const SLOW_FROM = 3;
 
-/** #MEMO: 세션당 1회 노출용 키 */
+const READY_TIMEOUT_MS = 1500;
+
+/** 세션당 1회 노출용 키 */
 const SEEN_KEY = 'haruyoung:intro-seen';
 
 const tickOf = (n: number) => (n <= SLOW_FROM ? SLOW_MS : FAST_MS);
@@ -19,7 +21,6 @@ const swapOf = (n: number) => (n <= SLOW_FROM ? 0.5 : 0.16);
 
 const noopSubscribe = () => () => {};
 
-/** 이번 세션에 이미 봤는지. 저장소 접근이 막혀 있으면 본 것으로 친다 */
 function hasSeen() {
     if (typeof window === 'undefined') return true;
     try {
@@ -38,6 +39,7 @@ export default function IntroLoader() {
         () => false,
     );
     const [skipped, setSkipped] = useState(false);
+    const [ready, setReady] = useState(false);
     const [count, setCount] = useState(10);
     const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -55,9 +57,16 @@ export default function IntroLoader() {
         setSkipped(true);
     }, []);
 
+    // 영상이 준비되지 않아도 인트로가 멈춰 있으면 안 된다
+    useEffect(() => {
+        if (!open || ready) return;
+        const t = setTimeout(() => setReady(true), READY_TIMEOUT_MS);
+        return () => clearTimeout(t);
+    }, [open, ready]);
+
     // 카운트다운. 숫자마다 간격이 달라 setInterval 을 쓸 수 없다
     useEffect(() => {
-        if (!open) return;
+        if (!open || !ready) return;
 
         if (count <= 1) {
             timer.current = setTimeout(close, HOLD_MS);
@@ -68,7 +77,7 @@ export default function IntroLoader() {
         return () => {
             if (timer.current) clearTimeout(timer.current);
         };
-    }, [open, count, close]);
+    }, [open, ready, count, close]);
 
     // 인트로가 떠 있는 동안 배경 스크롤을 막는다
     useEffect(() => {
@@ -81,17 +90,19 @@ export default function IntroLoader() {
         <AnimatePresence>
             {open && (
                 <motion.div
-                    // 확대되며 사라짐
+                    // 확대되며 사라진다. 영상이 히어로로 빨려드는 느낌이라 이어짐이 부드럽다
                     exit={{ opacity: 0, scale: 1.08, transition: { duration: 1, ease: EASE } }}
                     onClick={close}
                     className="fixed inset-0 z-[100] cursor-pointer overflow-hidden bg-dark"
                 >
                     <video
-                        src="/videos/intro-02.mp4"
+                        src="/videos/intro.mp4"
+                        poster="/images/intro-s.jpg"
                         autoPlay
                         muted
                         playsInline
                         preload="auto"
+                        onCanPlay={() => setReady(true)}
                         className="absolute inset-0 h-full w-full object-cover"
                     />
 
@@ -100,11 +111,11 @@ export default function IntroLoader() {
 
                     <motion.div
                         initial={{ opacity: 0, y: 12 }}
-                        animate={{ opacity: 1, y: 0 }}
+                        animate={ready ? { opacity: 1, y: 0 } : { opacity: 0 }}
                         transition={{ duration: 0.9, ease: EASE }}
                         className="absolute inset-0 flex items-center justify-center"
                     >
-                        <p className="flex font-display items-baseline gap-3 font-display text-cream drop-shadow-[0_2px_12px_rgba(0,0,0,0.4)] sm:gap-5">
+                        <p className="flex items-baseline gap-3 font-display text-cream drop-shadow-[0_2px_12px_rgba(0,0,0,0.4)] sm:gap-5">
                             <span className="text-32 tracking-[0.14em] sm:text-48">HA</span>
                             <span className="text-24 opacity-60 sm:text-32">:</span>
                             <span className="text-32 tracking-[0.14em] sm:text-48">RU</span>
@@ -113,6 +124,7 @@ export default function IntroLoader() {
                             {/* mode="wait" 을 쓰지 않아 나가는 숫자와 들어오는 숫자가 겹친다.
                                 빠른 구간에서 잔상이 이어져 툭툭 끊기지 않는다 */}
                             <span className="relative inline-block w-[2.2ch] text-32 tabular-nums sm:text-48">
+                                {/* 자리를 잡아두는 투명 글자. absolute 만 있으면 폭이 0 이 된다 */}
                                 <span className="invisible">00</span>
 
                                 <AnimatePresence initial={false}>
