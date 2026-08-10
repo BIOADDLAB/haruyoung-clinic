@@ -171,7 +171,7 @@ export default function PrecautionsView() {
                 <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-0">
                     <h1 className="shrink-0 text-30 font-extrabold leading-[45px] lg:w-[228px]">
                         시술 후
-                        <br />
+                        <br className="hidden lg:block" />
                         주의사항
                     </h1>
 

@@ -19,11 +19,6 @@ const SEEN_KEY = 'haruyoung:intro-seen';
 
 const tickOf = (n: number) => (n <= SLOW_FROM ? SLOW_MS : FAST_MS);
 
-/**
- * 숫자 전환 시간.
- * 빠른 구간은 짧게 — 다음 숫자가 오기 전에 끝나야 잔상이 안 뭉갠다.
- * 마지막 00 은 길게 — 툭 뜨지 않고 천천히 내려앉는다.
- */
 const swapOf = (n: number) => (n === 0 ? 0.7 : n <= SLOW_FROM ? 0.5 : 0.16);
 
 const noopSubscribe = () => () => {};

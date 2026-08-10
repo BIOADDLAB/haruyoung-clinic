@@ -11,11 +11,8 @@ import { MENU_CATEGORIES } from '@/constants/categories';
 import { VISIT_TYPES } from '@/data/site';
 import { addReservation } from '@/lib/reservations';
 
-// const field =
-//     'w-full border border-dark/20 bg-transparent px-4 py-3 text-caption text-dark outline-none transition-colors duration-500 ease-brand placeholder:text-dark/35 focus:border-dark/50';
-
 const field =
-    'w-full border-b border-dark/25 bg-transparent px-1 py-3 text-caption text-dark outline-none transition-colors duration-500 ease-brand placeholder:text-dark/35 focus:border-dark';
+    'w-full border-b border-dark/20 bg-transparent px-1 py-3.5 text-caption text-dark outline-none transition-colors duration-500 ease-brand placeholder:text-dark/35 focus:border-dark';
 
 /** 010-1234-5678 형태로 자동 정리 */
 function formatPhone(v: string) {
@@ -78,122 +75,158 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
 
     return (
         <div className="w-full max-w-[800px]">
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                <label className="flex flex-col gap-2">
-                    <span className="text-caption font-semibold">
-                        이름 <span className="text-red-500">*</span>
-                    </span>
-                    <input
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="이름을 입력해주세요."
-                        className={field}
-                    />
-                </label>
+            {/* 기본 정보 카드 */}
+            <section className="rounded-xl border border-beige bg-dark/[0.015] px-6 py-8 sm:px-8">
+                <h2 className="text-small font-semibold tracking-wide">예약자 정보</h2>
 
-                <label className="flex flex-col gap-2">
-                    <span className="text-caption font-semibold">
-                        연락처 <span className="text-red-500">*</span>
-                    </span>
-                    <input
-                        type="tel"
-                        inputMode="numeric"
-                        value={phone}
-                        onChange={(e) => setPhone(formatPhone(e.target.value))}
-                        placeholder="연락처를 입력해주세요."
-                        className={field}
-                    />
-                </label>
-            </div>
+                <div className="mt-7 grid grid-cols-1 gap-x-10 gap-y-7 sm:grid-cols-2">
+                    <label className="flex flex-col gap-2.5">
+                        <span className="text-caption font-medium tracking-wide text-dark/70">
+                            이름 <span className="text-red-500">*</span>
+                        </span>
+                        <input
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder="이름을 입력해주세요."
+                            className={field}
+                        />
+                    </label>
 
-            <label className="mt-6 flex flex-col gap-2">
-                <span className="text-caption font-semibold">
-                    방문 형태 <span className="text-red-500">*</span>
-                </span>
-                <select value={visitType} onChange={(e) => setVisitType(e.target.value)} className={field}>
-                    <option value="">방문 형태를 선택해주세요.</option>
-                    {VISIT_TYPES.map((v) => (
-                        <option key={v} value={v}>
-                            {v}
-                        </option>
-                    ))}
-                </select>
-            </label>
+                    <label className="flex flex-col gap-2.5">
+                        <span className="text-caption font-medium tracking-wide text-dark/70">
+                            연락처 <span className="text-red-500">*</span>
+                        </span>
+                        <input
+                            type="tel"
+                            inputMode="numeric"
+                            value={phone}
+                            onChange={(e) => setPhone(formatPhone(e.target.value))}
+                            placeholder="연락처를 입력해주세요."
+                            className={field}
+                        />
+                    </label>
+                </div>
 
-            {withCategory && (
-                <label className="mt-6 flex flex-col gap-2">
-                    <span className="text-caption font-semibold">
-                        카테고리 <span className="text-red-500">*</span>
+                <label className="mt-7 flex flex-col gap-2.5">
+                    <span className="text-caption font-medium tracking-wide text-dark/70">
+                        방문 형태 <span className="text-red-500">*</span>
                     </span>
-                    <select value={category} onChange={(e) => setCategory(e.target.value)} className={field}>
-                        <option value="">카테고리를 선택해주세요.</option>
-                        {MENU_CATEGORIES.map((c) => (
-                            <option key={c.slug} value={c.name}>
-                                {c.name}
+                    <select value={visitType} onChange={(e) => setVisitType(e.target.value)} className={field}>
+                        <option value="">방문 형태를 선택해주세요.</option>
+                        {VISIT_TYPES.map((v) => (
+                            <option key={v} value={v}>
+                                {v}
                             </option>
                         ))}
                     </select>
                 </label>
-            )}
 
-            <h2 className="mt-12 text-small font-semibold">예약 일자를 선택해주세요.</h2>
-            <div className="mt-6">
-                <Calendar
-                    value={date}
-                    onChange={(v) => {
-                        setDate(v);
-                        setTime('');
-                    }}
-                />
-            </div>
+                {withCategory && (
+                    <label className="mt-7 flex flex-col gap-2.5">
+                        <span className="text-caption font-medium tracking-wide text-dark/70">
+                            카테고리 <span className="text-red-500">*</span>
+                        </span>
+                        <select value={category} onChange={(e) => setCategory(e.target.value)} className={field}>
+                            <option value="">카테고리를 선택해주세요.</option>
+                            {MENU_CATEGORIES.map((c) => (
+                                <option key={c.slug} value={c.name}>
+                                    {c.name}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+                )}
+            </section>
 
-            <h2 className="mt-12 text-small font-semibold">예약 시간을 선택해주세요.</h2>
-            {date === '' ? (
-                <p className="mt-5 text-caption text-dark/50">먼저 예약 일자를 선택해주세요.</p>
-            ) : slots.length === 0 ? (
-                <p className="mt-5 text-caption text-dark/50">선택한 날짜는 휴진입니다.</p>
-            ) : (
-                <ul className="mt-5 grid grid-cols-3 gap-2.5 sm:grid-cols-6">
-                    {slots.map((s) => (
-                        <li key={s}>
-                            <button
-                                type="button"
-                                onClick={() => setTime(s)}
-                                aria-pressed={time === s}
-                                className={`w-full rounded-full py-2.5 text-caption transition-colors duration-500 ease-brand ${
-                                    time === s
-                                        ? 'bg-dark font-semibold text-cream'
-                                        : 'bg-dark/8 text-dark hover:bg-dark/15'
-                                }`}
+            {/* 날짜 */}
+            <section className="mt-10">
+                <h2 className="text-small font-semibold tracking-wide">예약 일자</h2>
+                <div className="mt-5 rounded-xl border border-beige bg-dark/[0.015] p-5 sm:p-6">
+                    <Calendar
+                        value={date}
+                        onChange={(v) => {
+                            setDate(v);
+                            setTime('');
+                        }}
+                    />
+                </div>
+            </section>
+
+            {/* 시간 */}
+            <section className="mt-10">
+                <h2 className="text-small font-semibold tracking-wide">예약 시간</h2>
+
+                <div className="mt-5 rounded-xl border border-beige bg-dark/[0.015] px-5 py-6 sm:px-6">
+                    {date === '' ? (
+                        <p className="text-caption text-dark/50">먼저 예약 일자를 선택해주세요.</p>
+                    ) : slots.length === 0 ? (
+                        <p className="text-caption text-dark/50">선택한 날짜는 휴진입니다.</p>
+                    ) : (
+                        <ul className="grid grid-cols-3 gap-2.5 sm:grid-cols-6">
+                            {slots.map((s) => {
+                                const active = time === s;
+                                return (
+                                    <li key={s}>
+                                        <button
+                                            type="button"
+                                            onClick={() => setTime(s)}
+                                            aria-pressed={active}
+                                            className={`w-full rounded-full py-2.5 text-caption transition-all duration-500 ease-brand ${
+                                                active
+                                                    ? 'bg-dark font-semibold text-cream shadow-sm'
+                                                    : 'bg-dark/[0.05] text-dark hover:bg-dark/[0.1]'
+                                            }`}
+                                        >
+                                            {s}
+                                        </button>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    )}
+                </div>
+            </section>
+
+            {/* 동의 */}
+            <section className="mt-10">
+                <h2 className="text-small font-semibold tracking-wide">이용 동의</h2>
+
+                <div className="mt-5 rounded-xl border border-beige bg-dark/[0.015] px-6 py-6">
+                    <div className="flex flex-col gap-5">
+                        <div className="flex items-center justify-between gap-4">
+                            <Check
+                                checked={agreePrivacy}
+                                onChange={setAgreePrivacy}
+                                label="(필수) 개인정보 수집 이용 동의"
+                            />
+                            <Link
+                                href="/privacy"
+                                className="shrink-0 text-caption-sm text-dark/50 underline underline-offset-2 transition-colors duration-500 ease-brand hover:text-dark"
                             >
-                                {s}
-                            </button>
-                        </li>
-                    ))}
-                </ul>
-            )}
+                                상세보기
+                            </Link>
+                        </div>
 
-            <h2 className="mt-12 text-small font-semibold">아래 내용에 동의해주세요.</h2>
-            <div className="mt-5 flex flex-col gap-4">
-                <div className="flex items-center justify-between gap-4">
-                    <Check checked={agreePrivacy} onChange={setAgreePrivacy} label="(필수) 개인정보 수집 이용 동의" />
-                    <Link href="/privacy" className="shrink-0 text-caption-sm text-dark/60 underline">
-                        상세보기
-                    </Link>
+                        <div>
+                            <Check
+                                checked={agreeAge}
+                                onChange={setAgreeAge}
+                                label="(필수) 예약자가 만 14세 이상입니다."
+                            />
+                            <p className="mt-2.5 pl-9 text-caption-sm leading-relaxed text-dark/50">
+                                만 14세 미만 고객은 카톡플친이나 전화로 문의해주세요.
+                            </p>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <Check checked={agreeAge} onChange={setAgreeAge} label="(필수) 예약자가 만 14세 이상입니다." />
-                    <p className="mt-2 pl-8 text-caption-sm text-dark/55">
-                        만 14세 미만 고객은 카톡플친이나 전화로 문의해주세요.
-                    </p>
-                </div>
-            </div>
+            </section>
 
+            {/* 제출 */}
             <button
                 type="button"
                 onClick={submit}
                 disabled={busy}
-                className="mt-10 w-full bg-dark py-4 text-caption font-semibold text-cream transition-colors duration-500 ease-brand hover:bg-brown disabled:opacity-50"
+                className="mt-12 w-full rounded-xl bg-dark py-4.5 text-caption font-semibold tracking-wide text-cream transition-colors duration-500 ease-brand hover:bg-brown disabled:opacity-50"
             >
                 {busy ? '접수 중…' : '시술 예약하기'}
             </button>
@@ -218,12 +251,12 @@ function Check({ checked, onChange, label }: { checked: boolean; onChange: (v: b
             type="button"
             onClick={() => onChange(!checked)}
             aria-pressed={checked}
-            className="flex items-center gap-3"
+            className="group flex items-center gap-3.5"
         >
             <span
                 aria-hidden="true"
-                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors duration-500 ease-brand ${
-                    checked ? 'border-dark bg-dark' : 'border-dark/30'
+                className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full border transition-all duration-500 ease-brand ${
+                    checked ? 'border-dark bg-dark' : 'border-dark/30 group-hover:border-dark/55'
                 }`}
             >
                 {checked && (
@@ -234,11 +267,11 @@ function Check({ checked, onChange, label }: { checked: boolean; onChange: (v: b
                         strokeWidth="2"
                         className="h-2.5 w-2.5 text-cream"
                     >
-                        <path d="M1 6l3.5 3.5L11 2" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M1.5 6l3.2 3.2L10.5 2.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                 )}
             </span>
-            <span className="text-left text-caption">{label}</span>
+            <span className="text-left text-caption leading-snug">{label}</span>
         </button>
     );
 }

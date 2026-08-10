@@ -18,16 +18,16 @@ export default function CartView() {
     const toggle = (key: string) =>
         setPicked((list) => (list.includes(key) ? list.filter((k) => k !== key) : [...list, key]));
 
-    // localStorage 기반이라 마운트 전에는 목록을 그리지 않는다
     if (!mounted) return <div className="w-full max-w-[800px]" />;
 
     return (
         <div className="w-full max-w-[800px]">
-            <div className="flex items-center justify-between">
+            {/* 상단 컨트롤 */}
+            <div className="flex items-center justify-between border-b border-beige pb-5">
                 <Check
                     checked={allOn}
                     onChange={() => setPicked(allOn ? [] : items.map((i) => i.key))}
-                    label={`전체 선택 (${picked.length}/${items.length})`}
+                    label={`전체 선택  ${picked.length}/${items.length}`}
                 />
                 <button
                     type="button"
@@ -36,61 +36,90 @@ export default function CartView() {
                         setPicked([]);
                     }}
                     disabled={picked.length === 0}
-                    className="text-caption text-dark/60 transition-colors duration-500 ease-brand hover:text-dark disabled:opacity-30"
+                    className="text-caption text-dark/50 transition-colors duration-500 ease-brand hover:text-dark disabled:opacity-30"
                 >
                     선택 삭제
                 </button>
             </div>
 
+            {/* 장바구니 목록 */}
             {items.length === 0 ? (
-                <div className="mt-5 rounded-lg border border-beige px-6 py-16 text-center">
-                    <p className="text-caption text-dark/60">장바구니가 비어 있습니다.</p>
-                    <Link href="/promotion" className="mt-5 inline-block text-caption font-semibold">
-                        <span className="border-b border-dark pb-0.5">시술 둘러보기</span>
+                <div className="mt-8 rounded-xl border border-beige bg-dark/[0.02] px-6 py-20 text-center">
+                    <p className="text-caption text-dark/55">장바구니가 비어 있습니다.</p>
+                    <Link href="/promotion" className="mt-6 inline-block text-caption font-semibold tracking-wide">
+                        <span className="border-b border-dark/70 pb-0.5 transition-colors duration-500 ease-brand hover:border-dark">
+                            시술 둘러보기
+                        </span>
                     </Link>
                 </div>
             ) : (
-                <ul className="mt-5 flex flex-col gap-4">
-                    {items.map((i) => (
-                        <li key={i.key} className="rounded-lg border border-beige p-6">
-                            <p className="text-caption-sm text-dark/50">{i.category}</p>
-                            <h2 className="mt-2 text-20 font-bold">{i.name}</h2>
-                            <div className="mt-6 flex justify-end">
-                                <Check
-                                    checked={picked.includes(i.key)}
-                                    onChange={() => toggle(i.key)}
-                                    label={`${i.price.toLocaleString()}원`}
-                                    strong
-                                />
-                            </div>
-                        </li>
-                    ))}
+                <ul className="mt-6 flex flex-col gap-3">
+                    {items.map((i) => {
+                        const isPicked = picked.includes(i.key);
+                        return (
+                            <li
+                                key={i.key}
+                                className={`rounded-xl border p-6 transition-all duration-500 ease-brand ${
+                                    isPicked
+                                        ? 'border-dark/25 bg-dark/[0.03]'
+                                        : 'border-beige bg-transparent hover:border-dark/15'
+                                }`}
+                            >
+                                <div className="flex items-start justify-between gap-6">
+                                    <div className="min-w-0 flex-1">
+                                        <p className="text-caption-sm tracking-wide text-dark/45">{i.category}</p>
+                                        <h2 className="mt-1.5 text-18 font-semibold leading-snug sm:text-20">
+                                            {i.name}
+                                        </h2>
+                                    </div>
+
+                                    <Check
+                                        checked={isPicked}
+                                        onChange={() => toggle(i.key)}
+                                        label={`${i.price.toLocaleString()}원`}
+                                        strong
+                                    />
+                                </div>
+                            </li>
+                        );
+                    })}
                 </ul>
             )}
 
-            <p className="mt-4 text-right text-caption-sm text-dark/55">VAT 별도</p>
+            <p className="mt-5 text-right text-caption-sm text-dark/45">VAT 별도</p>
 
+            {/* 다른 상품 추가 */}
             <Link
                 href="/promotion"
-                className="mt-6 block rounded-lg bg-dark/8 py-3.5 text-center text-caption transition-colors duration-500 ease-brand hover:bg-dark/15"
+                className="mt-6 block rounded-xl border border-beige bg-dark/[0.03] py-4 text-center text-caption tracking-wide transition-colors duration-500 ease-brand hover:bg-dark/[0.06]"
             >
                 다른 상품 추가하기
             </Link>
 
-            <h2 className="mt-12 text-small font-semibold">선택한 상품 정보</h2>
-            <dl className="mt-5 flex flex-col gap-3">
-                <div className="flex items-center justify-between">
-                    <dt className="text-caption font-semibold">선택한 시술 개수</dt>
-                    <dd className="text-caption">{pickedItems.length} 개</dd>
-                </div>
-                <div className="flex items-center justify-between">
-                    <dt className="text-caption font-semibold">총 결제 예상 금액</dt>
-                    <dd className="text-20 font-bold">{pickedTotal.toLocaleString()}원</dd>
-                </div>
-            </dl>
-            <p className="mt-2 text-right text-caption-sm text-dark/55">* 결제는 내원 후 진행해 주세요.</p>
+            {/* 선택 요약 */}
+            <section className="mt-14">
+                <h2 className="text-small font-semibold tracking-wide">선택한 상품 정보</h2>
 
-            <div className="mt-12">
+                <div className="mt-5 rounded-xl border border-beige bg-dark/[0.02] px-6 py-6">
+                    <dl className="flex flex-col gap-4">
+                        <div className="flex items-center justify-between">
+                            <dt className="text-caption text-dark/60">선택한 시술 개수</dt>
+                            <dd className="text-caption font-medium">{pickedItems.length}개</dd>
+                        </div>
+                        <div className="flex items-end justify-between border-t border-beige pt-4">
+                            <dt className="text-caption font-semibold">총 결제 예상 금액</dt>
+                            <dd className="text-22 font-bold tracking-tight">
+                                {pickedTotal.toLocaleString()}
+                                <span className="ml-0.5 text-16 font-semibold">원</span>
+                            </dd>
+                        </div>
+                    </dl>
+                    <p className="mt-4 text-right text-caption-sm text-dark/45">* 결제는 내원 후 진행해 주세요.</p>
+                </div>
+            </section>
+
+            {/* 예약 폼 */}
+            <div className="mt-14">
                 <ReservationForm />
             </div>
         </div>
@@ -109,11 +138,16 @@ function Check({
     strong?: boolean;
 }) {
     return (
-        <button type="button" onClick={onChange} aria-pressed={checked} className="flex items-center gap-3">
+        <button
+            type="button"
+            onClick={onChange}
+            aria-pressed={checked}
+            className="group flex shrink-0 items-center gap-3"
+        >
             <span
                 aria-hidden="true"
-                className={`flex h-4 w-4 shrink-0 items-center justify-center border transition-colors duration-500 ease-brand ${
-                    checked ? 'border-dark bg-dark' : 'border-dark/40'
+                className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[4px] border transition-all duration-500 ease-brand ${
+                    checked ? 'border-dark bg-dark' : 'border-dark/35 group-hover:border-dark/60'
                 }`}
             >
                 {checked && (
@@ -122,13 +156,19 @@ function Check({
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="2"
-                        className="h-2 w-2 text-cream"
+                        className="h-2.5 w-2.5 text-cream"
                     >
-                        <path d="M1 6l3.5 3.5L11 2" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M1.5 6l3.2 3.2L10.5 2.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                 )}
             </span>
-            <span className={strong ? 'text-22 font-bold' : 'text-caption font-semibold'}>{label}</span>
+            <span
+                className={
+                    strong ? 'text-18 font-bold tracking-tight sm:text-20' : 'text-caption font-medium tracking-wide'
+                }
+            >
+                {label}
+            </span>
         </button>
     );
 }
