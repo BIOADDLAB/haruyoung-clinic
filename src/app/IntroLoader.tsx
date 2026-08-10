@@ -4,7 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { EASE } from '@/lib/motion';
 
-const FAST_MS = 110;
+const FAST_MS = 300;
 const SLOW_MS = 1240;
 const HOLD_MS = 1010;
 const SLOW_FROM = 3;
