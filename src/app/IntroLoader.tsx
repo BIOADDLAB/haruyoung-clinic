@@ -156,7 +156,7 @@ export default function IntroLoader() {
                     className="fixed inset-0 z-[100] cursor-pointer overflow-hidden bg-dark"
                 >
                     <video
-                        src="/videos/Intro-03.mp4"
+                        src="/videos/intro.mp4"
                         poster="/images/intro-s.jpg"
                         autoPlay
                         muted
