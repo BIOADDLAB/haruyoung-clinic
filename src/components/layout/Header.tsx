@@ -6,6 +6,9 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import MobileQuickBar from './MobileQuickBar';
+import AuthModal from '@/components/auth/AuthModal';
+import { useAuthMember } from '@/components/auth/useAuthMember';
+import { signOutMember } from '@/lib/members';
 import { useCart } from '@/components/cart/CartProvider';
 import { LANGS, MENU_GROUPS, QUICK_LINKS, type LangCode } from '@/data/site';
 import { DUR, EASE, fadeUp, stagger } from '@/lib/motion';
@@ -26,6 +29,7 @@ export default function Header({ dark }: { dark?: boolean }) {
     const [panel, setPanel] = useState<PanelKind>(null);
     const [keyword, setKeyword] = useState('');
     const [lang, setLang] = useState<LangCode>('ko');
+    const [auth, setAuth] = useState(false);
     const pathname = usePathname();
     const router = useRouter();
     const reduced = useReducedMotion();
@@ -134,10 +138,10 @@ export default function Header({ dark }: { dark?: boolean }) {
                     <motion.div
                         key={panel}
                         {...slideDown}
-                        className="fixed inset-x-0 bottom-0 top-16 z-40 overflow-y-auto bg-cream px-6 py-8 lg:hidden"
+                        className="fixed inset-x-0 bottom-0 top-16 z-45 overflow-y-auto bg-cream px-6 py-8 lg:hidden"
                     >
                         {panel === 'menu' ? (
-                            <MenuNav onNavigate={close} />
+                            <MenuNav onNavigate={close} onLogin={() => setAuth(true)} />
                         ) : (
                             <SearchForm
                                 keyword={keyword}
@@ -167,7 +171,7 @@ export default function Header({ dark }: { dark?: boolean }) {
             <header
                 className={`fixed left-0 top-0 z-50 hidden h-dvh lg:flex ${dark ? 'bg-dark text-cream' : 'bg-cream'}`}
             >
-                <div className="flex h-full w-rail flex-col justify-between px-4 py-11.5">
+                <div className="flex h-full w-rail shrink-0 flex-col justify-between gap-10 overflow-y-auto overscroll-contain px-4 py-11.5">
                     <div className="flex flex-col items-center justify-center">
                         <Link href="/" className="mb-10" aria-label="하루영의원 홈으로">
                             <Image
@@ -249,18 +253,17 @@ export default function Header({ dark }: { dark?: boolean }) {
 
                         <CartRailLink dark={dark} />
 
-                        <Link href="/login" className="text-center text-caption-sm font-semibold">
-                            <span className={`border-b pb-1 ${dark ? 'border-cream' : 'border-dark'}`}>로그인</span>
-                        </Link>
+                        <RailAuth dark={dark} onLogin={() => setAuth(true)} />
                     </nav>
                 </div>
 
                 <AnimatePresence initial={false} mode="wait">
                     {panel !== null && (
                         <motion.div key={panel} {...expand} className="overflow-hidden bg-cream text-dark">
-                            <div style={{ width: PANEL_W }} className="h-full">
+                            {/* 세로가 짧은 노트북에서 메뉴가 잘린다. 패널 안에서만 스크롤한다 */}
+                            <div style={{ width: PANEL_W }} className="h-full overflow-y-auto overscroll-contain">
                                 {panel === 'menu' ? (
-                                    <MenuNav onNavigate={close} />
+                                    <MenuNav onNavigate={close} onLogin={() => setAuth(true)} />
                                 ) : (
                                     <SearchForm
                                         keyword={keyword}
@@ -277,7 +280,73 @@ export default function Header({ dark }: { dark?: boolean }) {
             </header>
 
             <MobileQuickBar />
+
+            <AuthModal open={auth} onClose={() => setAuth(false)} />
         </>
+    );
+}
+
+/**
+ * 레일 로그인 영역.
+ * 로그인 전에는 '로그인', 후에는 이름과 로그아웃을 보여준다.
+ * 판정이 끝나기 전(ready=false)에는 아무것도 그리지 않아 깜빡임을 막는다.
+ */
+function RailAuth({ dark, onLogin }: { dark?: boolean; onLogin: () => void }) {
+    const { member, ready } = useAuthMember();
+    const line = dark ? 'border-cream' : 'border-dark';
+
+    if (!ready) return <span className="h-5" />;
+
+    if (!member) {
+        return (
+            <button type="button" onClick={onLogin} className="text-center text-caption-sm font-semibold">
+                <span className={`border-b pb-1 ${line}`}>로그인</span>
+            </button>
+        );
+    }
+
+    return (
+        <div className="flex flex-col items-center gap-2">
+            <span className="text-center text-caption-sm font-semibold">{member.name}님</span>
+            <button
+                type="button"
+                onClick={() => signOutMember()}
+                className={`text-caption-sm ${dark ? 'text-cream/60' : 'text-dark/55'}`}
+            >
+                <span className={`border-b pb-0.5 ${dark ? 'border-cream/40' : 'border-dark/30'}`}>로그아웃</span>
+            </button>
+        </div>
+    );
+}
+
+/** 모바일 메뉴 하단 로그인 영역 */
+function MobileAuth({ onNavigate, onLogin }: { onNavigate: () => void; onLogin: () => void }) {
+    const { member, ready } = useAuthMember();
+
+    if (!ready) return <span />;
+
+    if (!member) {
+        return (
+            <button
+                type="button"
+                onClick={() => {
+                    onNavigate();
+                    onLogin();
+                }}
+                className="text-caption font-semibold"
+            >
+                <span className="border-b border-dark pb-1">로그인</span>
+            </button>
+        );
+    }
+
+    return (
+        <div className="flex items-center gap-4">
+            <span className="text-caption font-semibold">{member.name}님</span>
+            <button type="button" onClick={() => signOutMember()} className="text-caption text-dark/55">
+                <span className="border-b border-dark/30 pb-0.5">로그아웃</span>
+            </button>
+        </div>
     );
 }
 
@@ -430,7 +499,7 @@ function RailLang({ value, onChange, dark }: { value: LangCode; onChange: (v: La
     );
 }
 
-function MenuNav({ onNavigate }: { onNavigate: () => void }) {
+function MenuNav({ onNavigate, onLogin }: { onNavigate: () => void; onLogin: () => void }) {
     const reduced = useReducedMotion();
     const pathname = usePathname();
 
@@ -441,9 +510,7 @@ function MenuNav({ onNavigate }: { onNavigate: () => void }) {
                 <Link href="/cart" onClick={onNavigate} className="text-caption font-semibold">
                     <span className="border-b border-dark pb-1">장바구니</span>
                 </Link>
-                <Link href="/login" onClick={onNavigate} className="text-caption font-semibold">
-                    <span className="border-b border-dark pb-1">로그인</span>
-                </Link>
+                <MobileAuth onNavigate={onNavigate} onLogin={onLogin} />
             </div>
 
             <motion.div
