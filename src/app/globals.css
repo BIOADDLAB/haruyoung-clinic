@@ -195,6 +195,10 @@ body.overflow-hidden {
     .footer-map {
         height: 100%;
         width: 412px;
+        max-width: none;
+        /* 1455 이상은 옆 정보 블록과 밑선을 맞춰야 해서 비율 대신 높이를 따라간다 */
+        aspect-ratio: auto;
+        align-self: stretch;
     }
     .footer-list {
         height: 100%;
