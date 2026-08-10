@@ -12,7 +12,7 @@ import PhotoGallery, { type GalleryPhoto } from '@/components/ui/PhotoGallery';
 import Reveal from '@/components/ui/Reveal';
 import { RevealGroup } from '@/components/ui/RevealGroup';
 import { fadeUpSlow, slideLeft, slideRight } from '@/lib/motion';
-// import IntroLoader from './IntroLoader';
+import IntroLoader from './IntroLoader';
 
 const TREATMENTS = [
     {
@@ -122,7 +122,7 @@ const SPACE_PHOTOS: GalleryPhoto[] = [
 export default function Home() {
     return (
         <>
-            {/* <IntroLoader /> */}
+            <IntroLoader />
 
             <Header />
 
