@@ -66,10 +66,14 @@ export default function PrivacyModal({ open, onClose }: { open: boolean; onClose
                                     className="border-b border-dark/10 py-5 first:pt-0 last:border-0"
                                 >
                                     <h3 className="text-caption font-bold">{s.title}</h3>
-                                    <p className="mt-2 text-caption-sm leading-[1.8] text-dark/75">{s.body}</p>
+                                    <p className="mt-2 text-caption-sm leading-[1.8] text-dark/75 whitespace-pre-line">
+                                        {s.body}
+                                    </p>
                                 </section>
                             ))}
-                            <p className="pt-4 text-caption-sm text-dark/45">시행일 {PRIVACY_EFFECTIVE}</p>
+                            <p className="pt-4 text-caption-sm text-dark/45">
+                                이 약관은 {PRIVACY_EFFECTIVE}일부터 시행합니다.
+                            </p>
                         </div>
                     </motion.div>
                 </motion.div>

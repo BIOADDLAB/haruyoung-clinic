@@ -20,10 +20,10 @@ export default function PrivacyPage() {
                     {PRIVACY_SECTIONS.map((s) => (
                         <section key={s.title} className="border-b border-dark/12 py-8 first:pt-0">
                             <h2 className="text-small font-bold">{s.title}</h2>
-                            <p className="mt-3 text-caption leading-[1.9] text-dark/75">{s.body}</p>
+                            <p className="mt-3 text-caption leading-[1.9] text-dark/75 whitespace-pre-line">{s.body}</p>
                         </section>
                     ))}
-                    <p className="pt-8 text-caption-sm text-dark/50">시행일 {PRIVACY_EFFECTIVE}</p>
+                    <p className="pt-8 text-caption-sm text-dark/50">이 약관은 {PRIVACY_EFFECTIVE}일부터 시행합니다.</p>
                 </div>
             </main>
         </>

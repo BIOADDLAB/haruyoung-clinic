@@ -240,7 +240,9 @@ export default function AuthModal({ open, onClose }: { open: boolean; onClose: (
                                                 </svg>
                                             )}
                                         </span>
-                                        <span className="text-caption">(필수) 개인정보 수집 이용 동의</span>
+                                        <span className="text-caption-sm lg:text-caption">
+                                            (필수) 개인정보 수집 이용 동의
+                                        </span>
                                     </button>
                                     <button
                                         type="button"

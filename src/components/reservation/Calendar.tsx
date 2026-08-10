@@ -25,7 +25,7 @@ export default function Calendar({ value, onChange }: { value: string; onChange:
     const nextDisabled = cursor.getFullYear() === last.getFullYear() && cursor.getMonth() === last.getMonth();
 
     return (
-        <div className="w-full max-w-[520px]">
+        <div className="w-full max-w-[520px] mx-auto">
             <div className="flex items-center justify-between px-2">
                 <button
                     type="button"

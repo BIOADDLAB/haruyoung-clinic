@@ -22,7 +22,7 @@ export function Icon({
             width={width ?? size}
             height={height ?? size}
             unoptimized
-            className={className}
+            className={`h-auto ${className ?? ''}`}
         />
     );
 }

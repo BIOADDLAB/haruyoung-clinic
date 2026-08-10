@@ -1,8 +1,5 @@
 import { RESERVATION_HOURS } from '@/data/site';
 
-/** 오늘 예약 시 지금부터 이만큼 뒤부터 받는다 (준비 시간) */
-const LEAD_MINUTES = 60;
-
 const toMin = (hhmm: string) => {
     const [h, m] = hhmm.split(':').map(Number);
     return h * 60 + m;
@@ -29,7 +26,8 @@ export function slotsOf(dateKey: string): string[] {
 
     const now = new Date();
     const isToday = dateKey === toKey(now);
-    const cutoff = isToday ? now.getHours() * 60 + now.getMinutes() + LEAD_MINUTES : -1;
+    const nowMin = now.getHours() * 60 + now.getMinutes();
+    const cutoff = isToday ? Math.ceil(nowMin / 30) * 30 : -1;
 
     const out: string[] = [];
     for (let m = toMin(rule.start); m <= toMin(rule.end) - 30; m += 30) {
