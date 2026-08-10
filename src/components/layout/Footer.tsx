@@ -25,12 +25,12 @@ export default function Footer() {
                             title={`하루영의원 위치 지도 - ${CLINIC.address}`}
                             loading="lazy"
                             referrerPolicy="no-referrer-when-downgrade"
-                            className="footer-map h-[220px] w-full border-0 bg-[#d9d9d9] lg:h-[250px] lg:w-[320px] lg:shrink-0"
+                            className="footer-map aspect-[5/3] w-full max-w-[520px] self-start border-0 bg-[#d9d9d9] lg:w-[320px] lg:max-w-none lg:shrink-0"
                         /> */}
                         <div
                             role="img"
                             aria-label="하루영의원 위치 지도 (개원 후 공개 예정)"
-                            className="footer-map flex h-[220px] w-full items-center justify-center bg-[#d9d9d9] text-caption text-dark/50 lg:h-[250px] lg:w-[320px] lg:shrink-0"
+                            className="footer-map flex aspect-[5/3] w-full max-w-[520px] shrink-0 items-center justify-center self-start bg-[#d9d9d9] text-caption text-dark/50 lg:w-[320px] lg:max-w-none"
                         >
                             오픈 준비 중
                         </div>

@@ -83,7 +83,11 @@ function PromotionCard({ p }: { p: Promotion }) {
                 </p>
             </div>
 
-            <div className="mt-2 flex justify-end">
+            {p.description && (
+                <p className="mt-6 whitespace-pre-line text-caption leading-[1.7] text-dark/85">{p.description}</p>
+            )}
+
+            <div className="mt-3 flex justify-end">
                 <button
                     type="button"
                     onClick={() => toggle({ key, name: p.name, price: p.price, category: '프로모션' })}
