@@ -53,11 +53,10 @@ export const QUICK_LINKS = [
     { icon: 'i-h-05', label: '카카오톡', href: KAKAO_CHANNEL, external: true },
 ] as const;
 
-/** 언어 전환. TODO: next-intl 등 라우팅 붙으면 code 를 locale 로 사용 */
 export const LANGS = [
     { code: 'ko', label: 'KO', name: '한국어' },
     { code: 'en', label: 'EN', name: 'English' },
-    { code: 'cn', label: 'CN', name: '中文' },
+    { code: 'zh', label: 'ZH', name: '中文' },
 ] as const;
 
 export type LangCode = (typeof LANGS)[number]['code'];
