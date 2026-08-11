@@ -19,7 +19,8 @@
         "langLabel": "选择语言，当前为 {name}",
         "quickConsult": "咨询预约",
         "quickReserve": "立即预约",
-        "quickKakao": "KakaoTalk"
+        "quickKakao": "KakaoTalk",
+        "quick": "快捷菜单"
     },
     "search": {
         "title": "项目搜索",

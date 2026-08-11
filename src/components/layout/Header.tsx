@@ -7,10 +7,11 @@ import { usePathname, useRouter } from '@/i18n/navigation';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import MobileQuickBar from './MobileQuickBar';
 import AuthModal from '@/components/auth/AuthModal';
+import { useLocale, useTranslations } from 'next-intl';
 import { useAuthMember } from '@/components/auth/useAuthMember';
 import { signOutMember } from '@/lib/members';
 import { useCart } from '@/components/cart/CartProvider';
-import { LANGS, MENU_GROUPS, QUICK_LINKS, type LangCode } from '@/data/site';
+import { LANGS, MENU_GROUPS, QUICK_LINKS } from '@/data/site';
 import { DUR, EASE, fadeUp, stagger } from '@/lib/motion';
 import { useMounted } from '@/lib/useMounted';
 
@@ -28,11 +29,11 @@ type PanelKind = 'menu' | 'search' | null;
 export default function Header({ dark }: { dark?: boolean }) {
     const [panel, setPanel] = useState<PanelKind>(null);
     const [keyword, setKeyword] = useState('');
-    const [lang, setLang] = useState<LangCode>('ko');
     const [auth, setAuth] = useState(false);
     const pathname = usePathname();
     const router = useRouter();
     const reduced = useReducedMotion();
+    const t = useTranslations('nav');
 
     const iconTone = dark ? 'brightness-0 invert' : undefined;
 
@@ -103,16 +104,16 @@ export default function Header({ dark }: { dark?: boolean }) {
     return (
         <>
             <header className="fixed inset-x-0 top-0 z-50 flex h-16 items-center justify-between border-b border-dark/10 bg-cream px-5 lg:hidden">
-                <Link href="/" aria-label="하루영의원 홈으로">
+                <Link href="/" aria-label={t('home')}>
                     <Image src="/images/logo-sub.svg" alt="하루영의원" width={110} height={24} priority />
                 </Link>
                 <div className="flex items-center gap-4">
-                    <MobileLangTop value={lang} onChange={setLang} />
+                    <MobileLangTop />
 
                     <button
                         type="button"
                         onClick={() => toggle('search')}
-                        aria-label="시술 바로 검색 열기"
+                        aria-label={t('openSearch')}
                         aria-expanded={panel === 'search'}
                     >
                         <Image src="/images/i-search.svg" alt="" width={22} height={22} />
@@ -120,7 +121,7 @@ export default function Header({ dark }: { dark?: boolean }) {
                     <button
                         type="button"
                         onClick={() => toggle('menu')}
-                        aria-label={panel === 'menu' ? '메뉴 닫기' : '메뉴 열기'}
+                        aria-label={panel === 'menu' ? t('closeMenu') : t('openMenu')}
                         aria-expanded={panel === 'menu'}
                     >
                         <Image
@@ -173,7 +174,7 @@ export default function Header({ dark }: { dark?: boolean }) {
             >
                 <div className="flex h-full w-rail shrink-0 flex-col justify-between gap-10 overflow-y-auto overscroll-contain px-4 py-11.5">
                     <div className="flex flex-col items-center justify-center">
-                        <Link href="/" className="mb-10" aria-label="하루영의원 홈으로">
+                        <Link href="/" className="mb-10" aria-label={t('home')}>
                             <Image
                                 src="/images/logo.svg"
                                 alt="하루영의원"
@@ -187,7 +188,7 @@ export default function Header({ dark }: { dark?: boolean }) {
                             type="button"
                             onClick={() => toggle('menu')}
                             aria-expanded={panel === 'menu'}
-                            aria-label={panel === 'menu' ? '전체 메뉴 닫기' : '전체 메뉴 열기'}
+                            aria-label={panel === 'menu' ? t('closeMenu') : t('openMenu')}
                             className="mb-5.5 flex flex-col items-center"
                         >
                             <Image
@@ -197,23 +198,23 @@ export default function Header({ dark }: { dark?: boolean }) {
                                 height={22}
                                 className={iconTone}
                             />
-                            <span className="mt-3 font-display text-caption">MENU</span>
+                            <span className="mt-3 font-display text-caption">{t('menu')}</span>
                         </button>
 
                         <button
                             type="button"
                             onClick={() => toggle('search')}
                             aria-expanded={panel === 'search'}
-                            aria-label={panel === 'search' ? '바로검색 닫기' : '바로검색 열기'}
+                            aria-label={panel === 'search' ? t('closeSearch') : t('openSearch')}
                             className="flex flex-col items-center"
                         >
                             <Image src="/images/i-search.svg" alt="" width={22} height={22} className={iconTone} />
-                            <span className="mt-1.25 text-caption-sm font-semibold">바로검색</span>
+                            <span className="mt-1.25 text-caption-sm font-semibold">{t('search')}</span>
                         </button>
                     </div>
 
-                    <nav aria-label="빠른 메뉴" className="flex flex-col gap-6.5">
-                        <RailLang value={lang} onChange={setLang} dark={dark} />
+                    <nav aria-label={t('quick')} className="flex flex-col gap-6.5">
+                        <RailLang dark={dark} />
 
                         {QUICK_LINKS.map((l) =>
                             l.external ? (
@@ -336,25 +337,26 @@ function MobileAuth({ onNavigate, onLogin }: { onNavigate: () => void; onLogin: 
         </button>
     );
 }
-/** 레일 장바구니. 개수는 localStorage 기반이라 마운트 전에는 숨긴다 */
-function CartRailLink({ dark }: { dark?: boolean }) {
-    const { count } = useCart();
-    const mounted = useMounted();
-
-    return (
-        <Link href="/cart" className="text-center text-caption-sm font-semibold">
-            <span className={`border-b pb-1 ${dark ? 'border-cream' : 'border-dark'}`}>
-                장바구니
-                {mounted && count > 0 && ` (${count})`}
-            </span>
-        </Link>
-    );
-}
-
-function MobileLangTop({ value, onChange }: { value: LangCode; onChange: (v: LangCode) => void }) {
+/**
+ * 모바일 언어 전환.
+ * 트리거를 헤더 높이(h-16)로 잡아 top-full 이 헤더 밑선과 정확히 맞고,
+ * 드롭다운은 트리거 기준 가운데(left-1/2)에 붙는다.
+ * 바깥을 누르면 닫히도록 투명 레이어를 뒤에 깐다.
+ */
+function MobileLangTop() {
     const [open, setOpen] = useState(false);
     const reduced = useReducedMotion();
-    const current = LANGS.find((l) => l.code === value)!;
+    const t = useTranslations('nav');
+    const locale = useLocale();
+    const router = useRouter();
+    const pathname = usePathname();
+    const current = LANGS.find((l) => l.code === locale) ?? LANGS[0];
+
+    /** 같은 경로를 다른 언어로 다시 연다. 보던 화면이 유지된다 */
+    const pick = (code: string) => {
+        setOpen(false);
+        router.replace(pathname, { locale: code });
+    };
 
     return (
         <>
@@ -373,7 +375,7 @@ function MobileLangTop({ value, onChange }: { value: LangCode; onChange: (v: Lan
                     type="button"
                     onClick={() => setOpen((o) => !o)}
                     aria-expanded={open}
-                    aria-label={`언어 선택, 현재 ${current.name}`}
+                    aria-label={t('langLabel', { name: current.name })}
                     className={`px-1 font-display text-caption tracking-[0.12em] transition-colors duration-500 ease-brand ${
                         open ? 'text-dark' : 'text-dark/70'
                     }`}
@@ -394,13 +396,10 @@ function MobileLangTop({ value, onChange }: { value: LangCode; onChange: (v: Lan
                                 <li key={l.code} className="w-full">
                                     <button
                                         type="button"
-                                        onClick={() => {
-                                            onChange(l.code);
-                                            setOpen(false);
-                                        }}
-                                        aria-pressed={value === l.code}
+                                        onClick={() => pick(l.code)}
+                                        aria-pressed={locale === l.code}
                                         className={`w-full py-2.5 font-display text-caption-sm tracking-[0.12em] transition-colors duration-500 ease-brand ${
-                                            value === l.code ? 'bg-dark/5 text-dark' : 'text-dark/45'
+                                            locale === l.code ? 'bg-dark/5 text-dark' : 'text-dark/45'
                                         }`}
                                     >
                                         <span className="sr-only">{l.name}</span>
@@ -419,24 +418,29 @@ function MobileLangTop({ value, onChange }: { value: LangCode; onChange: (v: Lan
 /**
  * 레일 언어 전환.
  * 레일 오른쪽으로 캡슐 팝오버가 미끄러져 나온다.
- * 세로로 펼치면 레일 높이가 늘어나 아래 항목들이 밀리므로 옆으로 편다.
- *
- * 레일에 overflow-y-auto 가 걸려 있어 absolute 로 두면 잘린다.
- * 버튼 위치를 재서 fixed 로 띄운다.
- *
- * TODO: 다국어 라우팅 붙으면 setState 대신 locale 전환으로 교체
+ * 레일에 overflow-y-auto 가 걸려 있어 absolute 로 두면 잘린다. 버튼 위치를 재서 fixed 로 띄운다.
  */
-function RailLang({ value, onChange, dark }: { value: LangCode; onChange: (v: LangCode) => void; dark?: boolean }) {
+function RailLang({ dark }: { dark?: boolean }) {
     const [open, setOpen] = useState(false);
     const [pos, setPos] = useState({ top: 0, left: 0 });
     const btnRef = useRef<HTMLButtonElement>(null);
     const reduced = useReducedMotion();
-    const current = LANGS.find((l) => l.code === value)!;
+    const t = useTranslations('nav');
+    const locale = useLocale();
+    const router = useRouter();
+    const pathname = usePathname();
+    const current = LANGS.find((l) => l.code === locale) ?? LANGS[0];
 
     const openAt = () => {
         const r = btnRef.current?.getBoundingClientRect();
         if (r) setPos({ top: r.top + r.height / 2, left: r.right + 8 });
         setOpen((o) => !o);
+    };
+
+    /** 같은 경로를 다른 언어로 다시 연다. 보던 화면이 유지된다 */
+    const pick = (code: string) => {
+        setOpen(false);
+        router.replace(pathname, { locale: code });
     };
 
     return (
@@ -457,7 +461,7 @@ function RailLang({ value, onChange, dark }: { value: LangCode; onChange: (v: La
                     type="button"
                     onClick={openAt}
                     aria-expanded={open}
-                    aria-label={`언어 선택, 현재 ${current.name}`}
+                    aria-label={t('langLabel', { name: current.name })}
                     className="flex flex-col items-center transition-opacity duration-500 ease-brand hover:opacity-70"
                 >
                     <Image
@@ -487,13 +491,10 @@ function RailLang({ value, onChange, dark }: { value: LangCode; onChange: (v: La
                             <li key={l.code}>
                                 <button
                                     type="button"
-                                    onClick={() => {
-                                        onChange(l.code);
-                                        setOpen(false);
-                                    }}
-                                    aria-pressed={value === l.code}
+                                    onClick={() => pick(l.code)}
+                                    aria-pressed={locale === l.code}
                                     className={`rounded-full px-2.5 py-1 font-display text-caption-sm tracking-[0.1em] transition-colors duration-500 ease-brand ${
-                                        value === l.code
+                                        locale === l.code
                                             ? 'bg-dark text-cream'
                                             : 'text-dark/50 hover:bg-dark/8 hover:text-dark'
                                     }`}
@@ -643,6 +644,22 @@ function SearchForm({
                 ))}
             </ul>
         </section>
+    );
+}
+
+/** 레일 장바구니. 개수는 localStorage 기반이라 마운트 전에는 숨긴다 */
+function CartRailLink({ dark }: { dark?: boolean }) {
+    const { count } = useCart();
+    const mounted = useMounted();
+    const t = useTranslations('nav');
+
+    return (
+        <Link href="/cart" className="text-center text-caption-sm font-semibold">
+            <span className={`border-b pb-1 ${dark ? 'border-cream' : 'border-dark'}`}>
+                {t('cart')}
+                {mounted && count > 0 && ` (${count})`}
+            </span>
+        </Link>
     );
 }
 

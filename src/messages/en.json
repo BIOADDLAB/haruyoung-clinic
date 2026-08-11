@@ -19,7 +19,8 @@
         "langLabel": "Select language, currently {name}",
         "quickConsult": "Consultation",
         "quickReserve": "Book now",
-        "quickKakao": "KakaoTalk"
+        "quickKakao": "KakaoTalk",
+        "quick": "Quick menu"
     },
     "search": {
         "title": "Treatment search",

@@ -19,7 +19,8 @@
         "langLabel": "언어 선택, 현재 {name}",
         "quickConsult": "상담예약",
         "quickReserve": "바로예약",
-        "quickKakao": "카카오톡"
+        "quickKakao": "카카오톡",
+        "quick": "빠른 메뉴"
     },
     "search": {
         "title": "시술 바로 검색",
