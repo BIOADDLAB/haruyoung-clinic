@@ -1,18 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { ADMIN_COOKIE_NAME, getAdminAuthToken } from './app/admin/auth';
+import createMiddleware from 'next-intl/middleware';
+import { routing } from '@/i18n/routing';
 
-export function middleware(req: NextRequest) {
-    const { pathname } = req.nextUrl;
-    if (pathname === '/admin/login') return NextResponse.next();
-    if (pathname.startsWith('/admin')) {
-        const token = req.cookies.get(ADMIN_COOKIE_NAME)?.value;
-        if (token !== getAdminAuthToken()) {
-            return NextResponse.redirect(new URL('/admin/login', req.url));
-        }
-    }
-    return NextResponse.next();
-}
+export default createMiddleware(routing);
 
 export const config = {
-    matcher: ['/admin/:path*'],
+    // 관리자·API·정적 파일은 언어 라우팅에서 제외한다
+    matcher: ['/((?!api|admin|_next|_vercel|images|videos|.*\\..*).*)'],
 };
