@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from 'framer-motion';
 import Image from 'next/image';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { DUR, EASE, fadeIn, stagger, VIEWPORT } from '@/lib/motion';
 
 export type CategoryItem = { en: string; ko: string; slug: string; n: string; alt: string };

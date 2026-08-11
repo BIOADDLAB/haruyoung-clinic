@@ -2,8 +2,8 @@
 
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import Image from 'next/image';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { Link } from '@/i18n/navigation';
+import { usePathname, useRouter } from '@/i18n/navigation';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import MobileQuickBar from './MobileQuickBar';
 import AuthModal from '@/components/auth/AuthModal';

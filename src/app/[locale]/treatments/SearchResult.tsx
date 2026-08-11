@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import CartToggle from '@/components/cart/CartToggle';
 import { getProducts } from '@/lib/products';
 import type { Product } from '@/types/product';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 
 /** 헤더 바로검색이 /treatments?q= 로 보낸 결과를 보여준다 */
 export default function SearchResult({ keyword }: { keyword: string }) {

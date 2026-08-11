@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useCart } from '@/components/cart/CartProvider';
 import ReservationForm from '@/components/reservation/ReservationForm';
 import { useMounted } from '@/lib/useMounted';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 
 export default function CartView() {
     const { items, remove } = useCart();

@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { DUR, EASE } from '@/lib/motion';
 
 export const HERO_HOLD = 300;

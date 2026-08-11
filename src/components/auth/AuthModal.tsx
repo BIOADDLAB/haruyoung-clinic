@@ -1,7 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { isLoginIdTaken, signIn, signUp } from '@/lib/members';

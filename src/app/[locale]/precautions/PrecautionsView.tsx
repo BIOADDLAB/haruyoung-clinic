@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useState } from 'react';
 import { DUR, EASE } from '@/lib/motion';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 
 const GUIDES = [
     {

@@ -2,7 +2,7 @@
 
 // import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 // import Image from 'next/image';
-// import Link from 'next/link';
+// import { Link } from '@/i18n/navigation';
 // import { useState } from 'react';
 // import { QUICK_LINKS } from '@/data/site';
 // import { DUR, EASE } from '@/lib/motion';
@@ -114,7 +114,7 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { QUICK_LINKS } from '@/data/site';
 
 export default function MobileQuickBar() {
