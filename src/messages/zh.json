@@ -11,7 +11,17 @@
         "terms": "服务条款",
         "precautions": "术后注意事项",
         "promotion": "优惠活动",
-        "search": "项目搜索"
+        "search": "项目搜索",
+        "homeDesc": "HARU YOUNG 医院为您的肌肤带来忙碌日常中的片刻安宁。",
+        "aboutDesc": "介绍我们的理念、院长与私密空间。",
+        "cartDesc": "确认已选项目并立即预约。",
+        "reservationDesc": "受理 HARU YOUNG 医院的项目预约。",
+        "privacyDesc": "关于个人信息收集与使用的说明。",
+        "termsDesc": "在线预约与会员服务条款。",
+        "precautionsDesc": "各项目的术后护理指南。",
+        "promotionDesc": "查看进行中的优惠与活动价格。",
+        "searchDesc": "搜索 HARU YOUNG 医院的项目。",
+        "treatmentDesc": "HARU YOUNG 医院 {name} 项目介绍与价格。"
     },
     "nav": {
         "menu": "菜单",
@@ -35,7 +45,15 @@
         "specialist": "院长介绍",
         "space": "空间介绍",
         "promotion": "优惠活动",
-        "precautions": "术后注意事项"
+        "precautions": "术后注意事项",
+        "lifting": "提升",
+        "pigment": "色素治疗",
+        "acne": "痘痘治疗",
+        "petit": "微整形",
+        "care": "皮肤管理 · 营养输液",
+        "hair": "脱毛",
+        "body": "身体塑形",
+        "booster": "水光针"
     },
     "search": {
         "title": "项目搜索",
@@ -74,7 +92,8 @@
         "deadline": "至 {until}",
         "daysLeft": "剩余 {days} 天",
         "today": "今日截止",
-        "closed": "已结束"
+        "closed": "已结束",
+        "from": "起"
     },
     "cart": {
         "title": "购物车",
@@ -206,5 +225,35 @@
         "bizNo": "营业执照号",
         "tel": "代表电话",
         "map": "即将开放"
+    },
+    "a11y": {
+        "hero": "HARU YOUNG 医院前台休息区",
+        "close": "关闭",
+        "prev": "上一张",
+        "next": "下一张",
+        "photoOf": "查看第 {n} 张照片",
+        "bannerOf": "HARU YOUNG 医院 {name}",
+        "skipToContent": "跳到正文",
+        "heroImg": "HARU YOUNG 医院前台休息区",
+        "linen": "诊疗室的亚麻寝具特写",
+        "flower": "象征护理的织物上的花",
+        "silk": "象征护理的丝绸包裹的手",
+        "doctor": "院长个人照片",
+        "lounge": "一楼前台休息区全景",
+        "mapAlt": "医院位置地图（开业后公开）",
+        "enlarge": "查看大图",
+        "logo": "HARU YOUNG 医院"
+    },
+    "home": {
+        "moreView": "More View",
+        "treatments": "Treatments",
+        "space": "HARU YOUNG Space",
+        "promotion": "Promotion",
+        "category": "Category",
+        "promotionLead": "找到适合您的优惠。",
+        "categoryLead": "为您的肌肤\n定制的解决方案。"
+    },
+    "about": {
+        "ceoTitle": "院长"
     }
 }

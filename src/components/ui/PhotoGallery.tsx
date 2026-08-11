@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { AnimatePresence, motion, useReducedMotion, type PanInfo } from 'framer-motion';
 import Image from 'next/image';
 import { useCallback, useEffect, useState, useSyncExternalStore } from 'react';
@@ -30,6 +31,7 @@ const useMounted = () =>
     );
 
 export default function PhotoGallery({ photos, className }: { photos: GalleryPhoto[]; className?: string }) {
+    const t = useTranslations('a11y');
     const [index, setIndex] = useState<number | null>(null);
     const reduced = useReducedMotion();
     const mounted = useMounted();
@@ -76,7 +78,7 @@ export default function PhotoGallery({ photos, className }: { photos: GalleryPho
                         <motion.button
                             type="button"
                             onClick={() => setIndex(i)}
-                            aria-label={`${p.alt} 크게 보기`}
+                            aria-label={`${p.alt} ${t('enlarge')}`}
                             initial="rest"
                             animate="rest"
                             whileHover={reduced ? undefined : 'hover'}
@@ -112,7 +114,7 @@ export default function PhotoGallery({ photos, className }: { photos: GalleryPho
                                 <span className="flex h-9 w-9 items-center justify-center rounded-full border border-cream/50 bg-cream/10 backdrop-blur-sm">
                                     <ExpandIcon />
                                 </span>
-                                <span className="text-caption-sm font-semibold">크게 보기</span>
+                                <span className="text-caption-sm font-semibold">{t('enlarge')}</span>
                             </motion.span>
                         </motion.button>
                     </motion.li>
@@ -174,7 +176,7 @@ export default function PhotoGallery({ photos, className }: { photos: GalleryPho
                                     <button
                                         type="button"
                                         onClick={close}
-                                        aria-label="닫기"
+                                        aria-label={t('close')}
                                         className="absolute right-2 top-2 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-cream/25 bg-dark/40 text-cream backdrop-blur-sm transition-colors duration-500 ease-brand hover:border-cream/60 hover:bg-dark/70 lg:right-5 lg:top-5 lg:h-12 lg:w-12"
                                     >
                                         <CloseIcon />

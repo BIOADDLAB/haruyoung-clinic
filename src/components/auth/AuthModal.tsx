@@ -1,7 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { Link } from '@/i18n/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { isLoginIdTaken, signIn, signUp } from '@/lib/members';
@@ -32,6 +32,9 @@ export default function AuthModal({ open, onClose }: { open: boolean; onClose: (
     const [error, setError] = useState('');
 
     const [privacy, setPrivacy] = useState(false);
+
+    const t = useTranslations('auth');
+    const tr = useTranslations('reservation');
 
     /**
      * 닫으면서 초기 상태로 되돌린다.
@@ -73,20 +76,19 @@ export default function AuthModal({ open, onClose }: { open: boolean; onClose: (
         setBusy(true);
         try {
             if (mode === 'login') {
-                if (!loginId.trim() || !pw) return setError('아이디와 비밀번호를 입력해주세요.');
+                if (!loginId.trim() || !pw) return setError(t('errEmpty'));
                 await signIn(loginId, pw);
                 reset();
                 return;
             }
 
-            if (!name.trim()) return setError('이름을 입력해주세요.');
-            if (phone.replace(/\D/g, '').length < 8) return setError('연락처를 정확히 입력해주세요.');
-            if (!ID_RULE.test(loginId.trim().toLowerCase()))
-                return setError('아이디는 영문 소문자와 숫자 4~16자입니다.');
-            if (pw.length < 6) return setError('비밀번호는 6자 이상이어야 합니다.');
-            if (pw !== pw2) return setError('비밀번호가 일치하지 않습니다.');
-            if (!agree) return setError('필수 약관에 동의해주세요.');
-            if (await isLoginIdTaken(loginId)) return setError('이미 사용 중인 아이디입니다.');
+            if (!name.trim()) return setError(tr('errName'));
+            if (phone.replace(/\D/g, '').length < 8) return setError(tr('errPhone'));
+            if (!ID_RULE.test(loginId.trim().toLowerCase())) return setError(t('errIdRule'));
+            if (pw.length < 6) return setError(t('errPwShort'));
+            if (pw !== pw2) return setError(t('errPwMismatch'));
+            if (!agree) return setError(t('errAgree'));
+            if (await isLoginIdTaken(loginId)) return setError(t('errIdTaken'));
 
             await signUp({
                 loginId: loginId.trim().toLowerCase(),
@@ -95,10 +97,10 @@ export default function AuthModal({ open, onClose }: { open: boolean; onClose: (
                 password: pw,
                 createdAt: Date.now(),
             });
-            alert(`${name.trim()}님, 가입이 완료되었습니다.`);
+            alert(t('signupDone', { name: name.trim() }));
             reset();
         } catch {
-            setError(mode === 'login' ? '아이디 또는 비밀번호가 올바르지 않습니다.' : '가입에 실패했습니다.');
+            setError(mode === 'login' ? t('errLogin') : t('errSignup'));
         } finally {
             setBusy(false);
         }
@@ -113,7 +115,7 @@ export default function AuthModal({ open, onClose }: { open: boolean; onClose: (
                 <motion.div
                     role="dialog"
                     aria-modal="true"
-                    aria-label={signup ? '회원가입' : '로그인'}
+                    aria-label={signup ? t('signup') : t('login')}
                     initial={reduced ? false : { opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -132,35 +134,35 @@ export default function AuthModal({ open, onClose }: { open: boolean; onClose: (
                         {/* 모달은 화면 안에 갇히고 안쪽만 스크롤된다 */}
                         <div className="overflow-y-auto overscroll-contain px-8 py-12 lg:px-12">
                             <p className="text-center font-gara text-24 italic text-brown">
-                                {signup ? 'Welcome' : 'Haru Young'}
+                                {signup ? t('welcome') : t('brand')}
                             </p>
-                            <h2 className="mt-3 text-center text-22 font-bold">{signup ? '회원가입' : '로그인'}</h2>
+                            <h2 className="mt-3 text-center text-22 font-bold">{signup ? t('signup') : t('login')}</h2>
 
                             <div className="mt-10 flex flex-col gap-6">
                                 {signup && (
                                     <>
                                         <label className="flex flex-col gap-2">
                                             <span className="text-caption-sm font-semibold">
-                                                이름 <span className="text-red-500">*</span>
+                                                {tr('name')} <span className="text-red-500">*</span>
                                             </span>
                                             <input
                                                 value={name}
                                                 onChange={(e) => setName(e.target.value)}
-                                                placeholder="이름을 입력해주세요."
+                                                placeholder={tr('namePlaceholder')}
                                                 className={field}
                                             />
                                         </label>
 
                                         <label className="flex flex-col gap-2">
                                             <span className="text-caption-sm font-semibold">
-                                                연락처 <span className="text-red-500">*</span>
+                                                {tr('phone')} <span className="text-red-500">*</span>
                                             </span>
                                             <input
                                                 type="tel"
                                                 inputMode="tel"
                                                 value={phone}
                                                 onChange={(e) => setPhone(cleanPhone(e.target.value))}
-                                                placeholder="숫자만 입력해주세요."
+                                                placeholder={tr('phonePlaceholder')}
                                                 className={field}
                                             />
                                         </label>
@@ -169,27 +171,27 @@ export default function AuthModal({ open, onClose }: { open: boolean; onClose: (
 
                                 <label className="flex flex-col gap-2">
                                     <span className="text-caption-sm font-semibold">
-                                        아이디 {signup && <span className="text-red-500">*</span>}
+                                        {t('loginId')} {signup && <span className="text-red-500">*</span>}
                                     </span>
                                     <input
                                         value={loginId}
                                         onChange={(e) => setLoginId(e.target.value.replace(/[^a-zA-Z0-9]/g, ''))}
                                         autoCapitalize="none"
-                                        placeholder={signup ? '영문 소문자와 숫자 4~16자' : '아이디를 입력해주세요.'}
+                                        placeholder={signup ? t('loginIdRule') : t('loginIdPlaceholder')}
                                         className={field}
                                     />
                                 </label>
 
                                 <label className="flex flex-col gap-2">
                                     <span className="text-caption-sm font-semibold">
-                                        비밀번호 {signup && <span className="text-red-500">*</span>}
+                                        {t('password')} {signup && <span className="text-red-500">*</span>}
                                     </span>
                                     <input
                                         type="password"
                                         value={pw}
                                         onChange={(e) => setPw(e.target.value)}
                                         onKeyDown={(e) => e.key === 'Enter' && !signup && submit()}
-                                        placeholder={signup ? '6자 이상' : '비밀번호를 입력해주세요.'}
+                                        placeholder={signup ? t('passwordRule') : t('passwordPlaceholder')}
                                         className={field}
                                     />
                                 </label>
@@ -197,13 +199,13 @@ export default function AuthModal({ open, onClose }: { open: boolean; onClose: (
                                 {signup && (
                                     <label className="flex flex-col gap-2">
                                         <span className="text-caption-sm font-semibold">
-                                            비밀번호 확인 <span className="text-red-500">*</span>
+                                            {t('passwordConfirm')} <span className="text-red-500">*</span>
                                         </span>
                                         <input
                                             type="password"
                                             value={pw2}
                                             onChange={(e) => setPw2(e.target.value)}
-                                            placeholder="한 번 더 입력해주세요."
+                                            placeholder={t('passwordConfirmPlaceholder')}
                                             className={field}
                                         />
                                     </label>
@@ -249,7 +251,7 @@ export default function AuthModal({ open, onClose }: { open: boolean; onClose: (
                                         onClick={() => setPrivacy(true)}
                                         className="shrink-0 text-caption-sm text-dark/60 underline"
                                     >
-                                        상세보기
+                                        {tr('detail')}
                                     </button>
                                 </div>
                             )}
@@ -262,7 +264,7 @@ export default function AuthModal({ open, onClose }: { open: boolean; onClose: (
                                 disabled={busy}
                                 className="mt-8 w-full bg-dark py-3.5 text-caption font-semibold text-cream transition-colors duration-500 ease-brand hover:bg-brown disabled:opacity-50"
                             >
-                                {busy ? '확인 중…' : signup ? '가입하기' : '로그인'}
+                                {busy ? t('checking') : signup ? t('submitSignup') : t('submitLogin')}
                             </button>
 
                             {/* #TODO: 카카오 로그인은 후순위.
@@ -278,7 +280,7 @@ export default function AuthModal({ open, onClose }: { open: boolean; onClose: (
                                 onClick={() => swap(signup ? 'login' : 'signup')}
                                 className="mt-6 w-full text-center text-caption font-semibold"
                             >
-                                <span className="border-b border-dark pb-0.5">{signup ? '로그인' : '회원가입'}</span>
+                                <span className="border-b border-dark pb-0.5">{signup ? t('login') : t('signup')}</span>
                             </button>
                         </div>
                     </motion.div>
