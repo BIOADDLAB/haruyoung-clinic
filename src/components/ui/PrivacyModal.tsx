@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
@@ -13,6 +14,8 @@ import { useMounted } from '@/lib/useMounted';
  * 같은 내용을 /privacy 페이지와 공유한다.
  */
 export default function PrivacyModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+    const t = useTranslations('policy');
+    const ta = useTranslations('a11y');
     const reduced = useReducedMotion();
     const mounted = useMounted();
 
@@ -31,7 +34,7 @@ export default function PrivacyModal({ open, onClose }: { open: boolean; onClose
                 <motion.div
                     role="dialog"
                     aria-modal="true"
-                    aria-label="개인정보처리방침"
+                    aria-label={t('privacy')}
                     initial={reduced ? false : { opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -48,14 +51,14 @@ export default function PrivacyModal({ open, onClose }: { open: boolean; onClose
                         className="flex max-h-full w-full max-w-[520px] flex-col overflow-hidden bg-cream"
                     >
                         <div className="flex shrink-0 items-center justify-between border-b border-dark/12 px-8 py-6">
-                            <h2 className="text-small font-bold">개인정보처리방침</h2>
+                            <h2 className="text-small font-bold">{t('privacy')}</h2>
                             <button
                                 type="button"
                                 onClick={onClose}
-                                aria-label="닫기"
+                                aria-label={ta('close')}
                                 className="text-caption text-dark/50 transition-colors duration-500 ease-brand hover:text-dark"
                             >
-                                닫기
+                                {ta('close')}
                             </button>
                         </div>
 

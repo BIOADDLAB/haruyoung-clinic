@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 import CartToggle from '@/components/cart/CartToggle';
 import { getProducts } from '@/lib/products';
@@ -8,6 +9,8 @@ import { Link } from '@/i18n/navigation';
 
 /** 헤더 바로검색이 /treatments?q= 로 보낸 결과를 보여준다 */
 export default function SearchResult({ keyword }: { keyword: string }) {
+    const t = useTranslations('search');
+    const tt = useTranslations('treatments');
     const [all, setAll] = useState<Product[] | null>(null);
 
     useEffect(() => {
@@ -34,8 +37,12 @@ export default function SearchResult({ keyword }: { keyword: string }) {
             <p className="text-small font-semibold">
                 {keyword ? (
                     <>
-                        &lsquo;{keyword}&rsquo; 검색 결과
-                        {all && <span className="ml-2 text-caption font-normal text-dark/55">{hits.length}건</span>}
+                        {t('resultFor', { keyword })}
+                        {all && (
+                            <span className="ml-2 text-caption font-normal text-dark/55">
+                                {t('count', { count: hits.length })}
+                            </span>
+                        )}
                     </>
                 ) : (
                     '시술 검색'
@@ -43,11 +50,11 @@ export default function SearchResult({ keyword }: { keyword: string }) {
             </p>
 
             {!keyword ? (
-                <p className="pt-16 text-caption text-dark/50">왼쪽 메뉴에서 시술을 골라보세요.</p>
+                <p className="pt-16 text-caption text-dark/50">{t('prompt')}</p>
             ) : all === null ? (
-                <p className="pt-16 text-caption text-dark/50">불러오는 중…</p>
+                <p className="pt-16 text-caption text-dark/50">{t('loading')}</p>
             ) : hits.length === 0 ? (
-                <p className="pt-16 text-caption text-dark/50">검색 결과가 없습니다. 다른 이름으로 찾아보세요.</p>
+                <p className="pt-16 text-caption text-dark/50">{t('empty')}</p>
             ) : (
                 <ul className="flex flex-col gap-4 pt-9">
                     {hits.map((p) => (
@@ -71,7 +78,7 @@ export default function SearchResult({ keyword }: { keyword: string }) {
 
                             <div className="mt-3 flex justify-end">
                                 {p.price === null ? (
-                                    <span className="text-caption text-dark/50">가격 문의</span>
+                                    <span className="text-caption text-dark/50">{tt('askPrice')}</span>
                                 ) : (
                                     <CartToggle
                                         item={{

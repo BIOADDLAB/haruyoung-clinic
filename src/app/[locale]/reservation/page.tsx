@@ -1,19 +1,28 @@
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import Header from '@/components/layout/Header';
 import SidePanel from '@/components/layout/SidePanel';
 import ReservationForm from '@/components/reservation/ReservationForm';
 
-export const metadata: Metadata = {
-    title: '바로예약',
-    description: '하루영의원 시술 예약을 접수합니다. 원하는 날짜와 시간을 선택해주세요.',
-    alternates: { canonical: '/reservation' },
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+    const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: 'meta' });
 
-export default function ReservationPage() {
+    return {
+        title: t('reservation'),
+        description: t('reservationDesc'),
+        alternates: { canonical: '/reservation' },
+    };
+}
+
+export default async function ReservationPage({ params }: { params: Promise<{ locale: string }> }) {
+    const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: 'meta' });
+
     return (
         <>
             <Header dark />
-            <SidePanel title="바로예약" />
+            <SidePanel title={t('reservation')} />
 
             <main className="site-sub min-h-dvh bg-cream">
                 <div className="px-6 pb-28 pt-8 lg:pb-24 lg:pl-12 lg:pr-0 lg:pt-16">

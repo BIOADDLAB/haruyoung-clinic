@@ -2,6 +2,7 @@
 
 // import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 // import Image from 'next/image';
+// import { useTranslations } from 'next-intl';
 // import { Link } from '@/i18n/navigation';
 // import { useState } from 'react';
 // import { QUICK_LINKS } from '@/data/site';
@@ -52,13 +53,13 @@
 //                             {QUICK_LINKS.map((l) => {
 //                                 const inner = (
 //                                     <>
-//                                         <span className="text-caption font-semibold">{l.label}</span>
+//                                         <span className="text-caption font-semibold">{t(l.key)}</span>
 //                                         <Image src={`/images/${l.icon}.svg`} alt="" width={26} height={26} />
 //                                     </>
 //                                 );
 //                                 return (
 //                                     <motion.li
-//                                         key={l.label}
+//                                         key={t(l.key)}
 //                                         variants={{
 //                                             hidden: { opacity: 0, y: 14, scale: 0.94 },
 //                                             show: {
@@ -113,14 +114,16 @@
 
 'use client';
 
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
 import { QUICK_LINKS } from '@/data/site';
 
 export default function MobileQuickBar() {
+    const t = useTranslations('nav');
     return (
         <nav
-            aria-label="빠른 실행"
+            aria-label={t('quick')}
             className="fixed inset-x-0 bottom-0 z-30 h-16 border-t border-dark/12 bg-cream/95 backdrop-blur-sm lg:hidden"
         >
             <ul className="grid h-full grid-cols-3">
@@ -128,7 +131,7 @@ export default function MobileQuickBar() {
                     const inner = (
                         <>
                             <Image src={`/images/${l.icon}.svg`} alt="" width={22} height={22} />
-                            <span className="text-caption-sm font-semibold tracking-[0.02em]">{l.label}</span>
+                            <span className="text-caption-sm font-semibold tracking-[0.02em]">{t(l.key)}</span>
                         </>
                     );
                     const base = `flex h-full w-full flex-col items-center justify-center gap-1.5 border-dark/12 transition-opacity duration-500 ease-brand active:opacity-60 ${
@@ -136,7 +139,7 @@ export default function MobileQuickBar() {
                     }`;
 
                     return (
-                        <li key={l.label}>
+                        <li key={l.key}>
                             {l.external ? (
                                 <a
                                     href={l.href}

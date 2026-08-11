@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { useCart } from '@/components/cart/CartProvider';
 import ReservationForm from '@/components/reservation/ReservationForm';
@@ -7,6 +8,8 @@ import { useMounted } from '@/lib/useMounted';
 import { Link } from '@/i18n/navigation';
 
 export default function CartView() {
+    const t = useTranslations('cart');
+    const tt = useTranslations('treatments');
     const { items, remove } = useCart();
     const mounted = useMounted();
     const [picked, setPicked] = useState<string[]>([]);
@@ -31,7 +34,7 @@ export default function CartView() {
                 <Check
                     checked={allOn}
                     onChange={() => setPicked(allOn ? [] : items.map((i) => i.key))}
-                    label={`전체 선택  ${picked.length}/${items.length}`}
+                    label={`${t('selectAll')}  ${picked.length}/${items.length}`}
                 />
                 <button
                     type="button"
@@ -49,10 +52,10 @@ export default function CartView() {
             {/* 장바구니 목록 */}
             {items.length === 0 ? (
                 <div className="mt-8 rounded-xl border border-beige bg-dark/[0.02] px-6 py-20 text-center">
-                    <p className="text-caption text-dark/55">장바구니가 비어 있습니다.</p>
+                    <p className="text-caption text-dark/55">{t('empty')}</p>
                     <Link href="/promotion" className="mt-6 inline-block text-caption font-semibold tracking-wide">
                         <span className="border-b border-dark/70 pb-0.5 transition-colors duration-500 ease-brand hover:border-dark">
-                            시술 둘러보기
+                            {t('browse')}
                         </span>
                     </Link>
                 </div>
@@ -112,43 +115,46 @@ export default function CartView() {
                 </ul>
             )}
 
-            <p className="mt-5 text-right text-caption-sm text-dark/45">VAT 별도</p>
+            <p className="mt-5 text-right text-caption-sm text-dark/45">{tt('vat')}</p>
 
             {/* 다른 상품 추가 */}
             <Link
                 href="/promotion"
                 className="mt-6 block rounded-xl border border-beige bg-dark/[0.03] py-4 text-center text-caption tracking-wide transition-colors duration-500 ease-brand hover:bg-dark/[0.06]"
             >
-                다른 상품 추가하기
+                {t('addMore')}
             </Link>
 
             {/* 선택 요약 */}
             <section className="mt-14">
-                <h2 className="text-small font-semibold tracking-wide">선택한 상품 정보</h2>
+                <h2 className="text-small font-semibold tracking-wide">{t('summary')}</h2>
 
                 <div className="mt-5 rounded-xl border border-beige bg-dark/[0.02] px-6 py-6">
                     <dl className="flex flex-col gap-4">
                         <div className="flex items-center justify-between">
-                            <dt className="text-caption text-dark/60">선택한 시술 개수</dt>
-                            <dd className="text-caption font-medium">{pickedItems.length}개</dd>
+                            <dt className="text-caption text-dark/60">{t('count')}</dt>
+                            <dd className="text-caption font-medium">
+                                {pickedItems.length}
+                                {t('unit')}
+                            </dd>
                         </div>
 
                         {saved > 0 && (
                             <div className="flex items-center justify-between">
-                                <dt className="text-caption text-dark/60">할인 금액</dt>
+                                <dt className="text-caption text-dark/60">{t('discount')}</dt>
                                 <dd className="text-caption font-medium text-brown">-{saved.toLocaleString()}원</dd>
                             </div>
                         )}
 
                         <div className="flex items-end justify-between border-t border-beige pt-4">
-                            <dt className="text-caption font-semibold">총 결제 예상 금액</dt>
+                            <dt className="text-caption font-semibold">{t('total')}</dt>
                             <dd className="text-22 font-bold tracking-tight">
                                 {pickedTotal.toLocaleString()}
-                                <span className="ml-0.5 text-16 font-semibold">원</span>
+                                <span className="ml-0.5 text-16 font-semibold">{t('won')}</span>
                             </dd>
                         </div>
                     </dl>
-                    <p className="mt-4 text-right text-caption-sm text-dark/45">* 결제는 내원 후 진행해 주세요.</p>
+                    <p className="mt-4 text-right text-caption-sm text-dark/45">{t('payNotice')}</p>
                 </div>
             </section>
 

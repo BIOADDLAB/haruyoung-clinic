@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 import Banner from '@/components/ui/Banner';
 import CartToggle from '@/components/cart/CartToggle';
@@ -10,6 +11,8 @@ import { getProducts } from '@/lib/products';
 import type { Product } from '@/types/product';
 
 export default function TreatmentList({ slug, categoryName }: { slug: string; categoryName: string }) {
+    const t = useTranslations('treatments');
+    const tb = useTranslations('banner');
     const [list, setList] = useState<Product[] | null>(null);
 
     useEffect(() => {
@@ -44,13 +47,13 @@ export default function TreatmentList({ slug, categoryName }: { slug: string; ca
             <Banner
                 file={TREATMENT_BANNER[slug]?.file ?? 'bg-tre-01'}
                 en={TREATMENT_BANNER[slug]?.en ?? categoryName}
-                ko={categoryName}
+                ko={tb(slug)}
             />
 
             {list === null ? (
-                <p className="px-6 pt-16 text-caption text-dark/50 lg:pl-12">불러오는 중…</p>
+                <p className="px-6 pt-16 text-caption text-dark/50 lg:pl-12">{t('loading')}</p>
             ) : list.length === 0 ? (
-                <p className="px-6 pt-16 text-caption text-dark/50 lg:pl-12">준비 중인 시술입니다.</p>
+                <p className="px-6 pt-16 text-caption text-dark/50 lg:pl-12">{t('empty')}</p>
             ) : (
                 <div className="px-6 lg:pl-12 lg:pr-0">
                     {sections.map((section) => (
@@ -91,7 +94,9 @@ export default function TreatmentList({ slug, categoryName }: { slug: string; ca
 
                                                 <div className="mt-3 flex justify-end">
                                                     {p.price === null ? (
-                                                        <span className="text-caption text-dark/50">가격 문의</span>
+                                                        <span className="text-caption text-dark/50">
+                                                            {t('askPrice')}
+                                                        </span>
                                                     ) : (
                                                         <CartToggle
                                                             item={{

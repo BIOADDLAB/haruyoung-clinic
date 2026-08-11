@@ -1,16 +1,30 @@
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import SearchResult from './SearchResult';
 import Header from '@/components/layout/Header';
 import SubNav from '@/components/layout/SubNav';
 
-export const metadata: Metadata = {
-    title: '시술 검색',
-    description: '하루영의원 시술을 검색해 보세요.',
-    alternates: { canonical: '/treatments' },
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+    const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: 'meta' });
 
-export default async function TreatmentsPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
+    return {
+        title: t('search'),
+        description: t('searchDesc'),
+        alternates: { canonical: '/treatments' },
+    };
+}
+
+export default async function TreatmentsPage({
+    params,
+    searchParams,
+}: {
+    params: Promise<{ locale: string }>;
+    searchParams: Promise<{ q?: string }>;
+}) {
+    const { locale } = await params;
     const { q } = await searchParams;
+    const t = await getTranslations({ locale, namespace: 'meta' });
 
     return (
         <>
@@ -18,7 +32,7 @@ export default async function TreatmentsPage({ searchParams }: { searchParams: P
             <SubNav />
 
             <main className="site-sub min-h-dvh bg-cream">
-                <h1 className="sr-only">하루영의원 시술 검색</h1>
+                <h1 className="sr-only">{t('search')}</h1>
                 <SearchResult keyword={q ?? ''} />
             </main>
         </>

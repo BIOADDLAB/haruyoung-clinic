@@ -1,16 +1,18 @@
 'use client';
 
-import { Link } from '@/i18n/navigation';
-import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { Link, usePathname } from '@/i18n/navigation';
 import { SUB_NAV } from '@/data/site';
 
 export default function SubNav() {
     const pathname = usePathname();
+    const t = useTranslations('banner');
+    const tn = useTranslations('nav');
 
     return (
         <>
             <nav
-                aria-label="시술 메뉴"
+                aria-label={tn('treatmentMenu')}
                 className="fixed left-rail top-0 z-40 hidden h-dvh w-[277px] border-r border-dark/15 bg-cream lg:block"
             >
                 <ul className="flex flex-col gap-[13px] pl-14 pt-[91px]">
@@ -25,7 +27,7 @@ export default function SubNav() {
                                         current ? 'font-semibold text-dark' : 'text-dark/70'
                                     }`}
                                 >
-                                    {item.label}
+                                    {t(item.key)}
                                     <span
                                         className={`absolute inset-x-0 bottom-0 h-px origin-left bg-dark transition-transform duration-500 ease-brand group-hover:scale-x-100 ${
                                             current ? 'scale-x-100' : 'scale-x-0'
@@ -39,7 +41,7 @@ export default function SubNav() {
             </nav>
 
             <nav
-                aria-label="시술 메뉴"
+                aria-label={tn('treatmentMenu')}
                 className="fixed inset-x-0 top-16 z-40 h-12 border-b border-dark/10 bg-cream lg:hidden"
             >
                 <ul className="flex h-full items-center gap-5 overflow-x-auto px-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -54,7 +56,7 @@ export default function SubNav() {
                                         current ? 'border-b border-dark pb-1 font-semibold text-dark' : 'text-dark/60'
                                     }`}
                                 >
-                                    {item.label}
+                                    {t(item.key)}
                                 </Link>
                             </li>
                         );

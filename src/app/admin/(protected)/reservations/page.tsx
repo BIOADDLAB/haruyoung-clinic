@@ -11,6 +11,9 @@ const TONE: Record<ReservationStatus, string> = {
     canceled: 'bg-rose-100 text-rose-700',
 };
 
+/** 예약 폼이 키로 저장한다. 관리자는 한국어 전용이라 여기서 되돌린다 */
+const VISIT_LABEL: Record<string, string> = { visitFirst: '초진', visitAgain: '재진' };
+
 /** 상태 변경 버튼. 선택된 것은 채우고, 나머지는 그 상태의 색을 테두리로만 보여준다 */
 const PICK: Record<ReservationStatus, { on: string; off: string }> = {
     pending: { on: 'bg-amber-500 text-white', off: 'border border-amber-300 text-amber-700 bg-white' },
@@ -108,7 +111,7 @@ export default function ReservationsPage() {
                                 </div>
 
                                 <p className="mt-2 truncate text-sm text-neutral-500">
-                                    {r.visitType}
+                                    {VISIT_LABEL[r.visitType] ?? r.visitType}
                                     {r.category && ` · ${r.category}`}
                                     {r.items.length > 0 && ` · ${r.items[0].name}`}
                                     {r.items.length > 1 && ` 외 ${r.items.length - 1}건`}

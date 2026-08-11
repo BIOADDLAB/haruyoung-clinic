@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Link } from '@/i18n/navigation';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
@@ -44,6 +45,7 @@ function readStored(): CartItem[] {
 }
 
 export default function CartProvider({ children }: { children: ReactNode }) {
+    const t = useTranslations('cart');
     const [items, setItems] = useState<CartItem[]>(readStored);
     const [toasts, setToasts] = useState<Toast[]>([]);
     const reduced = useReducedMotion();
@@ -104,9 +106,9 @@ export default function CartProvider({ children }: { children: ReactNode }) {
 
             <div className="pointer-events-none fixed bottom-24 right-5 z-70 flex flex-col-reverse gap-2 lg:bottom-8">
                 <AnimatePresence initial={false}>
-                    {toasts.map((t) => (
+                    {toasts.map((toast) => (
                         <motion.div
-                            key={t.id}
+                            key={toast.id}
                             initial={reduced ? false : { opacity: 0, y: 16 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -8 }}
@@ -130,12 +132,12 @@ export default function CartProvider({ children }: { children: ReactNode }) {
                                 </span>
 
                                 <div className="min-w-0 flex-1">
-                                    <p className="text-caption font-semibold">시술이 추가됐어요!</p>
-                                    <p className="mt-0.5 truncate text-caption-sm text-dark/55">{t.name}</p>
+                                    <p className="text-caption font-semibold">{t('added')}</p>
+                                    <p className="mt-0.5 truncate text-caption-sm text-dark/55">{toast.name}</p>
                                 </div>
 
                                 <Link href="/cart" className="shrink-0 text-caption font-semibold">
-                                    <span className="border-b border-dark pb-0.5">보기</span>
+                                    <span className="border-b border-dark pb-0.5">{t('view')}</span>
                                 </Link>
                             </div>
 

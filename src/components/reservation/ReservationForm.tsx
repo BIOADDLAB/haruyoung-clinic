@@ -1,7 +1,7 @@
 'use client';
 
-import { Link } from '@/i18n/navigation';
-import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useRouter } from '@/i18n/navigation';
 import { useState } from 'react';
 import Calendar from './Calendar';
 import DoneModal from './DoneModal';
@@ -19,6 +19,8 @@ const cleanPhone = (v: string) => v.replace(/[^\d+-]/g, '').slice(0, 20);
 
 /** @param withCategory 장바구니 없이 바로예약할 때만 카테고리를 고른다 */
 export default function ReservationForm({ withCategory }: { withCategory?: boolean }) {
+    const t = useTranslations('reservation');
+    const tb = useTranslations('banner');
     const { items, total, clear } = useCart();
     const router = useRouter();
 
@@ -38,13 +40,13 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
     const [privacy, setPrivacy] = useState(false);
 
     const submit = async () => {
-        if (!name.trim()) return alert('이름을 입력해주세요.');
-        if (phone.replace(/\D/g, '').length < 8) return alert('연락처를 정확히 입력해주세요.');
-        if (!visitType) return alert('방문 형태를 선택해주세요.');
-        if (withCategory && !category) return alert('카테고리를 선택해주세요.');
-        if (!date) return alert('예약 일자를 선택해주세요.');
-        if (!time) return alert('예약 시간을 선택해주세요.');
-        if (!agreePrivacy || !agreeAge) return alert('필수 항목에 동의해주세요.');
+        if (!name.trim()) return alert(t('errName'));
+        if (phone.replace(/\D/g, '').length < 8) return alert(t('errPhone'));
+        if (!visitType) return alert(t('errVisitType'));
+        if (withCategory && !category) return alert(t('errCategory'));
+        if (!date) return alert(t('errDate'));
+        if (!time) return alert(t('errTime'));
+        if (!agreePrivacy || !agreeAge) return alert(t('errAgree'));
 
         setBusy(true);
         try {
@@ -64,7 +66,7 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
             if (!withCategory) clear();
             setDone(true);
         } catch {
-            alert('예약 접수에 실패했습니다. 잠시 후 다시 시도해주세요.');
+            alert(t('errSubmit'));
         } finally {
             setBusy(false);
         }
@@ -74,31 +76,31 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
         <div className="w-full max-w-[800px]">
             {/* 기본 정보 카드 */}
             <section className="rounded-xl border border-beige bg-dark/[0.015] px-6 py-8 sm:px-8">
-                <h2 className="text-small font-semibold tracking-wide">예약자 정보</h2>
+                <h2 className="text-small font-semibold tracking-wide">{t('secInfo')}</h2>
 
                 <div className="mt-7 grid grid-cols-1 gap-x-10 gap-y-7 sm:grid-cols-2">
                     <label className="flex flex-col gap-2.5">
                         <span className="text-caption font-medium tracking-wide text-dark/70">
-                            이름 <span className="text-red-500">*</span>
+                            {t('name')} <span className="text-red-500">*</span>
                         </span>
                         <input
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            placeholder="이름을 입력해주세요."
+                            placeholder={t('namePlaceholder')}
                             className={field}
                         />
                     </label>
 
                     <label className="flex flex-col gap-2.5">
                         <span className="text-caption font-medium tracking-wide text-dark/70">
-                            연락처 <span className="text-red-500">*</span>
+                            {t('phone')} <span className="text-red-500">*</span>
                         </span>
                         <input
                             type="tel"
                             inputMode="tel"
                             value={phone}
                             onChange={(e) => setPhone(cleanPhone(e.target.value))}
-                            placeholder="숫자만 입력해주세요."
+                            placeholder={t('phonePlaceholder')}
                             className={field}
                         />
                     </label>
@@ -106,10 +108,10 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
 
                 <label className="mt-7 flex flex-col gap-2.5">
                     <span className="text-caption font-medium tracking-wide text-dark/70">
-                        방문 형태 <span className="text-red-500">*</span>
+                        {t('visitType')} <span className="text-red-500">*</span>
                     </span>
                     <select value={visitType} onChange={(e) => setVisitType(e.target.value)} className={field}>
-                        <option value="">방문 형태를 선택해주세요.</option>
+                        <option value="">{t('visitTypePlaceholder')}</option>
                         {VISIT_TYPES.map((v) => (
                             <option key={v} value={v}>
                                 {v}
@@ -121,13 +123,13 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
                 {withCategory && (
                     <label className="mt-7 flex flex-col gap-2.5">
                         <span className="text-caption font-medium tracking-wide text-dark/70">
-                            카테고리 <span className="text-red-500">*</span>
+                            {t('category')} <span className="text-red-500">*</span>
                         </span>
                         <select value={category} onChange={(e) => setCategory(e.target.value)} className={field}>
-                            <option value="">카테고리를 선택해주세요.</option>
+                            <option value="">{t('categoryPlaceholder')}</option>
                             {MENU_CATEGORIES.map((c) => (
-                                <option key={c.slug} value={c.name}>
-                                    {c.name}
+                                <option key={c.slug} value={c.slug}>
+                                    {tb(c.slug)}
                                 </option>
                             ))}
                         </select>
@@ -137,7 +139,7 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
 
             {/* 날짜 */}
             <section className="mt-10">
-                <h2 className="text-small font-semibold tracking-wide">예약 일자</h2>
+                <h2 className="text-small font-semibold tracking-wide">{t('secDate')}</h2>
                 <div className="mt-5 rounded-xl border border-beige bg-dark/[0.015] p-5 sm:p-6">
                     <Calendar
                         value={date}
@@ -151,13 +153,13 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
 
             {/* 시간 */}
             <section className="mt-10">
-                <h2 className="text-small font-semibold tracking-wide">예약 시간</h2>
+                <h2 className="text-small font-semibold tracking-wide">{t('secTime')}</h2>
 
                 <div className="mt-5 rounded-xl border border-beige bg-dark/[0.015] px-5 py-6 sm:px-6">
                     {date === '' ? (
-                        <p className="text-caption text-dark/50">먼저 예약 일자를 선택해주세요.</p>
+                        <p className="text-caption text-dark/50">{t('pickDateFirst')}</p>
                     ) : slots.length === 0 ? (
-                        <p className="text-caption text-dark/50">선택한 날짜는 휴진입니다.</p>
+                        <p className="text-caption text-dark/50">{t('closedDay')}</p>
                     ) : (
                         <ul className="grid grid-cols-3 gap-2.5 sm:grid-cols-6">
                             {slots.map((s) => {
@@ -186,34 +188,24 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
 
             {/* 동의 */}
             <section className="mt-10">
-                <h2 className="text-small font-semibold tracking-wide">이용 동의</h2>
+                <h2 className="text-small font-semibold tracking-wide">{t('secAgree')}</h2>
 
                 <div className="mt-5 rounded-xl border border-beige bg-dark/[0.015] px-6 py-6">
                     <div className="flex flex-col gap-5">
                         <div className="flex items-center justify-between gap-4">
-                            <Check
-                                checked={agreePrivacy}
-                                onChange={setAgreePrivacy}
-                                label="(필수) 개인정보 수집 이용 동의"
-                            />
+                            <Check checked={agreePrivacy} onChange={setAgreePrivacy} label={t('agreePrivacy')} />
                             <button
                                 type="button"
                                 onClick={() => setPrivacy(true)}
                                 className="shrink-0 text-caption-sm text-dark/50 underline underline-offset-2 transition-colors duration-500 ease-brand hover:text-dark"
                             >
-                                상세보기
+                                {t('detail')}
                             </button>
                         </div>
 
                         <div>
-                            <Check
-                                checked={agreeAge}
-                                onChange={setAgreeAge}
-                                label="(필수) 예약자가 만 14세 이상입니다."
-                            />
-                            <p className="mt-2.5 pl-9 text-caption-sm leading-relaxed text-dark/50">
-                                만 14세 미만 고객은 카톡플친이나 전화로 문의해주세요.
-                            </p>
+                            <Check checked={agreeAge} onChange={setAgreeAge} label={t('agreeAge')} />
+                            <p className="mt-2.5 pl-9 text-caption-sm leading-relaxed text-dark/50">{t('ageNotice')}</p>
                         </div>
                     </div>
                 </div>
@@ -226,7 +218,7 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
                 disabled={busy}
                 className="mt-12 w-full rounded-xl bg-dark py-4.5 text-caption font-semibold tracking-wide text-cream transition-colors duration-500 ease-brand hover:bg-brown disabled:opacity-50"
             >
-                {busy ? '접수 중…' : '시술 예약하기'}
+                {busy ? t('submitting') : t('submit')}
             </button>
 
             <DoneModal

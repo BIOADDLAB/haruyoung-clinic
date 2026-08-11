@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
@@ -8,6 +9,7 @@ import { DUR, EASE } from '@/lib/motion';
 export const HERO_HOLD = 300;
 
 export default function HeroVisual() {
+    const t = useTranslations('a11y');
     const reduced = useReducedMotion();
     const { scrollY } = useScroll();
 
@@ -21,7 +23,7 @@ export default function HeroVisual() {
             <motion.div style={reduced ? undefined : { scale }} className="absolute inset-0 origin-center">
                 <Image
                     src="/images/bg-hero.jpg"
-                    alt="하루영의원 리셉션 라운지 메인 비주얼"
+                    alt={t('heroImg')}
                     fill
                     priority
                     quality={95}

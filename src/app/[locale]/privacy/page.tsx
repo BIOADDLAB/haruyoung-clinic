@@ -1,19 +1,28 @@
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import Header from '@/components/layout/Header';
 import SidePanel from '@/components/layout/SidePanel';
 import { PRIVACY_EFFECTIVE, PRIVACY_SECTIONS } from '@/data/privacy';
 
-export const metadata: Metadata = {
-    title: '개인정보처리방침',
-    description: '하루영의원 개인정보 수집 및 이용에 대한 안내입니다.',
-    alternates: { canonical: '/privacy' },
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+    const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: 'meta' });
 
-export default function PrivacyPage() {
+    return {
+        title: t('privacy'),
+        description: t('privacyDesc'),
+        alternates: { canonical: '/privacy' },
+    };
+}
+
+export default async function PrivacyPage({ params }: { params: Promise<{ locale: string }> }) {
+    const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: 'meta' });
+
     return (
         <>
             <Header dark />
-            <SidePanel title="개인정보처리방침" />
+            <SidePanel title={t('privacy')} />
 
             <main className="site-sub min-h-dvh bg-cream">
                 <div className="w-full max-w-[800px] px-6 pb-28 pt-8 lg:pb-24 lg:pl-12 lg:pr-0 lg:pt-16">

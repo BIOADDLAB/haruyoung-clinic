@@ -3,7 +3,15 @@
         "clinic": "HARU YOUNG 医院",
         "title": "HARU YOUNG 医院 | 一日之息，永恒之美",
         "description": "HARU YOUNG 医院为您的肌肤带来忙碌日常中的片刻安宁。以专属于您的定制护理，让自然之美长久延续。",
-        "ogAlt": "HARU YOUNG 医院 - 专为您设计的肌肤休憩"
+        "ogAlt": "HARU YOUNG 医院 - 专为您设计的肌肤休憩",
+        "about": "医院介绍",
+        "cart": "购物车",
+        "reservation": "立即预约",
+        "privacy": "隐私政策",
+        "terms": "服务条款",
+        "precautions": "术后注意事项",
+        "promotion": "优惠活动",
+        "search": "项目搜索"
     },
     "nav": {
         "menu": "菜单",
@@ -20,7 +28,14 @@
         "quickConsult": "咨询预约",
         "quickReserve": "立即预约",
         "quickKakao": "KakaoTalk",
-        "quick": "快捷菜单"
+        "quick": "快捷菜单",
+        "treatmentMenu": "项目菜单",
+        "menuAll": "全部菜单",
+        "philosophy": "哈鲁荣理念",
+        "specialist": "院长介绍",
+        "space": "空间介绍",
+        "promotion": "优惠活动",
+        "precautions": "术后注意事项"
     },
     "search": {
         "title": "项目搜索",
@@ -31,7 +46,11 @@
         "count": "{count} 项",
         "empty": "没有找到结果，请尝试其他名称。",
         "prompt": "请从左侧菜单选择项目。",
-        "loading": "加载中…"
+        "loading": "加载中…",
+        "suggest1": "提升",
+        "suggest2": "水光针",
+        "suggest3": "痘痘治疗",
+        "suggest4": "脱毛"
     },
     "banner": {
         "promotion": "优惠活动",
@@ -110,7 +129,23 @@
         "errDate": "请选择预约日期。",
         "errTime": "请选择预约时间。",
         "errAgree": "请同意必填项目。",
-        "errSubmit": "预约失败，请稍后再试。"
+        "errSubmit": "预约失败，请稍后再试。",
+        "visitFirst": "初诊",
+        "visitAgain": "复诊",
+        "week": {
+            "sun": "日",
+            "mon": "一",
+            "tue": "二",
+            "wed": "三",
+            "thu": "四",
+            "fri": "五",
+            "sat": "六"
+        },
+        "secInfo": "预约人信息",
+        "secDate": "预约日期",
+        "secTime": "预约时间",
+        "secAgree": "使用同意",
+        "closedDay": "所选日期为休诊日。"
     },
     "auth": {
         "login": "登录",
@@ -144,7 +179,8 @@
         "title": "术后注意事项",
         "subtitle": "{tab}\n术后注意事项",
         "consult": "咨询预约",
-        "notice": "护理方式会因个人肤质与项目种类而有所不同。\n如出现异常症状，请勿自行判断，请联系医院。"
+        "notice": "护理方式会因个人肤质与项目种类而有所不同。\n如出现异常症状，请勿自行判断，请联系医院。",
+        "swipeHint": "向旁滑动查看更多"
     },
     "policy": {
         "privacy": "隐私政策",
@@ -160,5 +196,15 @@
     },
     "intro": {
         "skip": "SKIP"
+    },
+    "footer": {
+        "hours": "诊疗时间",
+        "address": "地址",
+        "subway": "地铁",
+        "parking": "停车",
+        "ceo": "代表",
+        "bizNo": "营业执照号",
+        "tel": "代表电话",
+        "map": "即将开放"
     }
 }

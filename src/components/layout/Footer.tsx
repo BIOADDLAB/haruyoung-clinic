@@ -1,14 +1,20 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
 import { CLINIC, POLICY_LINKS } from '@/data/site';
 
 export default function Footer() {
+    const t = useTranslations('policy');
+    const tf = useTranslations('footer');
+    const ta = useTranslations('a11y');
     return (
         <footer className="flex flex-col bg-dark text-cream lg:h-dvh">
             <div className="relative h-[32vh] w-full shrink-0 sm:h-[40vh] lg:h-auto lg:min-h-0 lg:flex-1">
                 <Image
                     src="/images/bg-main.jpg"
-                    alt="하루영의원 1층 리셉션 라운지 전경"
+                    alt={ta('lounge')}
                     fill
                     quality={95}
                     sizes="100vw"
@@ -29,7 +35,7 @@ export default function Footer() {
                         /> */}
                         <div
                             role="img"
-                            aria-label="하루영의원 위치 지도 (개원 후 공개 예정)"
+                            aria-label={ta('mapAlt')}
                             className="footer-map flex aspect-[5/3] w-full max-w-[520px] shrink-0 items-center justify-center self-start bg-[#d9d9d9] text-caption text-dark/50 lg:w-[320px] lg:max-w-none"
                         >
                             오픈 준비 중
@@ -41,7 +47,7 @@ export default function Footer() {
                                 <p className="text-caption tracking-wide">{CLINIC.address}</p>
                             </li>
                             <li className="flex items-center gap-5 border-b border-cream/40 pb-3.5 pl-3">
-                                <h4 className="shrink-0 text-caption w-[55px]  tracking-wide">진료시간</h4>
+                                <h4 className="shrink-0 text-caption w-[55px]  tracking-wide">{tf('hours')}</h4>
                                 <div className="flex min-w-0 flex-col gap-3 lg:flex-row lg:items-center lg:gap-7">
                                     <div className="flex flex-col">
                                         {CLINIC.hours.map((h) => (
@@ -85,20 +91,20 @@ export default function Footer() {
                             </li>
 
                             <li className="flex items-center gap-7 border-b border-cream/40 pb-3.5 pl-3">
-                                <h4 className="shrink-0 text-caption   w-[55px]">지하철</h4>
+                                <h4 className="shrink-0 text-caption   w-[55px]">{tf('subway')}</h4>
                                 <p className="text-caption tracking-wide">{CLINIC.subway}</p>
                             </li>
 
                             <li className="flex items-center gap-7 border-b border-cream/40 pb-3.5 pl-3">
-                                <h4 className="shrink-0 text-caption  w-[55px]">주차</h4>
+                                <h4 className="shrink-0 text-caption  w-[55px]">{tf('parking')}</h4>
                                 <p className="text-caption tracking-wide">{CLINIC.parking}</p>
                             </li>
                         </ul>
                     </div>
 
                     <div className="footer-right flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-                        <Link href="/" aria-label="하루영의원 홈으로">
-                            <Image src="/images/logo-suv-w.svg" alt="하루영의원" width={170} height={37} />
+                        <Link href="/" aria-label={ta('logo')}>
+                            <Image src="/images/logo-suv-w.svg" alt={ta('logo')} width={170} height={37} />
                         </Link>
 
                         <div className="lg:text-right">
@@ -112,7 +118,7 @@ export default function Footer() {
                                             href={l.href}
                                             className="transition-colors duration-500 ease-brand hover:text-beige"
                                         >
-                                            {l.label}
+                                            {t(l.key)}
                                         </Link>
                                     </li>
                                 ))}

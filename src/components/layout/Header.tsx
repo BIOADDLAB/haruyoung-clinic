@@ -18,7 +18,7 @@ import { useMounted } from '@/lib/useMounted';
 const PANEL_W = 247;
 
 /** 검색창이 비어 있을 때 바로 누를 수 있는 추천어 관리자에서 직접 입력 불가 */
-const SEARCH_SUGGESTIONS = ['리프팅', '스킨부스터', '여드름치료', '제모'] as const;
+const SEARCH_SUGGESTION_KEYS = ['suggest1', 'suggest2', 'suggest3', 'suggest4'] as const;
 
 type PanelKind = 'menu' | 'search' | null;
 
@@ -105,7 +105,7 @@ export default function Header({ dark }: { dark?: boolean }) {
         <>
             <header className="fixed inset-x-0 top-0 z-50 flex h-16 items-center justify-between border-b border-dark/10 bg-cream px-5 lg:hidden">
                 <Link href="/" aria-label={t('home')}>
-                    <Image src="/images/logo-sub.svg" alt="하루영의원" width={110} height={24} priority />
+                    <Image src="/images/logo-sub.svg" alt={t('home')} width={110} height={24} priority />
                 </Link>
                 <div className="flex items-center gap-4">
                     <MobileLangTop />
@@ -175,13 +175,7 @@ export default function Header({ dark }: { dark?: boolean }) {
                 <div className="flex h-full w-rail shrink-0 flex-col justify-between gap-10 overflow-y-auto overscroll-contain px-4 py-11.5">
                     <div className="flex flex-col items-center justify-center">
                         <Link href="/" className="mb-10" aria-label={t('home')}>
-                            <Image
-                                src="/images/logo.svg"
-                                alt="하루영의원"
-                                width={74}
-                                height={44}
-                                className={iconTone}
-                            />
+                            <Image src="/images/logo.svg" alt={t('home')} width={74} height={44} className={iconTone} />
                         </Link>
 
                         <button
@@ -219,7 +213,7 @@ export default function Header({ dark }: { dark?: boolean }) {
                         {QUICK_LINKS.map((l) =>
                             l.external ? (
                                 <a
-                                    key={l.label}
+                                    key={l.key}
                                     href={l.href}
                                     target={l.href.startsWith('http') ? '_blank' : undefined}
                                     rel={l.href.startsWith('http') ? 'noopener noreferrer' : undefined}
@@ -232,11 +226,11 @@ export default function Header({ dark }: { dark?: boolean }) {
                                         height={34}
                                         className={iconTone}
                                     />
-                                    <span className="text-caption-sm font-semibold">{l.label}</span>
+                                    <span className="text-caption-sm font-semibold">{t(l.key)}</span>
                                 </a>
                             ) : (
                                 <Link
-                                    key={l.label}
+                                    key={l.key}
                                     href={l.href}
                                     className="flex flex-col items-center transition-opacity duration-500 ease-brand hover:opacity-70"
                                 >
@@ -247,7 +241,7 @@ export default function Header({ dark }: { dark?: boolean }) {
                                         height={34}
                                         className={iconTone}
                                     />
-                                    <span className="text-caption-sm font-semibold">{l.label}</span>
+                                    <span className="text-caption-sm font-semibold">{t(l.key)}</span>
                                 </Link>
                             ),
                         )}
@@ -514,9 +508,10 @@ function RailLang({ dark }: { dark?: boolean }) {
 function MenuNav({ onNavigate, onLogin }: { onNavigate: () => void; onLogin: () => void }) {
     const reduced = useReducedMotion();
     const pathname = usePathname();
+    const t = useTranslations('nav');
 
     return (
-        <nav aria-label="전체 메뉴" className="flex h-full flex-col justify-between lg:py-10 lg:pl-10 lg:pr-7.5 ">
+        <nav aria-label={t('menuAll')} className="flex h-full flex-col justify-between lg:py-10 lg:pl-10 lg:pr-7.5 ">
             <div className="mb-2 flex items-center justify-end gap-5 lg:hidden">
                 <MobileCartLink onNavigate={onNavigate} />
                 <MobileAuth onNavigate={onNavigate} onLogin={onLogin} />
@@ -555,7 +550,7 @@ function MenuNav({ onNavigate, onLogin }: { onNavigate: () => void; onLogin: () 
                                                     current ? 'font-semibold text-dark' : 'text-dark/80'
                                                 }`}
                                             >
-                                                {item.label}
+                                                {t(item.key)}
                                                 <span
                                                     className={`absolute inset-x-0 bottom-0 h-px origin-left bg-dark transition-transform duration-500 ease-brand group-hover/item:scale-x-100 ${
                                                         current ? 'scale-x-100' : 'scale-x-0'
@@ -572,7 +567,7 @@ function MenuNav({ onNavigate, onLogin }: { onNavigate: () => void; onLogin: () 
             </motion.div>
 
             <div className="!mt-12 flex justify-center !pb-10 lg:mt-0 lg:pb-0">
-                <Image src="/images/logo-sub.svg" alt="하루영의원" width={120} height={34} />
+                <Image src="/images/logo-sub.svg" alt={t('home')} width={120} height={34} />
             </div>
         </nav>
     );
@@ -592,6 +587,8 @@ function SearchForm({
     onClose: () => void;
 }) {
     const inputRef = useRef<HTMLInputElement>(null);
+    const t = useTranslations('search');
+    const tn = useTranslations('nav');
 
     // 패널이 열리면 바로 타이핑할 수 있게 한다. 레이아웃 점프 방지로 preventScroll
     useEffect(() => {
@@ -599,10 +596,10 @@ function SearchForm({
     }, []);
 
     return (
-        <section aria-label="시술 바로 검색" className="lg:px-9 lg:py-11.25">
+        <section aria-label={t('title')} className="lg:px-9 lg:py-11.25">
             <div className="mb-7.5 flex items-center justify-between">
-                <h2 className="text-small font-semibold">시술 바로 검색</h2>
-                <button type="button" onClick={onClose} aria-label="검색 닫기">
+                <h2 className="text-small font-semibold">{t('title')}</h2>
+                <button type="button" onClick={onClose} aria-label={tn('closeSearch')}>
                     <Image src="/images/i-close.svg" alt="" width={20} height={20} />
                 </button>
             </div>
@@ -610,7 +607,7 @@ function SearchForm({
             <form onSubmit={onSubmit}>
                 <div className="flex items-center justify-between border-b border-dark/50 pb-1.75">
                     <label htmlFor="quick-search" className="sr-only">
-                        시술명 검색
+                        {t('title')}
                     </label>
                     <input
                         ref={inputRef}
@@ -618,27 +615,27 @@ function SearchForm({
                         type="search"
                         value={keyword}
                         onChange={(e) => onChange(e.target.value)}
-                        placeholder="Search"
+                        placeholder={t('placeholder')}
                         autoComplete="off"
                         className="w-[90%] bg-transparent outline-none placeholder:text-dark/40"
                     />
-                    <button type="submit" aria-label="검색">
+                    <button type="submit" aria-label={t('title')}>
                         <Image src="/images/i-search.svg" alt="" width={20} height={20} />
                     </button>
                 </div>
-                <p className="mt-2 text-caption-sm text-dark/60">원하는 시술명을 입력해주세요.</p>
+                <p className="mt-2 text-caption-sm text-dark/60">{t('hint')}</p>
             </form>
 
-            <p className="mt-7.5 text-caption-sm font-semibold text-dark/60">추천 검색어</p>
+            <p className="mt-7.5 text-caption-sm font-semibold text-dark/60">{t('suggestions')}</p>
             <ul className="mt-3 flex flex-wrap gap-2">
-                {SEARCH_SUGGESTIONS.map((s) => (
-                    <li key={s}>
+                {SEARCH_SUGGESTION_KEYS.map((k) => (
+                    <li key={k}>
                         <button
                             type="button"
-                            onClick={() => onPick(s)}
+                            onClick={() => onPick(t(k))}
                             className="rounded-full border border-dark/20 px-3 py-1 text-caption-sm transition-colors duration-500 ease-brand hover:border-dark/40 hover:bg-tan/40"
                         >
-                            {s}
+                            {t(k)}
                         </button>
                     </li>
                 ))}

@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import Banner from '@/components/ui/Banner';
 import { useCart } from '@/components/cart/CartProvider';
@@ -10,6 +11,8 @@ import { getPromotions } from '@/lib/promotions';
 import { daysLeft, discountRate, type Promotion } from '@/types/promotion';
 
 export default function PromotionList() {
+    const t = useTranslations('promotion');
+    const tt = useTranslations('treatments');
     const [list, setList] = useState<Promotion[] | null>(null);
     const month = new Date().getMonth() + 1;
 
@@ -45,16 +48,16 @@ export default function PromotionList() {
                     {/* 최저가는 저장하지 않고 목록에서 계산한다 */}
                     <p className="pt-10 text-right lg:pt-20">
                         <span className="text-20 font-bold lg:text-24">{from.toLocaleString()}원</span>
-                        <span className="ml-1 text-small"> 부터~</span>
+                        <span className="ml-1 text-small">{t('from')}</span>
                     </p>
-                    <p className="mt-2 text-right text-caption text-dark/55">VAT 별도</p>
+                    <p className="mt-2 text-right text-caption text-dark/55">{tt('vat')}</p>
                 </div>
             </div>
 
             {list === null ? (
-                <p className="px-6 pt-16 text-caption text-dark/50 lg:pl-12">불러오는 중…</p>
+                <p className="px-6 pt-16 text-caption text-dark/50 lg:pl-12">{tt('loading')}</p>
             ) : list.length === 0 ? (
-                <p className="px-6 pt-16 text-caption text-dark/50 lg:pl-12">진행 중인 프로모션이 없습니다.</p>
+                <p className="px-6 pt-16 text-caption text-dark/50 lg:pl-12">{t('empty')}</p>
             ) : (
                 <RevealGroup as="ul" className="flex flex-col gap-4 px-6 pt-9 lg:pl-12 lg:pr-0">
                     {list.map((p) => (
@@ -68,6 +71,7 @@ export default function PromotionList() {
 
 function PromotionCard({ p }: { p: Promotion }) {
     const { has, toggle } = useCart();
+    const t = useTranslations('promotion');
     const key = `promotion:${p.id}`;
     const on = has(key);
     const rate = discountRate(p);
@@ -84,7 +88,7 @@ function PromotionCard({ p }: { p: Promotion }) {
             <div className="mt-4 flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
                 <p className="text-small font-medium text-brown">{p.highlight}</p>
                 <p className="text-caption text-dark/60 sm:shrink-0">
-                    ~{p.until} ({left === 0 ? '오늘 마감' : `${left}일 남음`})
+                    ~{p.until} ({left === 0 ? t('today') : t('daysLeft', { days: left })})
                 </p>
             </div>
 

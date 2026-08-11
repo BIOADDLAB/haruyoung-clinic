@@ -1,24 +1,20 @@
-import { MENU_CATEGORIES } from '@/constants/categories';
-
 const TREATMENT_ORDER = ['lifting', 'pigment', 'acne', 'petit', 'care', 'hair', 'body', 'booster'] as const;
 
-const treatments = TREATMENT_ORDER.map((slug) => {
-    const c = MENU_CATEGORIES.find((m) => m.slug === slug)!;
-    return { label: c.name, href: `/treatments/${c.slug}` };
-});
+/** key 는 messages 의 banner 네임스페이스 키다 */
+const treatments = TREATMENT_ORDER.map((slug) => ({ key: slug, href: `/treatments/${slug}` }));
 
 export const MENU_GROUPS = [
     {
         title: 'Haru Young',
         items: [
-            { label: '하루영 철학', href: '/about#philosophy' },
-            { label: '원장 소개', href: '/about#specialist' },
-            { label: '공간 소개', href: '/about#space' },
+            { key: 'philosophy', href: '/about#philosophy' },
+            { key: 'specialist', href: '/about#specialist' },
+            { key: 'space', href: '/about#space' },
         ],
     },
     { title: 'Treatments', items: treatments },
-    { title: 'Promotion', items: [{ label: '프로모션', href: '/promotion' }] },
-    { title: 'Precautions', items: [{ label: '시술 후 주의사항', href: '/precautions' }] },
+    { title: 'Promotion', items: [{ key: 'promotion', href: '/promotion' }] },
+    { title: 'Precautions', items: [{ key: 'precautions', href: '/precautions' }] },
 ] as const;
 
 export const CLINIC = {
@@ -48,9 +44,9 @@ export const KAKAO_CHANNEL = 'https://pf.kakao.com/_haruyoung';
 
 /** 헤더 레일 하단 바로가기 — 상담예약은 전화연결, 바로예약은 예약 페이지, 카카오톡은 채널 */
 export const QUICK_LINKS = [
-    { icon: 'i-h-02', label: '상담예약', href: `tel:${CLINIC.tel.replace(/-/g, '')}`, external: true },
-    { icon: 'i-h-03', label: '바로예약', href: '/reservation', external: false },
-    { icon: 'i-h-05', label: '카카오톡', href: KAKAO_CHANNEL, external: true },
+    { icon: 'i-h-02', key: 'quickConsult', href: `tel:${CLINIC.tel.replace(/-/g, '')}`, external: true },
+    { icon: 'i-h-03', key: 'quickReserve', href: '/reservation', external: false },
+    { icon: 'i-h-05', key: 'quickKakao', href: KAKAO_CHANNEL, external: true },
 ] as const;
 
 export const LANGS = [
@@ -62,22 +58,19 @@ export const LANGS = [
 export type LangCode = (typeof LANGS)[number]['code'];
 
 export const POLICY_LINKS = [
-    { label: '비급여수가표', href: '/treatments' },
-    { label: '이용약관', href: '/terms' },
-    { label: '개인정보처리방침', href: '/privacy' },
+    { key: 'priceList', href: '/treatments' },
+    { key: 'terms', href: '/terms' },
+    { key: 'privacy', href: '/privacy' },
 ] as const;
 
 /** 시술·프로모션 페이지 좌측 서브 내비. 시안 순서 그대로 */
 export const SUB_NAV = [
-    { label: '프로모션', href: '/promotion' },
-    ...['lifting', 'pigment', 'acne', 'petit', 'care', 'hair', 'body', 'booster'].map((slug) => {
-        const c = MENU_CATEGORIES.find((m) => m.slug === slug)!;
-        return { label: c.name, href: `/treatments/${c.slug}` };
-    }),
+    { key: 'promotion', href: '/promotion' },
+    ...TREATMENT_ORDER.map((slug) => ({ key: slug, href: `/treatments/${slug}` })),
 ] as const;
 
-/** 방문 형태 */
-export const VISIT_TYPES = ['초진', '재진'] as const;
+/** 방문 형태. 값은 키로 저장하고 화면에서만 번역한다 */
+export const VISIT_TYPES = ['visitFirst', 'visitAgain'] as const;
 
 /**
  * 요일별 예약 가능 구간. 0=일 … 6=토. 없는 요일은 휴진이다.

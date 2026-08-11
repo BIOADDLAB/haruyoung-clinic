@@ -1,19 +1,28 @@
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import Header from '@/components/layout/Header';
 import SidePanel from '@/components/layout/SidePanel';
 import { TERMS_EFFECTIVE, TERMS_SECTIONS } from '@/data/terms';
 
-export const metadata: Metadata = {
-    title: '이용약관',
-    description: '하루영의원 온라인 예약 및 회원 서비스 이용약관입니다.',
-    alternates: { canonical: '/terms' },
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+    const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: 'meta' });
 
-export default function TermsPage() {
+    return {
+        title: t('terms'),
+        description: t('termsDesc'),
+        alternates: { canonical: '/terms' },
+    };
+}
+
+export default async function TermsPage({ params }: { params: Promise<{ locale: string }> }) {
+    const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: 'meta' });
+
     return (
         <>
             <Header dark />
-            <SidePanel title="이용약관" />
+            <SidePanel title={t('terms')} />
 
             <main className="site-sub min-h-dvh bg-cream">
                 <div className="w-full max-w-[800px] px-6 pb-28 pt-8 lg:pb-24 lg:pl-12 lg:pr-0 lg:pt-16">

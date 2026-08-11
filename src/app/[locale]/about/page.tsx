@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
@@ -9,12 +10,16 @@ import Reveal from '@/components/ui/Reveal';
 import { RevealGroup, RevealItem } from '@/components/ui/RevealGroup';
 import { drawLine, fadeUpSlow, slideLeft } from '@/lib/motion';
 
-export const metadata: Metadata = {
-    title: '병원소개',
-    description:
-        '하루영의원의 철학과 대표원장, 그리고 하이엔드 리조트 스파를 닮은 프라이빗 공간을 소개합니다. 피부를 위한 가장 깊은 쉼을 설계합니다.',
-    alternates: { canonical: '/about' },
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+    const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: 'meta' });
+
+    return {
+        title: t('about'),
+        description: t('aboutDesc'),
+        alternates: { canonical: '/about' },
+    };
+}
 
 const CAREERS = [
     '前 강남 사적인 아름다움 지유 총괄원장',
@@ -66,7 +71,11 @@ const SPACE_PHOTOS: GalleryPhoto[] = [
     },
 ];
 
-export default function AboutPage() {
+export default async function AboutPage({ params }: { params: Promise<{ locale: string }> }) {
+    const { locale } = await params;
+    const ta = await getTranslations({ locale, namespace: 'a11y' });
+    const tab = await getTranslations({ locale, namespace: 'about' });
+
     return (
         <>
             <Header />
@@ -108,7 +117,7 @@ export default function AboutPage() {
                                         <div className="absolute bottom-0 left-0 h-[190px] w-[155px] overflow-hidden rounded-bl-[50px]">
                                             <Image
                                                 src="/images/img-sub-01.jpg"
-                                                alt="하루영의원 케어를 상징하는 패브릭 위의 꽃"
+                                                alt={ta('flower')}
                                                 fill
                                                 quality={90}
                                                 sizes="155px"
@@ -120,7 +129,7 @@ export default function AboutPage() {
                                         <div className="absolute right-0 top-0 z-10 h-[140px] w-[115px] overflow-hidden rounded-t-full">
                                             <Image
                                                 src="/images/img-sub-02.jpg"
-                                                alt="하루영의원 시술실 리넨 침구 클로즈업"
+                                                alt={ta('linen')}
                                                 fill
                                                 quality={90}
                                                 sizes="115px"
@@ -168,7 +177,7 @@ export default function AboutPage() {
                                     <div className="absolute bottom-0 left-0 h-[267px] w-[216px] overflow-hidden rounded-bl-[70px]">
                                         <Image
                                             src="/images/img-sub-01.jpg"
-                                            alt="하루영의원 케어를 상징하는 패브릭 위의 꽃"
+                                            alt={ta('flower')}
                                             fill
                                             quality={90}
                                             sizes="216px"
@@ -178,7 +187,7 @@ export default function AboutPage() {
                                     <div className="absolute right-0 top-0 z-10 h-[192px] w-[155px] overflow-hidden rounded-t-full">
                                         <Image
                                             src="/images/img-sub-02.jpg"
-                                            alt="하루영의원 시술실 리넨 침구 클로즈업"
+                                            alt={ta('linen')}
                                             fill
                                             quality={90}
                                             sizes="155px"
@@ -220,7 +229,7 @@ export default function AboutPage() {
                                     <Reveal variants={slideLeft} delay={0.1} className="mt-9 lg:hidden">
                                         <div
                                             role="img"
-                                            aria-label="하루영의원 홍길동 대표원장 프로필 사진"
+                                            aria-label={ta('doctor')}
                                             className="h-[260px] w-[175px] rounded-full bg-[#d9d9d9]"
                                         />
                                     </Reveal>
@@ -235,7 +244,7 @@ export default function AboutPage() {
                                                 HARUYOUNG
                                             </span>
                                             <span className="mt-2.5 block text-[22px] font-bold lg:text-24">
-                                                홍길동 <span className="text-16 font-normal">대표원장</span>
+                                                홍길동 <span className="text-16 font-normal">{tab('ceoTitle')}</span>
                                             </span>
                                         </p>
                                         <Icon name="i-sig" width={129} height={37} className="pb-1" />
@@ -270,7 +279,7 @@ export default function AboutPage() {
                                 >
                                     <div
                                         role="img"
-                                        aria-label="하루영의원 홍길동 대표원장 프로필 사진"
+                                        aria-label={ta('doctor')}
                                         className="h-[357px] w-[239px] rounded-full bg-[#d9d9d9]"
                                     />
                                 </Reveal>

@@ -7,7 +7,6 @@ import { DUR, EASE, fadeIn, stagger, VIEWPORT } from '@/lib/motion';
 
 export type CategoryItem = { en: string; ko: string; slug: string; n: string; alt: string };
 
-/** 평소엔 영문, 올리면 한글로 바뀌고 카드 바깥 3px 자리에 테두리가 그어진다 */
 const SCRIM = { rest: { backgroundColor: 'rgba(59,43,30,0.2)' }, hover: { backgroundColor: 'rgba(255,251,246,0.62)' } };
 const EN = { rest: { opacity: 1 }, hover: { opacity: 0 } };
 const KO = { rest: { opacity: 0 }, hover: { opacity: 1 } };

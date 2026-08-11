@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useState } from 'react';
 import MoreView from '@/components/ui/MoreView';
@@ -18,6 +19,7 @@ const PROMOTIONS = [
 ];
 
 export default function PromotionBoard() {
+    const t = useTranslations('home');
     const [hot, setHot] = useState(false);
     const reduced = useReducedMotion();
 
@@ -26,7 +28,7 @@ export default function PromotionBoard() {
             <div className="mx-auto flex w-full flex-col gap-8 lg:max-w-[828px] lg:flex-row lg:items-start lg:gap-[11px]">
                 <Reveal variants={slideRight} className="shrink-0 lg:w-[200px]">
                     <h2 className="font-display text-24">Promotion</h2>
-                    <p className="mt-3.5 text-caption text-cream">원하는 프로모션을 만나보세요.</p>
+                    <p className="mt-3.5 text-caption text-cream">{t('promotionLead')}</p>
                     <motion.div
                         animate={hot && !reduced ? 'pulse' : 'rest'}
                         variants={{

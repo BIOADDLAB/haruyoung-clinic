@@ -1,13 +1,19 @@
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
 import PrecautionsView from './PrecautionsView';
 import Header from '@/components/layout/Header';
 
-export const metadata: Metadata = {
-    title: '시술 후 주의사항',
-    description: '하루영의원 시술 후 관리 방법과 주의사항을 안내합니다.',
-    alternates: { canonical: '/precautions' },
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+    const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: 'meta' });
+
+    return {
+        title: t('precautions'),
+        description: t('precautionsDesc'),
+        alternates: { canonical: '/precautions' },
+    };
+}
 
 export default function PrecautionsPage() {
     return (

@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { toKey } from './slots';
 import { RESERVATION_HOURS, RESERVATION_MAX_DAYS } from '@/data/site';
@@ -7,6 +8,7 @@ import { RESERVATION_HOURS, RESERVATION_MAX_DAYS } from '@/data/site';
 const WEEK = ['일', '월', '화', '수', '목', '금', '토'];
 
 export default function Calendar({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+    const t = useTranslations('reservation');
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const last = new Date(today);
@@ -31,7 +33,7 @@ export default function Calendar({ value, onChange }: { value: string; onChange:
                     type="button"
                     onClick={() => move(-1)}
                     disabled={prevDisabled}
-                    aria-label="이전 달"
+                    aria-label={t('prevMonth')}
                     className="p-2 text-dark/60 transition-colors duration-500 ease-brand hover:text-dark disabled:opacity-25"
                 >
                     <Chevron dir={-1} />
@@ -43,7 +45,7 @@ export default function Calendar({ value, onChange }: { value: string; onChange:
                     type="button"
                     onClick={() => move(1)}
                     disabled={nextDisabled}
-                    aria-label="다음 달"
+                    aria-label={t('nextMonth')}
                     className="p-2 text-dark/60 transition-colors duration-500 ease-brand hover:text-dark disabled:opacity-25"
                 >
                     <Chevron dir={1} />
