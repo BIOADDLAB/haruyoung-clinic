@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation';
 import { useState } from 'react';
 import { MENU_CATEGORIES } from '@/constants/categories';
 import { addProduct, updateProduct } from '@/lib/products';
@@ -24,8 +24,14 @@ export default function ProductForm({
     const [subCategory, setSubCategory] = useState(initial?.subCategory ?? '');
     const [customSub, setCustomSub] = useState(false);
     const [name, setName] = useState(initial?.name ?? '');
+    const [nameEn, setNameEn] = useState(initial?.nameEn ?? '');
+    const [nameZh, setNameZh] = useState(initial?.nameZh ?? '');
     const [highlight, setHighlight] = useState(initial?.highlight ?? '');
     const [description, setDescription] = useState(initial?.description ?? '');
+    const [descriptionEn, setDescriptionEn] = useState(initial?.descriptionEn ?? '');
+    const [descriptionZh, setDescriptionZh] = useState(initial?.descriptionZh ?? '');
+    /** 언어 탭. 한 화면에 3배로 늘어놓으면 못 쓴다 */
+    const [lang, setLang] = useState<'ko' | 'en' | 'zh'>('ko');
     const [price, setPrice] = useState(initial?.price?.toString() ?? '');
     const [busy, setBusy] = useState(false);
 
@@ -53,8 +59,12 @@ export default function ProductForm({
                 mainCategory,
                 subCategory,
                 name,
+                nameEn,
+                nameZh,
                 highlight,
                 description,
+                descriptionEn,
+                descriptionZh,
                 price: price === '' ? null : Number(price),
                 order: initial?.order ?? Date.now(),
             };
@@ -90,7 +100,7 @@ export default function ProductForm({
             </div>
 
             {/* 카드 */}
-            <div className="overflow-hidden rounded-2xl border border-black/[0.04] bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+            <div className="relative overflow-hidden rounded-2xl border border-black/[0.04] bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
                 <div className="space-y-6 p-6 sm:p-8">
                     {/* 대메뉴 + 중제목 */}
                     <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
@@ -178,16 +188,52 @@ export default function ProductForm({
                     </div>
 
                     {/* 시술명 */}
+                    <div className="flex gap-1.5">
+                        {(['ko', 'en', 'zh'] as const).map((l) => (
+                            <button
+                                key={l}
+                                type="button"
+                                onClick={() => setLang(l)}
+                                className={`rounded-full px-3.5 py-1.5 text-xs ${
+                                    lang === l ? 'bg-[#3a322c] text-white' : 'border border-neutral-200 bg-white'
+                                }`}
+                            >
+                                {l === 'ko' ? '한국어' : l === 'en' ? 'English' : '中文'}
+                            </button>
+                        ))}
+                    </div>
+
                     <label className="flex flex-col gap-1.5">
                         <span className="text-[13px] font-medium text-neutral-600">
-                            시술명 <span className="text-rose-500">*</span>
+                            시술명 {lang === 'ko' && <span className="text-rose-500">*</span>}
+                            {lang !== 'ko' && (
+                                <span className="font-normal text-neutral-400">(비우면 한국어로 표시)</span>
+                            )}
                         </span>
-                        <input
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            placeholder="예: 프리미엄 리프팅"
-                            className={inputBase}
-                        />
+                        {lang === 'ko' && (
+                            <input
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                placeholder="예: 프리미엄 리프팅"
+                                className={inputBase}
+                            />
+                        )}
+                        {lang === 'en' && (
+                            <input
+                                value={nameEn}
+                                onChange={(e) => setNameEn(e.target.value)}
+                                placeholder="e.g. Premium Lifting"
+                                className={inputBase}
+                            />
+                        )}
+                        {lang === 'zh' && (
+                            <input
+                                value={nameZh}
+                                onChange={(e) => setNameZh(e.target.value)}
+                                placeholder="例: 高级提升"
+                                className={inputBase}
+                            />
+                        )}
                     </label>
 
                     {/* 주요문장 */}
@@ -208,13 +254,33 @@ export default function ProductForm({
                         <span className="text-[13px] font-medium text-neutral-600">
                             설명 <span className="font-normal text-neutral-400">(선택)</span>
                         </span>
-                        <textarea
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            rows={4}
-                            placeholder="시술에 대한 간단한 설명을 입력하세요"
-                            className={`${inputBase} resize-none`}
-                        />
+                        {lang === 'ko' && (
+                            <textarea
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                rows={4}
+                                placeholder="시술에 대한 간단한 설명을 입력하세요"
+                                className={`${inputBase} resize-none`}
+                            />
+                        )}
+                        {lang === 'en' && (
+                            <textarea
+                                value={descriptionEn}
+                                onChange={(e) => setDescriptionEn(e.target.value)}
+                                rows={4}
+                                placeholder="Short description in English"
+                                className={`${inputBase} resize-none`}
+                            />
+                        )}
+                        {lang === 'zh' && (
+                            <textarea
+                                value={descriptionZh}
+                                onChange={(e) => setDescriptionZh(e.target.value)}
+                                rows={4}
+                                placeholder="简短说明"
+                                className={`${inputBase} resize-none`}
+                            />
+                        )}
                     </label>
 
                     {/* 정가 */}
@@ -255,6 +321,13 @@ export default function ProductForm({
                         {busy ? '저장 중…' : initial ? '수정 저장' : '추가하기'}
                     </button>
                 </div>
+
+                {/* 저장 중에는 폼 전체를 덮는다. 두 번 누르는 걸 막고 진행 상태가 확실히 보인다 */}
+                {busy && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-white/70">
+                        <span className="rounded-full bg-[#3a322c] px-5 py-2 text-sm text-white">저장 중…</span>
+                    </div>
+                )}
             </div>
         </div>
     );

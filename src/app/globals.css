@@ -245,7 +245,7 @@ body.overflow-hidden {
         padding-left: calc(var(--spacing-rail) + 277px);
     }
 }
-
+/* 
 * {
     scrollbar-width: thin;
     scrollbar-color: rgba(59, 43, 30, 0.25) transparent;
@@ -267,4 +267,19 @@ body.overflow-hidden {
 
 *::-webkit-scrollbar-thumb:hover {
     background: rgba(59, 43, 30, 0.4);
+} */
+
+/* 스크롤을 부드럽게. prefers-reduced-motion 이면 위 규칙이 auto 로 되돌린다 */
+html {
+    scroll-behavior: smooth;
+}
+
+/* 스크롤바를 전부 숨긴다. 스크롤 기능은 그대로 돌고 막대만 안 보인다 */
+* {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+    display: none;
 }

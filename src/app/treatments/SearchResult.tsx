@@ -1,10 +1,10 @@
 'use client';
 
-import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import CartToggle from '@/components/cart/CartToggle';
 import { getProducts } from '@/lib/products';
 import type { Product } from '@/types/product';
+import Link from 'next/link';
 
 /** 헤더 바로검색이 /treatments?q= 로 보낸 결과를 보여준다 */
 export default function SearchResult({ keyword }: { keyword: string }) {
@@ -51,7 +51,7 @@ export default function SearchResult({ keyword }: { keyword: string }) {
             ) : (
                 <ul className="flex flex-col gap-4 pt-9">
                     {hits.map((p) => (
-                        <li key={p.id} className="w-full max-w-[800px] rounded-lg border border-beige p-6">
+                        <li key={p.id} className="w-full max-w-[800px] rounded-lg border border-beige p-5 lg:p-6">
                             <Link
                                 href={`/treatments/${p.menuSlug}`}
                                 className="text-caption-sm text-dark/50 transition-colors duration-500 ease-brand hover:text-brown"
@@ -59,7 +59,7 @@ export default function SearchResult({ keyword }: { keyword: string }) {
                                 {p.menuCategory}
                                 {p.mainCategory && ` · ${p.mainCategory}`}
                             </Link>
-                            <h2 className="mt-2 whitespace-pre-line text-20 font-bold">{p.name}</h2>
+                            <h2 className="mt-2 whitespace-pre-line text-18 font-bold lg:text-20">{p.name}</h2>
 
                             {p.highlight && <p className="mt-2 text-small font-medium text-brown">{p.highlight}</p>}
 
@@ -79,6 +79,7 @@ export default function SearchResult({ keyword }: { keyword: string }) {
                                             name: p.name,
                                             price: p.price,
                                             category: p.menuCategory,
+                                            description: p.description,
                                         }}
                                     />
                                 )}

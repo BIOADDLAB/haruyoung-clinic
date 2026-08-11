@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, type DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -25,7 +25,7 @@ function SortableCard({
         <div
             ref={setNodeRef}
             style={{ transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.5 : 1 }}
-            className={`w-full max-w-[800px] rounded-lg border bg-cream p-6 ${
+            className={`w-full max-w-[800px] rounded-lg border bg-cream p-5 lg:p-6 ${
                 editing ? 'border-dark ring-1 ring-dark' : 'border-beige'
             }`}
         >
@@ -40,7 +40,7 @@ function SortableCard({
                         {p.mainCategory || '(대분류 없음)'}
                         {p.subCategory && ` · ${p.subCategory}`}
                     </p>
-                    <h3 className="mt-1 whitespace-pre-line text-20 font-bold text-dark">{p.name}</h3>
+                    <h3 className="mt-1 whitespace-pre-line text-18 font-bold text-dark lg:text-20">{p.name}</h3>
                     {p.highlight && <p className="mt-2 text-small font-medium text-brown">{p.highlight}</p>}
                     {p.description && (
                         <p className="mt-6 whitespace-pre-line text-caption leading-[1.7] text-dark/85">
@@ -50,14 +50,14 @@ function SortableCard({
                 </div>
             </div>
 
-            <div className="mt-3 flex items-center justify-end gap-5">
+            <div className="mt-3 flex flex-wrap items-center justify-end gap-x-5 gap-y-2">
                 <button onClick={() => onEdit(p)} className="text-caption text-dark/55 hover:text-dark">
                     수정
                 </button>
                 <button onClick={() => onDelete(p.id)} className="text-caption text-red-500">
                     삭제
                 </button>
-                <span className="text-22 font-bold text-dark">
+                <span className="text-20 font-bold text-dark lg:text-22">
                     {p.price === null ? '가격 문의' : `${p.price.toLocaleString()}원`}
                 </span>
             </div>
@@ -71,6 +71,13 @@ export default function ProductsPage() {
     const [loading, setLoading] = useState(true);
     const [editing, setEditing] = useState<Product | null>(null);
     const sensors = useSensors(useSensor(PointerSensor));
+    const formRef = useRef<HTMLDivElement>(null);
+
+    /** 수정을 누르면 폼이 화면 밖에 있을 수 있다. 폼으로 데려간다 */
+    const edit = (item: typeof editing) => {
+        setEditing(item);
+        formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
 
     /** 저장·삭제 후 다시 불러올 때 쓴다 */
     const load = async () => {
@@ -124,7 +131,7 @@ export default function ProductsPage() {
             <h1 className="text-2xl font-bold text-[#3a322c] lg:text-3xl">수가표 관리</h1>
 
             {/* 폼: key로 편집 대상 바뀔 때 폼 리셋 */}
-            <div className="mt-6">
+            <div ref={formRef} className="mt-6">
                 <ProductForm
                     key={editing?.id ?? 'new'}
                     initial={editing ?? undefined}
@@ -158,7 +165,7 @@ export default function ProductsPage() {
                                 <SortableCard
                                     key={p.id}
                                     p={p}
-                                    onEdit={setEditing}
+                                    onEdit={edit}
                                     onDelete={onDelete}
                                     editing={editing?.id === p.id}
                                 />

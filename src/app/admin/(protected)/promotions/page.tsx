@@ -3,7 +3,7 @@
 import { closestCenter, DndContext, PointerSensor, useSensor, useSensors, type DragEndEvent } from '@dnd-kit/core';
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import PromotionForm from './PromotionForm';
 import { deletePromotion, getPromotions, reorderPromotions } from '@/lib/promotions';
 import { daysLeft, discountRate, type Promotion } from '@/types/promotion';
@@ -26,7 +26,7 @@ function SortableCard({
         <div
             ref={setNodeRef}
             style={{ transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.5 : 1 }}
-            className={`w-full max-w-[800px] rounded-lg border bg-cream p-6 ${
+            className={`w-full max-w-[800px] rounded-lg border bg-cream p-5 lg:p-6 ${
                 editing ? 'border-dark ring-1 ring-dark' : 'border-beige'
             }`}
         >
@@ -35,10 +35,10 @@ function SortableCard({
                 <button {...attributes} {...listeners} className="cursor-grab pt-1 text-dark/35">
                     ⠿
                 </button>
-                <h3 className="min-w-0 flex-1 text-20 font-bold text-dark">{p.name}</h3>
+                <h3 className="min-w-0 flex-1 text-18 font-bold text-dark lg:text-20">{p.name}</h3>
             </div>
 
-            <div className="mt-4 flex items-baseline justify-between gap-6">
+            <div className="mt-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
                 <p className="text-small font-medium text-brown">{p.highlight}</p>
                 <p className="shrink-0 text-caption text-dark/60">
                     ~{p.until} ({left < 0 ? '마감됨' : left === 0 ? '오늘 마감' : `${left}일 남음`})
@@ -49,7 +49,7 @@ function SortableCard({
                 <p className="mt-6 whitespace-pre-line text-caption leading-[1.7] text-dark/85">{p.description}</p>
             )}
 
-            <div className="mt-3 flex items-center justify-end gap-5">
+            <div className="mt-3 flex flex-wrap items-center justify-end gap-x-5 gap-y-2">
                 <button onClick={() => onEdit(p)} className="text-caption text-dark/55 hover:text-dark">
                     수정
                 </button>
@@ -64,7 +64,7 @@ function SortableCard({
                 {p.originPrice > p.price && (
                     <span className="text-caption text-dark/45 line-through">{p.originPrice.toLocaleString()}원</span>
                 )}
-                <span className="text-24 font-bold text-dark">{p.price.toLocaleString()}원</span>
+                <span className="text-20 font-bold text-dark lg:text-24">{p.price.toLocaleString()}원</span>
             </div>
         </div>
     );
@@ -75,6 +75,13 @@ export default function PromotionsPage() {
     const [loading, setLoading] = useState(true);
     const [editing, setEditing] = useState<Promotion | null>(null);
     const sensors = useSensors(useSensor(PointerSensor));
+    const formRef = useRef<HTMLDivElement>(null);
+
+    /** 수정을 누르면 폼이 화면 밖에 있을 수 있다. 폼으로 데려간다 */
+    const edit = (item: typeof editing) => {
+        setEditing(item);
+        formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
 
     const load = async () => {
         setAll(await getPromotions());
@@ -122,7 +129,7 @@ export default function PromotionsPage() {
         <div>
             <h1 className="text-2xl font-bold text-[#3a322c] lg:text-3xl">프로모션 관리</h1>
 
-            <div className="mt-6">
+            <div ref={formRef} className="mt-6">
                 <PromotionForm
                     key={editing?.id ?? 'new'}
                     initial={editing ?? undefined}
@@ -139,7 +146,7 @@ export default function PromotionsPage() {
                                 <SortableCard
                                     key={p.id}
                                     p={p}
-                                    onEdit={setEditing}
+                                    onEdit={edit}
                                     onDelete={onDelete}
                                     editing={editing?.id === p.id}
                                 />

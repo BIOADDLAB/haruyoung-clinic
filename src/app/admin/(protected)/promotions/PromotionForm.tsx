@@ -59,7 +59,7 @@ export default function PromotionForm({
                 <p className="mt-1 text-sm text-neutral-500">마감일이 지나면 사이트에서 자동으로 내려갑니다.</p>
             </div>
 
-            <div className="overflow-hidden rounded-2xl border border-black/[0.04] bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+            <div className="relative overflow-hidden rounded-2xl border border-black/[0.04] bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
                 <div className="space-y-6 p-6 sm:p-8">
                     <label className="flex flex-col gap-1.5">
                         <span className="text-[13px] font-medium text-neutral-600">
@@ -157,6 +157,13 @@ export default function PromotionForm({
                         {busy ? '저장 중…' : initial ? '수정 저장' : '추가하기'}
                     </button>
                 </div>
+
+                {/* 저장 중에는 폼 전체를 덮는다. 두 번 누르는 걸 막고 진행 상태가 확실히 보인다 */}
+                {busy && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-white/70">
+                        <span className="rounded-full bg-[#3a322c] px-5 py-2 text-sm text-white">저장 중…</span>
+                    </div>
+                )}
             </div>
         </div>
     );

@@ -15,7 +15,7 @@ export default function CartToggle({ item, origin }: { item: CartItem; origin?: 
             onClick={() => toggle(item)}
             aria-pressed={on}
             aria-label={`${item.name} ${on ? '장바구니에서 빼기' : '장바구니에 담기'}`}
-            className="flex items-center gap-3 transition-opacity duration-500 ease-brand hover:opacity-70"
+            className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 transition-opacity duration-500 ease-brand hover:opacity-70"
         >
             <span
                 aria-hidden="true"

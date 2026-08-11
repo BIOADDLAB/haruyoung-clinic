@@ -1,14 +1,13 @@
 'use client';
 
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import Banner from '@/components/ui/Banner';
 import { useCart } from '@/components/cart/CartProvider';
+import { PROMOTION_BANNER } from '@/data/site';
 import { RevealGroup, RevealItem } from '@/components/ui/RevealGroup';
 import { fadeUp } from '@/lib/motion';
 import { getPromotions } from '@/lib/promotions';
 import { daysLeft, discountRate, type Promotion } from '@/types/promotion';
-import Banner from '@/components/ui/Banner';
-import { PROMOTION_BANNER } from '@/data/site';
 
 export default function PromotionList() {
     const [list, setList] = useState<Promotion[] | null>(null);
@@ -29,6 +28,8 @@ export default function PromotionList() {
 
     return (
         <div className="pb-28 lg:pb-24">
+            <p className="px-6 pt-8 text-small font-semibold lg:pl-12 lg:pt-16">{month}월 promotion</p>
+
             <Banner
                 file={PROMOTION_BANNER.file}
                 lead={PROMOTION_BANNER.lead}
@@ -39,11 +40,11 @@ export default function PromotionList() {
 
             <div className="px-6 lg:pl-12 lg:pr-0">
                 <div className="w-full max-w-[800px]">
-                    <h2 className="pt-16 text-22 font-bold">{month}월 promotion</h2>
+                    <h2 className="pt-12 text-20 font-bold lg:pt-16 lg:text-22">{month}월 promotion</h2>
 
                     {/* 최저가는 저장하지 않고 목록에서 계산한다 */}
-                    <p className="pt-20 text-right">
-                        <span className="text-24 font-bold">{from.toLocaleString()}원</span>
+                    <p className="pt-10 text-right lg:pt-20">
+                        <span className="text-20 font-bold lg:text-24">{from.toLocaleString()}원</span>
                         <span className="ml-1 text-small"> 부터~</span>
                     </p>
                     <p className="mt-2 text-right text-caption text-dark/55">VAT 별도</p>
@@ -73,12 +74,16 @@ function PromotionCard({ p }: { p: Promotion }) {
     const left = daysLeft(p.until);
 
     return (
-        <RevealItem as="li" variants={fadeUp} className="w-full max-w-[800px] rounded-lg border border-beige p-6">
-            <h3 className="text-20 font-bold">{p.name}</h3>
+        <RevealItem
+            as="li"
+            variants={fadeUp}
+            className="w-full max-w-[800px] rounded-lg border border-beige p-5 lg:p-6"
+        >
+            <h3 className="text-18 font-bold lg:text-20">{p.name}</h3>
 
-            <div className="mt-4 flex items-baseline justify-between gap-6">
+            <div className="mt-4 flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
                 <p className="text-small font-medium text-brown">{p.highlight}</p>
-                <p className="shrink-0 text-caption text-dark/60">
+                <p className="text-caption text-dark/60 sm:shrink-0">
                     ~{p.until} ({left === 0 ? '오늘 마감' : `${left}일 남음`})
                 </p>
             </div>
@@ -87,7 +92,7 @@ function PromotionCard({ p }: { p: Promotion }) {
                 <p className="mt-6 whitespace-pre-line text-caption leading-[1.7] text-dark/85">{p.description}</p>
             )}
 
-            <div className="mt-3 flex justify-end">
+            <div className="mt-4 flex justify-end lg:mt-3">
                 <button
                     type="button"
                     onClick={() =>
@@ -97,11 +102,12 @@ function PromotionCard({ p }: { p: Promotion }) {
                             price: p.price,
                             category: '프로모션',
                             originPrice: p.originPrice,
+                            description: p.description,
                         })
                     }
                     aria-pressed={on}
                     aria-label={`${p.name} ${on ? '장바구니에서 빼기' : '장바구니에 담기'}`}
-                    className="flex items-center transition-opacity duration-500 ease-brand hover:opacity-70"
+                    className="flex flex-wrap items-center justify-end gap-y-1 transition-opacity duration-500 ease-brand hover:opacity-70"
                 >
                     <span
                         aria-hidden="true"
@@ -134,7 +140,7 @@ function PromotionCard({ p }: { p: Promotion }) {
                         </span>
                     )}
 
-                    <span className="ml-2 text-24 font-bold">{p.price.toLocaleString()}원</span>
+                    <span className="ml-2 text-20 font-bold lg:text-24">{p.price.toLocaleString()}원</span>
                 </button>
             </div>
         </RevealItem>

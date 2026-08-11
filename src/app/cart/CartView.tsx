@@ -1,10 +1,10 @@
 'use client';
 
-import Link from 'next/link';
 import { useState } from 'react';
 import { useCart } from '@/components/cart/CartProvider';
 import ReservationForm from '@/components/reservation/ReservationForm';
 import { useMounted } from '@/lib/useMounted';
+import Link from 'next/link';
 
 export default function CartView() {
     const { items, remove } = useCart();
@@ -79,6 +79,11 @@ export default function CartView() {
                                         <h2 className="mt-1.5 text-18 font-semibold leading-snug sm:text-20">
                                             {i.name}
                                         </h2>
+                                        {i.description && (
+                                            <p className="mt-3 whitespace-pre-line text-caption-sm leading-[1.7] text-dark/60">
+                                                {i.description}
+                                            </p>
+                                        )}
                                     </div>
 
                                     <div className="flex shrink-0 flex-col items-end gap-1.5">

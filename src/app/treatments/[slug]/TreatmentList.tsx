@@ -1,14 +1,13 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import Banner from '@/components/ui/Banner';
 import CartToggle from '@/components/cart/CartToggle';
+import { TREATMENT_BANNER } from '@/data/site';
 import { RevealGroup, RevealItem } from '@/components/ui/RevealGroup';
 import { fadeUp } from '@/lib/motion';
 import { getProducts } from '@/lib/products';
 import type { Product } from '@/types/product';
-import Image from 'next/image';
-import { TREATMENT_BANNER } from '@/data/site';
-import Banner from '@/components/ui/Banner';
 
 export default function TreatmentList({ slug, categoryName }: { slug: string; categoryName: string }) {
     const [list, setList] = useState<Product[] | null>(null);
@@ -42,8 +41,6 @@ export default function TreatmentList({ slug, categoryName }: { slug: string; ca
 
     return (
         <div className="pb-28 lg:pb-24">
-            {/* #TODO: 카테고리 대표 이미지로 교체 */}
-            {/* 배너 892x194. 원본 그대로 받아서 모바일에서도 확대되지 않는다 */}
             <Banner
                 file={TREATMENT_BANNER[slug]?.file ?? 'bg-tre-01'}
                 en={TREATMENT_BANNER[slug]?.en ?? categoryName}
@@ -59,7 +56,7 @@ export default function TreatmentList({ slug, categoryName }: { slug: string; ca
                     {sections.map((section) => (
                         <section key={section.main} className="pt-14">
                             {sections.length > 1 && (
-                                <h2 className="w-full max-w-[800px] border-b border-dark/15 pb-3 text-22 font-bold">
+                                <h2 className="w-full max-w-[800px] border-b border-dark/15 pb-3 text-20 font-bold lg:text-22">
                                     {section.main}
                                 </h2>
                             )}
@@ -74,9 +71,11 @@ export default function TreatmentList({ slug, categoryName }: { slug: string; ca
                                                 as="li"
                                                 key={p.id}
                                                 variants={fadeUp}
-                                                className="w-full max-w-[800px] rounded-lg border border-beige p-6"
+                                                className="w-full max-w-[800px] rounded-lg border border-beige p-5 lg:p-6"
                                             >
-                                                <h4 className="whitespace-pre-line text-20 font-bold">{p.name}</h4>
+                                                <h4 className="whitespace-pre-line text-18 font-bold lg:text-20">
+                                                    {p.name}
+                                                </h4>
 
                                                 {p.highlight && (
                                                     <p className="mt-2 text-small font-medium text-brown">
@@ -100,6 +99,7 @@ export default function TreatmentList({ slug, categoryName }: { slug: string; ca
                                                                 name: p.name,
                                                                 price: p.price,
                                                                 category: p.menuCategory,
+                                                                description: p.description,
                                                             }}
                                                         />
                                                     )}
