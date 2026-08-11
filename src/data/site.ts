@@ -100,13 +100,21 @@ export const RESERVATION_MAX_DAYS = 60;
  * 시술 페이지 배너. 892×194.
  * 번호는 SUB_NAV 순서를 따른다. 새 카테고리가 생기면 여기에 한 줄 추가한다.
  */
-export const TREATMENT_BANNER: Record<string, string> = {
-    lifting: 'bg-tre-01',
-    pigment: 'bg-tre-02',
-    acne: 'bg-tre-03',
-    petit: 'bg-tre-04',
-    care: 'bg-tre-05',
-    hair: 'bg-tre-06',
-    body: 'bg-tre-07',
-    booster: 'bg-tre-08',
+export const TREATMENT_BANNER: Record<string, { file: string; en: string }> = {
+    lifting: { file: 'bg-tre-01', en: 'Lifting' },
+    pigment: { file: 'bg-tre-02', en: 'Pigment' },
+    acne: { file: 'bg-tre-03', en: 'Acne' },
+    petit: { file: 'bg-tre-04', en: 'Petit' },
+    care: { file: 'bg-tre-05', en: 'Care' },
+    hair: { file: 'bg-tre-06', en: 'Smooth' },
+    body: { file: 'bg-tre-07', en: 'Body' },
+    booster: { file: 'bg-tre-08', en: 'Skin Booster' },
+};
+
+// #TODO: 관리자페이지에서 문구 등록 가능해야할듯
+export const PROMOTION_BANNER = {
+    file: 'bg-pro',
+    lead: 'HA : RU : OO',
+    title: '2026 Autumn Event',
+    subtitle: '2026년 9월 가을맞이 이벤트',
 };

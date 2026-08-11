@@ -7,6 +7,8 @@ import { RevealGroup, RevealItem } from '@/components/ui/RevealGroup';
 import { fadeUp } from '@/lib/motion';
 import { getPromotions } from '@/lib/promotions';
 import { daysLeft, discountRate, type Promotion } from '@/types/promotion';
+import Banner from '@/components/ui/Banner';
+import { PROMOTION_BANNER } from '@/data/site';
 
 export default function PromotionList() {
     const [list, setList] = useState<Promotion[] | null>(null);
@@ -27,20 +29,13 @@ export default function PromotionList() {
 
     return (
         <div className="pb-28 lg:pb-24">
-            <p className="px-6 pt-8 text-small font-semibold lg:pl-12 lg:pt-16">{month}월 promotion</p>
-
-            {/* 배너 892x420 */}
-            <div className="relative mt-9 aspect-[892/420] w-full max-w-[892px] overflow-hidden">
-                <Image
-                    src="/images/bg-pro.jpg"
-                    alt="하루영의원 프로모션"
-                    fill
-                    priority
-                    quality={92}
-                    sizes="(min-width:1024px) 892px, 892px"
-                    className="object-cover"
-                />
-            </div>
+            <Banner
+                file={PROMOTION_BANNER.file}
+                lead={PROMOTION_BANNER.lead}
+                en={PROMOTION_BANNER.title}
+                ko={PROMOTION_BANNER.subtitle}
+                tall
+            />
 
             <div className="px-6 lg:pl-12 lg:pr-0">
                 <div className="w-full max-w-[800px]">
