@@ -6,6 +6,13 @@ export type Member = {
     name: string;
     phone: string;
     createdAt: number;
+    /**
+     * 삭제 시각. 값이 있으면 삭제된 회원이다.
+     *
+     * Firebase Auth 계정을 지우려면 Admin SDK 와 서버 라우트가 필요하다.
+     * 여기서는 문서에 시각만 남긴다. 되돌리지 않고 기록만 보관한다.
+     */
+    deletedAt?: number | null;
 };
 
 export type MemberSeed = Omit<Member, 'id'>;
