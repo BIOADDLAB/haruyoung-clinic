@@ -142,7 +142,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                                 <Reveal
                                     as="p"
                                     delay={0.2}
-                                    className="mt-5 whitespace-normal text-caption leading-[2] text-dark lg:whitespace-pre-line"
+                                    className="mt-5 whitespace-normal text-caption leading-[2] text-dark lg:!whitespace-pre-line"
                                 >
                                     {t('heroBody')}
                                 </Reveal>
