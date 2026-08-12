@@ -110,7 +110,9 @@
         "unit": " 项",
         "won": " 韩元",
         "added": "已加入购物车",
-        "view": "查看"
+        "view": "查看",
+        "add": "加入购物车",
+        "remove": "从购物车移除"
     },
     "reservation": {
         "title": "立即预约",
@@ -218,13 +220,24 @@
     },
     "footer": {
         "hours": "诊疗时间",
-        "address": "地址",
-        "subway": "地铁",
-        "parking": "停车",
+        "address": "首尔江南区彦州路 538 大雄大厦 1 层",
+        "subway": "9 号线宣靖陵站 4 号出口 步行 11 分钟",
+        "parking": "免费停车 / 代客泊车 3,000 韩元",
         "ceo": "代表",
         "bizNo": "营业执照号",
         "tel": "代表电话",
-        "map": "即将开放"
+        "map": "即将开放",
+        "day1": "周一 周五",
+        "day1Aria": "周一与周五",
+        "day2": "周二 周三 周四",
+        "day2Aria": "周二、周三、周四",
+        "day3": "周六",
+        "day3Aria": "周六",
+        "day4": "午休",
+        "day4Aria": "午休时间",
+        "note1": "周一 / 周六：午间不休诊",
+        "note2": "周日：休诊",
+        "ceoName": "柳善敏"
     },
     "a11y": {
         "hero": "HARU YOUNG 医院前台休息区",
@@ -242,7 +255,30 @@
         "lounge": "一楼前台休息区全景",
         "mapAlt": "医院位置地图（开业后公开）",
         "enlarge": "查看大图",
-        "logo": "HARU YOUNG 医院"
+        "logo": "HARU YOUNG 医院",
+        "card_lifting": "象征提升项目的乳霜质感",
+        "card_pigment": "色素治疗后通透的颈肩肌肤",
+        "card_acne": "象征痘痘治疗的清透肌理",
+        "card_petit": "象征微整形项目的丝绸质感",
+        "card_care": "象征皮肤管理的水波质感",
+        "card_hair": "象征脱毛项目的光滑肌肤",
+        "card_body": "象征身体项目的轮廓",
+        "card_booster": "象征水光针的凝胶质感",
+        "tour01": "入口间接照明走廊",
+        "tour02": "前台休息区全景",
+        "tour03": "咨询室窗边座位",
+        "tour04": "诊疗室床位",
+        "tour05": "等候区沙发",
+        "tour06": "化妆间",
+        "tour07": "走廊照明",
+        "tour08": "私密房间",
+        "room01": "入口间接照明走廊",
+        "room02": "前台休息区全景",
+        "room03": "咨询室窗边座位",
+        "room04": "单人诊疗室床位",
+        "room05": "多人诊疗室床位",
+        "room06": "私密化妆间",
+        "room07": "木格栅走廊"
     },
     "home": {
         "moreView": "More View",
@@ -251,9 +287,49 @@
         "promotion": "Promotion",
         "category": "Category",
         "promotionLead": "找到适合您的优惠。",
-        "categoryLead": "为您的肌肤\n定制的解决方案。"
+        "categoryLead": "遇见为您的肌肤\n定制的解决方案。",
+        "heroTitle": "专为您设计的\n特别肌肤休憩。",
+        "heroBody": "HARU YOUNG 医院如同忙碌日常中的片刻停顿，\n为肌肤带来最舒适的休息。\n以专属于您的定制护理，\n让自然之美长久延续。",
+        "treatLead": "看起来比年龄更年轻的肌肤，\n逆转时间的哈鲁荣重塑护理。",
+        "spaceLead": "哈鲁荣的空间，为肌肤设计安然休憩的时间。\n沉静的氛围与细腻的细节，让停留的每一刻都成为完整的休息。"
     },
     "about": {
-        "ceoTitle": "院长"
+        "ceoTitle": "院长",
+        "heroEn": "A Moment of Pause,\nTimeless Beauty",
+        "heroTitle": "为肌肤设计\n最深层的休息。",
+        "heroBody": "哈鲁荣不止于简单的项目，而是设计让肌肤最为舒适的瞬间。\n以专属于您的定制护理，\n带来历久弥新的自然之美\n与长久的休憩。",
+        "specialistEn": "HARU YOUNG\nSpecialist",
+        "spaceEn": "HARU YOUNG\nSpace",
+        "spaceTitle": "一日之息，永恒之时，\n专为您设计的特别肌肤休憩。",
+        "spaceBody": "离开忙碌的日常，步入异国高端度假 SPA 般的宁静。\n在格调私密的空间里，\n以体贴入微的温暖之手，\n让您的肌肤回到最舒适的状态。",
+        "career1": "原 江南 Jiyu 总院长",
+        "career2": "原 Muse 江南院长",
+        "career3": "原 Abiju 蚕室院长",
+        "career4": "原 Tox&Fill 九里院长",
+        "society1": "大韩美容外科学会",
+        "society2": "大韩美容激光学会",
+        "society3": "大韩激光皮肤毛发学会",
+        "society4": "大韩肥胖美容治疗学会",
+        "society5": "大韩填充学会",
+        "spaceBody2": "我们不追随千篇一律的项目或流行。\n我们倾听您走过的时间与肌肤的故事，\n设计每天多一分光彩的明天。",
+        "ceoName": "洪吉童"
+    },
+    "treatCard": {
+        "lifting": "紧致不下垂，\n逆转衰老时钟的\n提升护理",
+        "pigment": "色素带来的年龄感，\n回到通透明亮的\n本来肌肤",
+        "acne": "痘痘的根源与老化信号，\n从根本上\n镇静的护理",
+        "petit": "以细微的变化，\n成就清晰印象\n与自然平衡",
+        "care": "由内而外充盈的\n深层水分与\n健康状态",
+        "hair": "平滑整洁的肌理，\n四季皆可\n自信的肌肤",
+        "body": "如面部般细致，\n连线条也一并\n完成的身体护理",
+        "booster": "唤醒肌肤本源力量，\n由内充盈的\n护理"
+    },
+    "promoBoard": {
+        "event1": "Welcome Event",
+        "event2": "美白 / 色素活动",
+        "event3": "护肤活动",
+        "event4": "每月活动",
+        "event5": "营养注射活动",
+        "event6": "脱毛活动"
     }
 }

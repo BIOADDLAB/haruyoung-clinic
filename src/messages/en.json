@@ -110,7 +110,9 @@
         "unit": "",
         "won": " KRW",
         "added": "Added to your cart",
-        "view": "View"
+        "view": "View",
+        "add": "Add to cart",
+        "remove": "Remove from cart"
     },
     "reservation": {
         "title": "Book now",
@@ -218,13 +220,24 @@
     },
     "footer": {
         "hours": "Hours",
-        "address": "Address",
-        "subway": "Subway",
-        "parking": "Parking",
+        "address": "1F Daewoong Bldg, 538 Eonju-ro, Gangnam-gu, Seoul",
+        "subway": "Line 9 Seonjeongneung Stn. Exit 4, 11 min walk",
+        "parking": "Free parking / Valet KRW 3,000",
         "ceo": "CEO",
         "bizNo": "Business No.",
         "tel": "Phone",
-        "map": "Coming soon"
+        "map": "Coming soon",
+        "day1": "Mon Fri",
+        "day1Aria": "Monday and Friday",
+        "day2": "Tue Wed Thu",
+        "day2Aria": "Tuesday, Wednesday, Thursday",
+        "day3": "Saturday",
+        "day3Aria": "Saturday",
+        "day4": "Lunch",
+        "day4Aria": "Lunch break",
+        "note1": "Mon / Sat: open through lunch",
+        "note2": "Sunday: closed",
+        "ceoName": "Yoo Seon-min"
     },
     "a11y": {
         "hero": "HARU YOUNG CLINIC reception lounge",
@@ -242,7 +255,30 @@
         "lounge": "First-floor reception lounge",
         "mapAlt": "Clinic location map (available after opening)",
         "enlarge": "View larger",
-        "logo": "HARU YOUNG CLINIC"
+        "logo": "HARU YOUNG CLINIC",
+        "card_lifting": "Cream texture symbolising our lifting treatments",
+        "card_pigment": "Clear neck and shoulder skin after pigment care",
+        "card_acne": "Clear skin texture symbolising our acne care",
+        "card_petit": "Silk texture symbolising our petit treatments",
+        "card_care": "Water texture symbolising our skin care",
+        "card_hair": "Smooth skin symbolising our hair removal",
+        "card_body": "Silhouette symbolising our body treatments",
+        "card_booster": "Gel texture symbolising our skin boosters",
+        "tour01": "Entrance corridor with indirect lighting",
+        "tour02": "Reception lounge",
+        "tour03": "Consultation room window seating",
+        "tour04": "Treatment room bed",
+        "tour05": "Waiting area sofa",
+        "tour06": "Powder room",
+        "tour07": "Corridor lighting",
+        "tour08": "Private room",
+        "room01": "Entrance corridor with indirect lighting",
+        "room02": "Reception lounge",
+        "room03": "Consultation room window seating",
+        "room04": "Single treatment room bed",
+        "room05": "Multi-bed treatment room",
+        "room06": "Private powder room",
+        "room07": "Wood-louvre corridor"
     },
     "home": {
         "moreView": "More View",
@@ -251,9 +287,49 @@
         "promotion": "Promotion",
         "category": "Category",
         "promotionLead": "Find the promotion that suits you.",
-        "categoryLead": "Tailored solutions\nfor your skin."
+        "categoryLead": "Discover a solution\ntailored to your skin.",
+        "heroTitle": "A skin retreat designed\nonly for you.",
+        "heroBody": "Like a pause in a busy day, HARU YOUNG CLINIC\noffers your skin the calmest rest.\nWith care designed only for you,\nwe help natural beauty last far beyond your visit.",
+        "treatLead": "Skin that looks younger than your years,\nremodelling care that turns time back.",
+        "spaceLead": "Our space is designed as time for your skin to rest.\nA calm mood and careful detail make every moment here a true pause."
     },
     "about": {
-        "ceoTitle": "Medical Director"
+        "ceoTitle": "Medical Director",
+        "heroEn": "A Moment of Pause,\nTimeless Beauty",
+        "heroTitle": "We design the deepest rest\nfor your skin.",
+        "heroBody": "Beyond a simple procedure, HARU YOUNG designs the moment\nyour skin feels most at ease. With care made only for you,\nwe offer rest where natural beauty lasts\nlong after time has passed.",
+        "specialistEn": "HARU YOUNG\nSpecialist",
+        "spaceEn": "HARU YOUNG\nSpace",
+        "spaceTitle": "The pause of a day, a timeless moment.\nA skin retreat designed only for you.",
+        "spaceBody": "Step away from the everyday and into the calm of\na high-end resort spa. In a refined private space,\nwith care attentive to the finest texture of your skin,\nyou return to your most comfortable state.",
+        "career1": "Former Director, Jiyu Gangnam",
+        "career2": "Former Director, Muse Gangnam",
+        "career3": "Former Director, Abiju Jamsil",
+        "career4": "Former Director, Tox&Fill Guri",
+        "society1": "Korean Academy of Cosmetic Surgery",
+        "society2": "Korean Academy of Aesthetic Laser",
+        "society3": "Korean Society of Laser Skin & Hair",
+        "society4": "Korean Society of Obesity & Aesthetic Therapy",
+        "society5": "Korean Filler Society",
+        "spaceBody2": "We do not follow uniform procedures or passing trends.\nWe listen to the time you have lived and the story of your skin,\nand design a tomorrow that shines a little more each day.",
+        "ceoName": "Hong Gil-dong"
+    },
+    "treatCard": {
+        "lifting": "Firm resilience,\nlifting that turns\nthe clock back",
+        "pigment": "Age made by pigment,\nback to clear and\nluminous skin",
+        "acne": "The root of breakouts,\ncare that calms\nfrom the source",
+        "petit": "A clearer impression\nand natural balance,\nmade by small changes",
+        "care": "Deep moisture and\nhealthy condition,\nfilled from within",
+        "hair": "Smoothly groomed\ntexture, confident skin\nin every season",
+        "body": "Body care that shapes\nyour line as delicately\nas your face",
+        "booster": "Care that fills from\nwithin and revives\nyour skin's own power"
+    },
+    "promoBoard": {
+        "event1": "Welcome Event",
+        "event2": "Brightening & Pigment",
+        "event3": "Skin Care",
+        "event4": "Monthly Event",
+        "event5": "IV Therapy",
+        "event6": "Hair Removal"
     }
 }

@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
 import MoreView from '@/components/ui/MoreView';
 import CategoryGrid from './CategoryGrid';
@@ -119,7 +120,10 @@ const SPACE_PHOTOS: GalleryPhoto[] = [
     },
 ];
 
-export default function Home() {
+export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
+    const { locale } = await params;
+    const ta = await getTranslations({ locale, namespace: 'a11y' });
+
     return (
         <>
             <IntroLoader />
@@ -181,7 +185,7 @@ export default function Home() {
                                 <div className="relative h-[290px] w-[220px] rounded-tl-[80px] overflow-hidden lg:h-[294px] lg:w-[235px]">
                                     <Image
                                         src="/images/img-s1-01.jpg"
-                                        alt="하루영의원 케어를 상징하는 실크를 감싼 손"
+                                        alt={ta('silk')}
                                         fill
                                         quality={90}
                                         sizes="(min-width:1024px) 240px, 220px"
