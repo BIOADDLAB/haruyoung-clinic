@@ -219,6 +219,10 @@
         "skip": "SKIP"
     },
     "footer": {
+        "labelLocation": "Location",
+        "labelHours": "진료시간",
+        "labelSubway": "지하철",
+        "labelParking": "주차",
         "hours": "진료시간",
         "address": "서울 강남구 언주로 538 대웅빌딩 1층",
         "subway": "9호선 선정릉역 4번 출구 도보 11분",

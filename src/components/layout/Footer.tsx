@@ -43,11 +43,11 @@ export default function Footer() {
 
                         <ul className="footer-list flex w-full flex-col gap-2.5 lg:min-w-0 lg:flex-1">
                             <li className="flex items-center gap-7 border-b border-cream/40 pb-3.5 pl-3">
-                                <h4 className="font-display text-caption w-[55px] tracking-wide">Location</h4>
+                                <h4 className="shrink-0 text-caption w-[55px]  tracking-wide">{tf('labelLocation')}</h4>
                                 <p className="text-caption tracking-wide">{tf('address')}</p>
                             </li>
                             <li className="flex items-center gap-5 border-b border-cream/40 pb-3.5 pl-3">
-                                <h4 className="shrink-0 text-caption w-[55px]  tracking-wide">{tf('hours')}</h4>
+                                <h4 className="shrink-0 text-caption w-[55px]  tracking-wide">{tf('labelHours')}</h4>
                                 <div className="flex min-w-0 flex-col gap-3 lg:flex-row lg:items-center lg:gap-7">
                                     <div className="flex flex-col">
                                         {CLINIC.hours.map((h) => (
@@ -92,12 +92,12 @@ export default function Footer() {
                             </li>
 
                             <li className="flex items-center gap-7 border-b border-cream/40 pb-3.5 pl-3">
-                                <h4 className="shrink-0 text-caption   w-[55px]">{tf('subway')}</h4>
+                                <h4 className="shrink-0 text-caption w-[55px]  tracking-wide">{tf('labelSubway')}</h4>
                                 <p className="text-caption tracking-wide">{tf('subway')}</p>
                             </li>
 
                             <li className="flex items-center gap-7 border-b border-cream/40 pb-3.5 pl-3">
-                                <h4 className="shrink-0 text-caption  w-[55px]">{tf('parking')}</h4>
+                                <h4 className="shrink-0 text-caption w-[55px]  tracking-wide">{tf('labelParking')}</h4>
                                 <p className="text-caption tracking-wide">{tf('parking')}</p>
                             </li>
                         </ul>
@@ -133,6 +133,9 @@ export default function Footer() {
                                     |
                                 </span>
                                 <span>{tf('address')}</span>
+                                <span aria-hidden="true" className="mx-3 text-cream/50">
+                                    |
+                                </span>
                                 <span>
                                     {tf('bizNo')} : {CLINIC.bizNo}
                                 </span>

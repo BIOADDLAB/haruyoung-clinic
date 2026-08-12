@@ -219,7 +219,10 @@
         "skip": "SKIP"
     },
     "footer": {
-        "hours": "Hours",
+        "labelLocation": "Location",
+        "labelHours": "Hours",
+        "labelSubway": "Subway",
+        "labelParking": "Parking",
         "address": "1F Daewoong Bldg, 538 Eonju-ro, Gangnam-gu, Seoul",
         "subway": "Line 9 Seonjeongneung Stn. Exit 4, 11 min walk",
         "parking": "Free parking / Valet KRW 3,000",

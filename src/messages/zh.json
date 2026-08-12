@@ -219,6 +219,10 @@
         "skip": "SKIP"
     },
     "footer": {
+        "labelLocation": "Location",
+        "labelHours": "诊疗时间",
+        "labelSubway": "地铁",
+        "labelParking": "停车",
         "hours": "诊疗时间",
         "address": "首尔江南区彦州路 538 大雄大厦 1 层",
         "subway": "9 号线宣靖陵站 4 号出口 步行 11 分钟",
