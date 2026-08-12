@@ -21,60 +21,61 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     };
 }
 
-const CAREERS = [
-    '前 강남 사적인 아름다움 지유 총괄원장',
-    '前 뮤즈 강남점 원장',
-    '前 아비쥬 잠실새내점 원장',
-    '前 톡스앤필 구리점 원장',
-    '대한미용레이저학회',
-    '대한미용외과학회',
-    '대한비만미용치료학회',
-    '대한필러학회',
-    '대한레이저피부모발학회',
-];
+/** #issue 원장 약력. 병원에서 영문·중문 표기를 받으면 messages 값만 고치면 된다 */
+const CAREER_KEYS = [
+    'career1',
+    'career2',
+    'career3',
+    'career4',
+    'society1',
+    'society2',
+    'society3',
+    'society4',
+    'society5',
+] as const;
 
 const SPACE_PHOTOS: GalleryPhoto[] = [
     {
         src: '/images/img-tour-01.jpg',
-        alt: '하루영의원 입구 간접조명 복도',
+        alt: 'room01',
         className: 'col-span-4 row-span-2 sm:col-span-3 sm:row-span-3 lg:col-span-20 lg:row-span-1',
     },
     {
         src: '/images/img-tour-02.jpg',
-        alt: '하루영의원 리셉션 라운지 전경',
+        alt: 'room02',
         className: 'col-span-2 row-span-2 sm:col-span-3 sm:row-span-3 lg:col-span-18 lg:row-span-1',
     },
     {
         src: '/images/img-tour-03.jpg',
-        alt: '하루영의원 상담실 창가 좌석',
+        alt: 'room03',
         className: 'col-span-2 row-span-2 sm:col-span-2 sm:row-span-2 lg:col-span-10 lg:row-span-1',
     },
     {
         src: '/images/img-tour-04.jpg',
-        alt: '하루영의원 1인 시술실 베드',
+        alt: 'room04',
         className: 'col-span-2 row-span-3 sm:col-span-2 sm:row-span-2 lg:col-span-14 lg:row-span-2',
     },
     {
         src: '/images/img-tour-05.jpg',
-        alt: '하루영의원 프라이빗 파우더룸',
+        alt: 'room05',
         className: 'col-span-2 row-span-3 sm:col-span-2 sm:row-span-2 lg:col-span-13 lg:row-span-2',
     },
     {
         src: '/images/img-tour-06.jpg',
-        alt: '하루영의원 다인 시술실 베드 라인',
+        alt: 'room06',
         className: 'col-span-4 row-span-2 sm:col-span-3 sm:row-span-2 lg:col-span-21 lg:row-span-1',
     },
     {
         src: '/images/img-tour-07.jpg',
-        alt: '하루영의원 우드 루버 마감 복도',
+        alt: 'room07',
         className: 'col-span-4 row-span-2 sm:col-span-3 sm:row-span-2 lg:col-span-21 lg:row-span-1',
     },
 ];
 
 export default async function AboutPage({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: 'about' });
     const ta = await getTranslations({ locale, namespace: 'a11y' });
-    const tab = await getTranslations({ locale, namespace: 'about' });
 
     return (
         <>
@@ -244,7 +245,8 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                                                 HARUYOUNG
                                             </span>
                                             <span className="mt-2.5 block text-[22px] font-bold lg:text-24">
-                                                홍길동 <span className="text-16 font-normal">{tab('ceoTitle')}</span>
+                                                {t('ceoName')}{' '}
+                                                <span className="text-16 font-normal">{t('ceoTitle')}</span>
                                             </span>
                                         </p>
                                         <Icon name="i-sig" width={129} height={37} className="pb-1" />
@@ -259,13 +261,13 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 
                                     {/* 경력 리스트 */}
                                     <RevealGroup as="ul" className="mt-7 text-center lg:mt-[33px] lg:text-left">
-                                        {CAREERS.map((c) => (
+                                        {CAREER_KEYS.map((c) => (
                                             <RevealItem
                                                 as="li"
-                                                key={c}
+                                                key={t(c)}
                                                 className="text-small leading-[32px] text-dark lg:leading-[35px]"
                                             >
-                                                {c}
+                                                {t(c)}
                                             </RevealItem>
                                         ))}
                                     </RevealGroup>
@@ -321,23 +323,19 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                                         delay={0.2}
                                         className="mt-[46px] whitespace-normal text-small font-medium leading-[24px] text-dark lg:whitespace-pre-line"
                                     >
-                                        {
-                                            '하루영의원은 바쁜 일상에서 벗어나,\n이국적인 하이엔드 리조트 스파에 들어선 듯한 평온함을 선사합니다.\n격조 높은 프라이빗 공간, 피부의 미세한 결까지 배려하는 따뜻한\n손길 속에서 당신의 피부는 가장 편안한 상태로 되돌아갑니다.'
-                                        }
+                                        {t('spaceBody')}
                                     </Reveal>
                                     <Reveal
                                         as="p"
                                         delay={0.3}
                                         className="mt-[30px] whitespace-normal text-small font-medium leading-[24px] text-dark lg:whitespace-pre-line"
                                     >
-                                        {
-                                            '흔히 말하는 획일화된 시술이나 유행을 따르지 않습니다.\n우리는 당신이 살아온 시간과 피부의 이야기에 귀를 기울이며,\n매일 조금씩 더 빛나는 내일을 설계합니다.'
-                                        }
+                                        {t('spaceBody2')}
                                     </Reveal>
                                 </div>
 
                                 <PhotoGallery
-                                    photos={SPACE_PHOTOS}
+                                    photos={SPACE_PHOTOS.map((ph) => ({ ...ph, alt: ta(ph.alt) }))}
                                     className="grid auto-rows-[84px] grid-cols-4 gap-2 sm:auto-rows-[92px] sm:grid-cols-6 lg:w-[1004px] lg:shrink-0 lg:auto-rows-auto lg:grid-cols-[repeat(48,minmax(0,1fr))] lg:grid-rows-[208px_160px_124px] lg:gap-3"
                                 />
                             </div>

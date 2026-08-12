@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
-import PromotionList from '../../../components/promotion/PromotionList';
+import PromotionList from '@/components/promotion/PromotionList';
 import Header from '@/components/layout/Header';
 import SubNav from '@/components/layout/SubNav';
 

@@ -10,6 +10,7 @@ export const HERO_HOLD = 300;
 
 export default function HeroVisual() {
     const t = useTranslations('a11y');
+    const th = useTranslations('home');
     const reduced = useReducedMotion();
     const { scrollY } = useScroll();
 
@@ -52,7 +53,7 @@ export default function HeroVisual() {
                     </div>
 
                     <p className="mt-5 text-30 font-normal [text-shadow:2px_0_10.6px_rgba(59,37,9,0.64)]">
-                        하루의 쉼표가 만드는 영원한 시간
+                        {th('heroSub')}
                     </p>
 
                     <div className="mt-14 lg:mt-18">

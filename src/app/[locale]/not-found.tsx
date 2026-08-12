@@ -12,9 +12,7 @@ export default function NotFound() {
                 <div className="pb-24 text-center">
                     <p className="font-gara text-48 italic text-brown">404</p>
                     <h1 className="mt-6 text-22 font-bold">{t('title')}</h1>
-                    <p className="mt-4 whitespace-pre-line text-caption leading-[1.9] text-dark/65">
-                        {t('body')}
-                    </p>
+                    <p className="mt-4 whitespace-pre-line text-caption leading-[1.9] text-dark/65">{t('body')}</p>
 
                     <div className="mt-10 flex flex-wrap justify-center gap-3">
                         <Link

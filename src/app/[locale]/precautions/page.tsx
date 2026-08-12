@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
-import PrecautionsView from './PrecautionsView';
+import PrecautionsView from '@/components/precautions/PrecautionsView';
 import Header from '@/components/layout/Header';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
