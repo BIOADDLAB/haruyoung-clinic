@@ -220,7 +220,7 @@
     },
     "footer": {
         "labelLocation": "Location",
-        "labelHours": "诊疗时间",
+        "labelHours": "门诊",
         "labelSubway": "地铁",
         "labelParking": "停车",
         "hours": "诊疗时间",
@@ -294,7 +294,7 @@
         "promotionLead": "找到适合您的优惠。",
         "categoryLead": "遇见为您的肌肤\n定制的解决方案。",
         "heroTitle": "专为您设计的\n特别肌肤休憩。",
-        "heroBody": "HARU YOUNG 医院如同忙碌日常中的片刻停顿，\n为肌肤带来最舒适的休息。\n以专属于您的定制护理，\n让自然之美长久延续。",
+        "heroBody": "HARU YOUNG \n医院如同忙碌日常中的片刻停顿，\n为肌肤带来最舒适的休息。\n以专属于您的定制护理，\n让自然之美长久延续。",
         "treatLead": "看起来比年龄更年轻的肌肤，\n逆转时间的哈鲁荣重塑护理。",
         "spaceLead": "哈鲁荣的空间，为肌肤设计安然休憩的时间。\n沉静的氛围与细腻的细节，让停留的每一刻都成为完整的休息。"
     },
@@ -302,7 +302,7 @@
         "ceoTitle": "院长",
         "heroEn": "A Moment of Pause,\nTimeless Beauty",
         "heroTitle": "为肌肤设计\n最深层的休息。",
-        "heroBody": "哈鲁荣不止于简单的项目，而是设计让肌肤最为舒适的瞬间。\n以专属于您的定制护理，\n带来历久弥新的自然之美\n与长久的休憩。",
+        "heroBody": "哈鲁荣不止于简单的项目，\n而是设计让肌肤最为舒适的瞬间。\n以专属于您的定制护理，\n带来历久弥新的自然之美\n与长久的休憩。",
         "specialistEn": "HARU YOUNG\nSpecialist",
         "spaceEn": "HARU YOUNG\nSpace",
         "spaceTitle": "一日之息，永恒之时，\n专为您设计的特别肌肤休憩。",

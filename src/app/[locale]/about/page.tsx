@@ -101,7 +101,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                                     <Reveal
                                         as="p"
                                         variants={fadeUpSlow}
-                                        className="text-center font-gara text-[26px] font-bold italic leading-[30px] text-dark lg:text-left lg:text-34 lg:leading-[38px]"
+                                        className="text-center font-gara text-[34px] font-bold italic leading-[30px] text-dark lg:text-left lg:text-34 lg:leading-[38px]"
                                     >
                                         A Moment of Pause,
                                         <br />
@@ -144,27 +144,17 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                                         <Reveal
                                             as="h1"
                                             variants={fadeUpSlow}
-                                            className="text-[21px] font-bold leading-[29px] lg:text-24 lg:leading-[34px]"
+                                            className="text-[21px] font-bold leading-[29px] lg:text-24 lg:leading-[34px] whitespace-pre-line"
                                         >
-                                            피부를 위한 가장 깊은 쉼을
-                                            <br />
-                                            설계합니다.
+                                            {t('heroTitle')}
                                         </Reveal>
 
                                         <Reveal
                                             as="p"
                                             delay={0.15}
-                                            className="mt-5 text-[14px] font-medium leading-[22px] text-dark lg:mt-[30px] lg:text-samll lg:leading-[24px]"
+                                            className="mt-5 text-[14px] whitespace-pre-line font-medium leading-[22px] text-dark lg:mt-[30px] lg:text-samll lg:leading-[24px]"
                                         >
-                                            하루영은 단순한 시술을 넘어,
-                                            <br />
-                                            피부가 가장 편안한 순간을 경험할 수 있도록 설계합니다.
-                                            <br />
-                                            오직 당신만을 위한 맞춤 케어로
-                                            <br />
-                                            시간이 지나도 자연스러운 아름다움이
-                                            <br />
-                                            오래도록 이어지는 휴식을 선사합니다.
+                                            {t('heroBody')}
                                         </Reveal>
                                     </div>
                                 </div>
@@ -310,13 +300,9 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                                         as="p"
                                         variants={fadeUpSlow}
                                         delay={0.1}
-                                        className="mt-[66px] text-24 font-bold leading-[36px]"
+                                        className="mt-[66px] text-24 font-bold leading-[36px] whitespace-pre-line"
                                     >
-                                        하루의 쉼표가 만드는 영원한 시간,
-                                        <br />
-                                        오직 당신만을 위해 설계된
-                                        <br />
-                                        특별한 피부 휴식.
+                                        {t('spaceTitle')}
                                     </Reveal>
                                     <Reveal
                                         as="p"
