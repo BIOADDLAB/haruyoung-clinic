@@ -246,29 +246,6 @@ body.overflow-hidden {
     }
 }
 /* 
-* {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(59, 43, 30, 0.25) transparent;
-}
-
-*::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-
-*::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-*::-webkit-scrollbar-thumb {
-    background: rgba(59, 43, 30, 0.25);
-    border-radius: 3px;
-}
-
-*::-webkit-scrollbar-thumb:hover {
-    background: rgba(59, 43, 30, 0.4);
-} */
-
 /* 스크롤을 부드럽게. prefers-reduced-motion 이면 위 규칙이 auto 로 되돌린다 */
 html {
     scroll-behavior: smooth;
