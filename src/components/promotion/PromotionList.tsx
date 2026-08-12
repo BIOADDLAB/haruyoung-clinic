@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import Banner from '@/components/ui/Banner';
 import { useCart } from '@/components/cart/CartProvider';
@@ -8,26 +8,37 @@ import { PROMOTION_BANNER } from '@/data/site';
 import { RevealGroup, RevealItem } from '@/components/ui/RevealGroup';
 import { fadeUp } from '@/lib/motion';
 import { getPromotions } from '@/lib/promotions';
-import { daysLeft, discountRate, type Promotion } from '@/types/promotion';
+import {
+    daysLeft,
+    discountRate,
+    localizedOriginPrice,
+    localizedPromo,
+    localizedPromoPrice,
+    type Promotion,
+} from '@/types/promotion';
 
 export default function PromotionList() {
     const t = useTranslations('promotion');
     const tt = useTranslations('treatments');
     const [list, setList] = useState<Promotion[] | null>(null);
     const month = new Date().getMonth() + 1;
+    const locale = useLocale() as 'ko' | 'en' | 'zh';
 
     useEffect(() => {
         let alive = true;
         getPromotions().then((all) => {
             // 마감일이 지난 항목은 감춘다. 관리자가 지우지 않아도 알아서 내려간다
-            if (alive) setList(all.filter((p) => daysLeft(p.until) >= 0));
+            if (alive)
+                setList(
+                    all.filter((p) => daysLeft(p.until) >= 0 && (!p.locales?.length || p.locales.includes(locale))),
+                );
         });
         return () => {
             alive = false;
         };
-    }, []);
+    }, [locale]);
 
-    const from = list && list.length > 0 ? Math.min(...list.map((p) => p.price)) : 0;
+    const from = list && list.length > 0 ? Math.min(...list.map((p) => localizedPromoPrice(p, locale))) : 0;
 
     return (
         <div className="pb-28 lg:pb-24">
@@ -70,11 +81,17 @@ export default function PromotionList() {
 }
 
 function PromotionCard({ p }: { p: Promotion }) {
+    const locale = useLocale() as 'ko' | 'en' | 'zh';
     const { has, toggle } = useCart();
     const t = useTranslations('promotion');
+    const tc = useTranslations('cart');
     const key = `promotion:${p.id}`;
     const on = has(key);
-    const rate = discountRate(p);
+    // 언어별 가격이 있으면 그 값으로 할인율을 다시 계산한다
+    const rate = discountRate({
+        originPrice: localizedOriginPrice(p, locale),
+        price: localizedPromoPrice(p, locale),
+    });
     const left = daysLeft(p.until);
 
     return (
@@ -83,17 +100,19 @@ function PromotionCard({ p }: { p: Promotion }) {
             variants={fadeUp}
             className="w-full max-w-[800px] rounded-lg border border-beige p-5 lg:p-6"
         >
-            <h3 className="text-18 font-bold lg:text-20">{p.name}</h3>
+            <h3 className="text-18 font-bold lg:text-20">{localizedPromo(p, 'name', locale)}</h3>
 
             <div className="mt-4 flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
-                <p className="text-small font-medium text-brown">{p.highlight}</p>
+                <p className="text-small font-medium text-brown">{localizedPromo(p, 'highlight', locale)}</p>
                 <p className="text-caption text-dark/60 sm:shrink-0">
                     ~{p.until} ({left === 0 ? t('today') : t('daysLeft', { days: left })})
                 </p>
             </div>
 
             {p.description && (
-                <p className="mt-6 whitespace-pre-line text-caption leading-[1.7] text-dark/85">{p.description}</p>
+                <p className="mt-6 whitespace-pre-line text-caption leading-[1.7] text-dark/85">
+                    {localizedPromo(p, 'description', locale)}
+                </p>
             )}
 
             <div className="mt-4 flex justify-end lg:mt-3">
@@ -102,15 +121,15 @@ function PromotionCard({ p }: { p: Promotion }) {
                     onClick={() =>
                         toggle({
                             key,
-                            name: p.name,
-                            price: p.price,
+                            name: localizedPromo(p, 'name', locale),
+                            price: localizedPromoPrice(p, locale),
                             category: '프로모션',
-                            originPrice: p.originPrice,
-                            description: p.description,
+                            originPrice: localizedOriginPrice(p, locale),
+                            description: localizedPromo(p, 'description', locale),
                         })
                     }
                     aria-pressed={on}
-                    aria-label={`${p.name} ${on ? '장바구니에서 빼기' : '장바구니에 담기'}`}
+                    aria-label={`${localizedPromo(p, 'name', locale)} ${on ? tc('remove') : tc('add')}`}
                     className="flex flex-wrap items-center justify-end gap-y-1 transition-opacity duration-500 ease-brand hover:opacity-70"
                 >
                     <span
@@ -138,13 +157,15 @@ function PromotionCard({ p }: { p: Promotion }) {
                         </span>
                     )}
 
-                    {p.originPrice > p.price && (
+                    {localizedOriginPrice(p, locale) > localizedPromoPrice(p, locale) && (
                         <span className="ml-3 text-caption text-dark/45 line-through">
-                            {p.originPrice.toLocaleString()}원
+                            {localizedOriginPrice(p, locale).toLocaleString()}원
                         </span>
                     )}
 
-                    <span className="ml-2 text-20 font-bold lg:text-24">{p.price.toLocaleString()}원</span>
+                    <span className="ml-2 text-20 font-bold lg:text-24">
+                        {localizedPromoPrice(p, locale).toLocaleString()}원
+                    </span>
                 </button>
             </div>
         </RevealItem>

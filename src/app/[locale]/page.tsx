@@ -1,10 +1,10 @@
 import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
 import MoreView from '@/components/ui/MoreView';
-import CategoryGrid from './CategoryGrid';
-import HeroVisual, { HERO_HOLD } from './HeroVisual';
-import PromotionBoard from './PromotionBoard';
-import TreatmentCard from './TreatmentCard';
+import CategoryGrid from '../../components/home/CategoryGrid';
+import HeroVisual, { HERO_HOLD } from '../../components/home/HeroVisual';
+import PromotionBoard from '../../components/home/PromotionBoard';
+import TreatmentCard from '../../components/home/TreatmentCard';
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
 import HorizontalScroll, { Panel } from '@/components/ui/HorizontalScroll';
@@ -13,7 +13,7 @@ import PhotoGallery, { type GalleryPhoto } from '@/components/ui/PhotoGallery';
 import Reveal from '@/components/ui/Reveal';
 import { RevealGroup } from '@/components/ui/RevealGroup';
 import { fadeUpSlow, slideLeft, slideRight } from '@/lib/motion';
-import IntroLoader from './IntroLoader';
+import IntroLoader from '../../components/home/IntroLoader';
 
 const TREATMENTS = [
     {

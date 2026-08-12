@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 import Banner from '@/components/ui/Banner';
 import CartToggle from '@/components/cart/CartToggle';
@@ -8,22 +8,26 @@ import { TREATMENT_BANNER } from '@/data/site';
 import { RevealGroup, RevealItem } from '@/components/ui/RevealGroup';
 import { fadeUp } from '@/lib/motion';
 import { getProducts } from '@/lib/products';
-import type { Product } from '@/types/product';
+import { localized, localizedPrice, type Locale, type Product } from '@/types/product';
 
 export default function TreatmentList({ slug, categoryName }: { slug: string; categoryName: string }) {
     const t = useTranslations('treatments');
+    const locale = useLocale() as Locale;
     const tb = useTranslations('banner');
     const [list, setList] = useState<Product[] | null>(null);
 
     useEffect(() => {
         let alive = true;
         getProducts().then((all) => {
-            if (alive) setList(all.filter((p) => p.menuSlug === slug));
+            if (alive) {
+                // locales 가 비어 있으면 모든 언어에 노출한다
+                setList(all.filter((p) => p.menuSlug === slug && (!p.locales?.length || p.locales.includes(locale))));
+            }
         });
         return () => {
             alive = false;
         };
-    }, [slug]);
+    }, [slug, locale]);
 
     const sections = useMemo(() => {
         if (!list) return [];
@@ -77,23 +81,23 @@ export default function TreatmentList({ slug, categoryName }: { slug: string; ca
                                                 className="w-full max-w-[800px] rounded-lg border border-beige p-5 lg:p-6"
                                             >
                                                 <h4 className="whitespace-pre-line text-18 font-bold lg:text-20">
-                                                    {p.name}
+                                                    {localized(p, 'name', locale)}
                                                 </h4>
 
                                                 {p.highlight && (
                                                     <p className="mt-2 text-small font-medium text-brown">
-                                                        {p.highlight}
+                                                        {localized(p, 'highlight', locale)}
                                                     </p>
                                                 )}
 
                                                 {p.description && (
                                                     <p className="mt-6 whitespace-pre-line text-caption leading-[1.7] text-dark/85">
-                                                        {p.description}
+                                                        {localized(p, 'description', locale)}
                                                     </p>
                                                 )}
 
                                                 <div className="mt-3 flex justify-end">
-                                                    {p.price === null ? (
+                                                    {localizedPrice(p, locale) === null ? (
                                                         <span className="text-caption text-dark/50">
                                                             {t('askPrice')}
                                                         </span>
@@ -101,10 +105,10 @@ export default function TreatmentList({ slug, categoryName }: { slug: string; ca
                                                         <CartToggle
                                                             item={{
                                                                 key: `product:${p.id}`,
-                                                                name: p.name,
-                                                                price: p.price,
+                                                                name: localized(p, 'name', locale),
+                                                                price: localizedPrice(p, locale) ?? 0,
                                                                 category: p.menuCategory,
-                                                                description: p.description,
+                                                                description: localized(p, 'description', locale),
                                                             }}
                                                         />
                                                     )}

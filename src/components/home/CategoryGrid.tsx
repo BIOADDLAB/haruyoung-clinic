@@ -1,11 +1,12 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { motion, useReducedMotion } from 'framer-motion';
 import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
 import { DUR, EASE, fadeIn, stagger, VIEWPORT } from '@/lib/motion';
 
-export type CategoryItem = { en: string; ko: string; slug: string; n: string; alt: string };
+export type CategoryItem = { en: string; slug: string; n: string };
 
 const SCRIM = { rest: { backgroundColor: 'rgba(59,43,30,0.2)' }, hover: { backgroundColor: 'rgba(255,251,246,0.62)' } };
 const EN = { rest: { opacity: 1 }, hover: { opacity: 0 } };
@@ -13,6 +14,8 @@ const KO = { rest: { opacity: 0 }, hover: { opacity: 1 } };
 const LINE = { rest: { opacity: 0 }, hover: { opacity: 1 } };
 
 export default function CategoryGrid({ items }: { items: readonly CategoryItem[] }) {
+    const tb = useTranslations('banner');
+    const ta = useTranslations('a11y');
     const reduced = useReducedMotion();
 
     return (
@@ -42,7 +45,7 @@ export default function CategoryGrid({ items }: { items: readonly CategoryItem[]
                             <span className="relative block aspect-[146/97] w-full overflow-hidden">
                                 <Image
                                     src={`/images/img-s3-${t.n}.jpg`}
-                                    alt={t.alt}
+                                    alt={ta(`card_${t.slug}`)}
                                     fill
                                     quality={90}
                                     sizes="(min-width:1024px) 146px, 45vw"
@@ -68,7 +71,7 @@ export default function CategoryGrid({ items }: { items: readonly CategoryItem[]
                                     transition={{ duration: DUR.fast, ease: EASE }}
                                     className="absolute inset-0 flex items-center justify-center text-caption-sm text-dark"
                                 >
-                                    {t.ko}
+                                    {tb(t.slug)}
                                 </motion.span>
                             </span>
                         </motion.span>

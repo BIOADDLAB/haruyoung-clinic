@@ -27,8 +27,8 @@ export default function Footer() {
                     <div className="footer-left flex flex-col gap-8 lg:flex-row lg:gap-5">
                         {/* #TODO: 개원 후 주소 확정되면 아래 iframe 으로 교체
                         <iframe
-                            src={`https://www.google.com/maps?q=${encodeURIComponent(CLINIC.address)}&hl=ko&z=17&output=embed`}
-                            title={`하루영의원 위치 지도 - ${CLINIC.address}`}
+                            src={`https://www.google.com/maps?q=${encodeURIComponent(tf('address'))}&hl=ko&z=17&output=embed`}
+                            title={`하루영의원 위치 지도 - ${tf('address')}`}
                             loading="lazy"
                             referrerPolicy="no-referrer-when-downgrade"
                             className="footer-map aspect-[5/3] w-full max-w-[520px] self-start border-0 bg-[#d9d9d9] lg:w-[320px] lg:max-w-none lg:shrink-0"
@@ -38,30 +38,31 @@ export default function Footer() {
                             aria-label={ta('mapAlt')}
                             className="footer-map flex aspect-[5/3] w-full max-w-[520px] shrink-0 items-center justify-center self-start bg-[#d9d9d9] text-caption text-dark/50 lg:w-[320px] lg:max-w-none"
                         >
-                            오픈 준비 중
+                            {tf('map')}
                         </div>
 
                         <ul className="footer-list flex w-full flex-col gap-2.5 lg:min-w-0 lg:flex-1">
                             <li className="flex items-center gap-7 border-b border-cream/40 pb-3.5 pl-3">
                                 <h4 className="font-display text-caption w-[55px] tracking-wide">Location</h4>
-                                <p className="text-caption tracking-wide">{CLINIC.address}</p>
+                                <p className="text-caption tracking-wide">{tf('address')}</p>
                             </li>
                             <li className="flex items-center gap-5 border-b border-cream/40 pb-3.5 pl-3">
                                 <h4 className="shrink-0 text-caption w-[55px]  tracking-wide">{tf('hours')}</h4>
                                 <div className="flex min-w-0 flex-col gap-3 lg:flex-row lg:items-center lg:gap-7">
                                     <div className="flex flex-col">
                                         {CLINIC.hours.map((h) => (
-                                            <p key={h.day} className="flex gap-2.5">
+                                            <p key={h.key} className="flex gap-2.5">
                                                 {/* 화면에는 글자를 벌려 보여주고, 읽히는 문장은 sr-only 로 따로 준다 */}
                                                 <span className="sr-only">
-                                                    {h.aria} {h.time}
+                                                    {tf(`${h.key}Aria`)} {h.time}
                                                 </span>
                                                 <span
                                                     aria-hidden="true"
                                                     className="flex w-[43px] shrink-0 justify-between text-caption  tracking-wide"
                                                 >
-                                                    {[...h.day.replace(/\s/g, '')].map((c) => (
-                                                        <span key={c}>{c}</span>
+                                                    {/* 같은 글자가 반복될 수 있어 위치를 key 로 쓴다 (Mon Fri 의 n 등) */}
+                                                    {[...tf(h.key).replace(/\s/g, '')].map((c, ci) => (
+                                                        <span key={`${h.key}-${ci}`}>{c}</span>
                                                     ))}
                                                 </span>
                                                 <span
@@ -83,7 +84,7 @@ export default function Footer() {
                                                     aria-hidden="true"
                                                     className="h-1 w-1 shrink-0 rounded-full bg-cream"
                                                 />
-                                                {n}
+                                                {tf(n)}
                                             </p>
                                         ))}
                                     </div>
@@ -92,12 +93,12 @@ export default function Footer() {
 
                             <li className="flex items-center gap-7 border-b border-cream/40 pb-3.5 pl-3">
                                 <h4 className="shrink-0 text-caption   w-[55px]">{tf('subway')}</h4>
-                                <p className="text-caption tracking-wide">{CLINIC.subway}</p>
+                                <p className="text-caption tracking-wide">{tf('subway')}</p>
                             </li>
 
                             <li className="flex items-center gap-7 border-b border-cream/40 pb-3.5 pl-3">
                                 <h4 className="shrink-0 text-caption  w-[55px]">{tf('parking')}</h4>
-                                <p className="text-caption tracking-wide">{CLINIC.parking}</p>
+                                <p className="text-caption tracking-wide">{tf('parking')}</p>
                             </li>
                         </ul>
                     </div>
@@ -125,16 +126,22 @@ export default function Footer() {
                             </ul>
 
                             <address className="mt-6 flex flex-wrap text-caption-sm font-medium not-italic lg:justify-end">
-                                <span>대표자 : {CLINIC.ceo}</span>
+                                <span>
+                                    {tf('ceo')} : {tf('ceoName')}
+                                </span>
                                 <span aria-hidden="true" className="mx-3 text-cream/50">
                                     |
                                 </span>
-                                <span>{CLINIC.address}</span>
-                                <span>사업자등록번호 : {CLINIC.bizNo}</span>
+                                <span>{tf('address')}</span>
+                                <span>
+                                    {tf('bizNo')} : {CLINIC.bizNo}
+                                </span>
                                 <span aria-hidden="true" className="mx-3 text-cream/50">
                                     |
                                 </span>
-                                <span>대표전화 : {CLINIC.tel}</span>
+                                <span>
+                                    {tf('tel')} : {CLINIC.tel}
+                                </span>
                             </address>
 
                             <p className="mt-3.75 text-[10px]">

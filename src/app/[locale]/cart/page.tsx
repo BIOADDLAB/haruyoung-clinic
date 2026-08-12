@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
-import CartView from './CartView';
+import CartView from '../../../components/cart/CartView';
 import Header from '@/components/layout/Header';
 import SidePanel from '@/components/layout/SidePanel';
 

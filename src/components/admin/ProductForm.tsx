@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from '@/i18n/navigation';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { MENU_CATEGORIES } from '@/constants/categories';
 import { addProduct, updateProduct } from '@/lib/products';
@@ -23,16 +23,48 @@ export default function ProductForm({
     const [mainCategory, setMainCategory] = useState(initial?.mainCategory ?? '');
     const [subCategory, setSubCategory] = useState(initial?.subCategory ?? '');
     const [customSub, setCustomSub] = useState(false);
-    const [name, setName] = useState(initial?.name ?? '');
-    const [nameEn, setNameEn] = useState(initial?.nameEn ?? '');
-    const [nameZh, setNameZh] = useState(initial?.nameZh ?? '');
-    const [highlight, setHighlight] = useState(initial?.highlight ?? '');
-    const [description, setDescription] = useState(initial?.description ?? '');
-    const [descriptionEn, setDescriptionEn] = useState(initial?.descriptionEn ?? '');
-    const [descriptionZh, setDescriptionZh] = useState(initial?.descriptionZh ?? '');
+    /**
+     * 언어별 입력값을 한 덩어리로 관리한다.
+     * 상태를 9개로 흩어 놓으면 탭을 바꿀 때마다 어느 값을 읽는지 놓치기 쉽다.
+     */
+    const [text, setText] = useState({
+        ko: {
+            name: initial?.name ?? '',
+            highlight: initial?.highlight ?? '',
+            description: initial?.description ?? '',
+        },
+        en: {
+            name: initial?.nameEn ?? '',
+            highlight: initial?.highlightEn ?? '',
+            description: initial?.descriptionEn ?? '',
+        },
+        zh: {
+            name: initial?.nameZh ?? '',
+            highlight: initial?.highlightZh ?? '',
+            description: initial?.descriptionZh ?? '',
+        },
+    });
+
     /** 언어 탭. 한 화면에 3배로 늘어놓으면 못 쓴다 */
     const [lang, setLang] = useState<'ko' | 'en' | 'zh'>('ko');
-    const [price, setPrice] = useState(initial?.price?.toString() ?? '');
+
+    const setField = (field: 'name' | 'highlight' | 'description', v: string) =>
+        setText((prev) => ({ ...prev, [lang]: { ...prev[lang], [field]: v } }));
+
+    /** 각 언어에 입력된 게 하나라도 있는지. 탭에 점으로 표시한다 */
+    const filled = (l: 'ko' | 'en' | 'zh') =>
+        Boolean(text[l].name.trim() || text[l].highlight.trim() || text[l].description.trim());
+    /** 노출 언어. 비어 있으면 모든 언어에 노출한다 */
+    const [locales, setLocales] = useState<('ko' | 'en' | 'zh')[]>(initial?.locales ?? []);
+
+    const toggleLocale = (l: 'ko' | 'en' | 'zh') =>
+        setLocales((prev) => (prev.includes(l) ? prev.filter((x) => x !== l) : [...prev, l]));
+    /** 언어별 가격. 비우면 한국어 가격을 쓴다 */
+    const [priceBy, setPriceBy] = useState({
+        ko: initial?.price?.toString() ?? '',
+        en: initial?.priceEn?.toString() ?? '',
+        zh: initial?.priceZh?.toString() ?? '',
+    });
     const [busy, setBusy] = useState(false);
 
     const subOptions = Array.from(
@@ -47,8 +79,9 @@ export default function ProductForm({
     const menuName = MENU_CATEGORIES.find((c) => c.slug === menuSlug)!.name;
 
     const submit = async () => {
-        if (!name.trim()) {
-            alert('시술명을 입력하세요.');
+        if (!text.ko.name.trim()) {
+            alert('한국어 시술명을 입력하세요.');
+            setLang('ko');
             return;
         }
         setBusy(true);
@@ -58,14 +91,19 @@ export default function ProductForm({
                 menuCategory: menuName,
                 mainCategory,
                 subCategory,
-                name,
-                nameEn,
-                nameZh,
-                highlight,
-                description,
-                descriptionEn,
-                descriptionZh,
-                price: price === '' ? null : Number(price),
+                name: text.ko.name,
+                nameEn: text.en.name,
+                nameZh: text.zh.name,
+                highlight: text.ko.highlight,
+                highlightEn: text.en.highlight,
+                highlightZh: text.zh.highlight,
+                description: text.ko.description,
+                descriptionEn: text.en.description,
+                descriptionZh: text.zh.description,
+                price: priceBy.ko === '' ? null : Number(priceBy.ko),
+                priceEn: priceBy.en === '' ? null : Number(priceBy.en),
+                priceZh: priceBy.zh === '' ? null : Number(priceBy.zh),
+                locales,
                 order: initial?.order ?? Date.now(),
             };
             if (initial) {
@@ -73,12 +111,15 @@ export default function ProductForm({
             } else {
                 await addProduct(data);
             }
+            alert(initial ? '수정했습니다.' : '등록했습니다.');
             if (onSaved) {
                 onSaved();
             } else {
                 router.push('/admin/products');
                 router.refresh();
             }
+        } catch {
+            alert('저장에 실패했습니다. 잠시 후 다시 시도해주세요.');
         } finally {
             setBusy(false);
         }
@@ -187,53 +228,52 @@ export default function ProductForm({
                         </label>
                     </div>
 
-                    {/* 시술명 */}
-                    <div className="flex gap-1.5">
+                    {/* 언어 탭. 입력한 언어에 점이 붙어 어디를 채웠는지 한눈에 보인다 */}
+                    <div className="flex items-center gap-1.5 border-b border-black/[0.06] pb-4">
                         {(['ko', 'en', 'zh'] as const).map((l) => (
                             <button
                                 key={l}
                                 type="button"
                                 onClick={() => setLang(l)}
-                                className={`rounded-full px-3.5 py-1.5 text-xs ${
-                                    lang === l ? 'bg-[#3a322c] text-white' : 'border border-neutral-200 bg-white'
+                                className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs transition ${
+                                    lang === l
+                                        ? 'bg-[#3a322c] text-white'
+                                        : 'border border-neutral-200 bg-white text-neutral-600'
                                 }`}
                             >
                                 {l === 'ko' ? '한국어' : l === 'en' ? 'English' : '中文'}
+                                {filled(l) && (
+                                    <span
+                                        aria-hidden="true"
+                                        className={`h-1.5 w-1.5 rounded-full ${
+                                            lang === l ? 'bg-white' : 'bg-emerald-500'
+                                        }`}
+                                    />
+                                )}
                             </button>
                         ))}
+                        {lang !== 'ko' && (
+                            <span className="ml-2 text-xs text-neutral-400">비우면 한국어로 표시됩니다</span>
+                        )}
                     </div>
 
+                    {/* 시술명 */}
                     <label className="flex flex-col gap-1.5">
                         <span className="text-[13px] font-medium text-neutral-600">
                             시술명 {lang === 'ko' && <span className="text-rose-500">*</span>}
-                            {lang !== 'ko' && (
-                                <span className="font-normal text-neutral-400">(비우면 한국어로 표시)</span>
-                            )}
                         </span>
-                        {lang === 'ko' && (
-                            <input
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                placeholder="예: 프리미엄 리프팅"
-                                className={inputBase}
-                            />
-                        )}
-                        {lang === 'en' && (
-                            <input
-                                value={nameEn}
-                                onChange={(e) => setNameEn(e.target.value)}
-                                placeholder="e.g. Premium Lifting"
-                                className={inputBase}
-                            />
-                        )}
-                        {lang === 'zh' && (
-                            <input
-                                value={nameZh}
-                                onChange={(e) => setNameZh(e.target.value)}
-                                placeholder="例: 高级提升"
-                                className={inputBase}
-                            />
-                        )}
+                        <input
+                            value={text[lang].name}
+                            onChange={(e) => setField('name', e.target.value)}
+                            placeholder={
+                                lang === 'ko'
+                                    ? '예: 프리미엄 리프팅'
+                                    : lang === 'en'
+                                      ? 'e.g. Premium Lifting'
+                                      : '例: 高级提升'
+                            }
+                            className={inputBase}
+                        />
                     </label>
 
                     {/* 주요문장 */}
@@ -242,9 +282,15 @@ export default function ProductForm({
                             주요문장 <span className="font-normal text-neutral-400">(볼드, 선택)</span>
                         </span>
                         <input
-                            value={highlight}
-                            onChange={(e) => setHighlight(e.target.value)}
-                            placeholder="강조하고 싶은 한 줄 문장"
+                            value={text[lang].highlight}
+                            onChange={(e) => setField('highlight', e.target.value)}
+                            placeholder={
+                                lang === 'ko'
+                                    ? '강조하고 싶은 한 줄 문장'
+                                    : lang === 'en'
+                                      ? 'One line to highlight'
+                                      : '想要强调的一句话'
+                            }
                             className={inputBase}
                         />
                     </label>
@@ -254,56 +300,67 @@ export default function ProductForm({
                         <span className="text-[13px] font-medium text-neutral-600">
                             설명 <span className="font-normal text-neutral-400">(선택)</span>
                         </span>
-                        {lang === 'ko' && (
-                            <textarea
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                                rows={4}
-                                placeholder="시술에 대한 간단한 설명을 입력하세요"
-                                className={`${inputBase} resize-none`}
-                            />
-                        )}
-                        {lang === 'en' && (
-                            <textarea
-                                value={descriptionEn}
-                                onChange={(e) => setDescriptionEn(e.target.value)}
-                                rows={4}
-                                placeholder="Short description in English"
-                                className={`${inputBase} resize-none`}
-                            />
-                        )}
-                        {lang === 'zh' && (
-                            <textarea
-                                value={descriptionZh}
-                                onChange={(e) => setDescriptionZh(e.target.value)}
-                                rows={4}
-                                placeholder="简短说明"
-                                className={`${inputBase} resize-none`}
-                            />
-                        )}
+                        <textarea
+                            value={text[lang].description}
+                            onChange={(e) => setField('description', e.target.value)}
+                            rows={4}
+                            placeholder={
+                                lang === 'ko'
+                                    ? '시술에 대한 간단한 설명을 입력하세요'
+                                    : lang === 'en'
+                                      ? 'Short description in English'
+                                      : '简短说明'
+                            }
+                            className={`${inputBase} resize-none`}
+                        />
                     </label>
 
                     {/* 정가 */}
                     <label className="flex w-full max-w-xs flex-col gap-1.5">
                         <span className="text-[13px] font-medium text-neutral-600">
-                            정가 <span className="font-normal text-neutral-400">(원, 미정이면 비움)</span>
+                            정가{' '}
+                            <span className="font-normal text-neutral-400">
+                                {lang === 'ko' ? '(원, 미정이면 비움)' : '(비우면 한국어 가격으로 표시)'}
+                            </span>
                         </span>
                         <div className="relative">
                             <input
                                 type="number"
-                                value={price}
-                                onChange={(e) => setPrice(e.target.value)}
+                                value={priceBy[lang]}
+                                onChange={(e) => setPriceBy((prev) => ({ ...prev, [lang]: e.target.value }))}
                                 placeholder="0"
                                 className={`${inputBase} pr-10`}
                             />
                             <span className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-sm text-neutral-400">
-                                원
+                                {lang === 'ko' ? '원' : lang === 'en' ? 'KRW' : '韩元'}
                             </span>
                         </div>
                     </label>
                 </div>
 
                 {/* 하단 버튼 */}
+                <div className="border-t border-black/[0.04] px-6 py-5 sm:px-8">
+                    <p className="text-[13px] font-medium text-neutral-600">노출 언어</p>
+                    <div className="mt-2.5 flex flex-wrap gap-2">
+                        {(['ko', 'en', 'zh'] as const).map((l) => (
+                            <button
+                                key={l}
+                                type="button"
+                                onClick={() => toggleLocale(l)}
+                                aria-pressed={locales.includes(l)}
+                                className={`rounded-full px-3.5 py-1.5 text-xs ${
+                                    locales.includes(l)
+                                        ? 'bg-[#3a322c] text-white'
+                                        : 'border border-neutral-200 bg-white text-neutral-600'
+                                }`}
+                            >
+                                {l === 'ko' ? '한국어' : l === 'en' ? 'English' : '中文'}
+                            </button>
+                        ))}
+                    </div>
+                    <p className="mt-2 text-xs text-neutral-400">하나도 고르지 않으면 모든 언어에 노출됩니다.</p>
+                </div>
+
                 <div className="flex flex-col-reverse gap-2.5 border-t border-black/[0.04] bg-neutral-50/50 px-6 py-4 sm:flex-row sm:justify-end sm:px-8">
                     <button
                         type="button"

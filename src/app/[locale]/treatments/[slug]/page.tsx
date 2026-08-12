@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import TreatmentList from './TreatmentList';
+import TreatmentList from '../../../../components/treatments/TreatmentList';
 import Header from '@/components/layout/Header';
 import SubNav from '@/components/layout/SubNav';
 import { MENU_CATEGORIES } from '@/constants/categories';

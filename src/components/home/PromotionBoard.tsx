@@ -9,17 +9,11 @@ import { RevealGroup, RevealItem } from '@/components/ui/RevealGroup';
 import { slideRight } from '@/lib/motion';
 
 /** 개별 페이지가 아직 없어서 링크가 아니다. 목록에 마우스를 올리면 More View 로 시선을 넘긴다 */
-const PROMOTIONS = [
-    'Welcome Event',
-    '미백/색소 이벤트',
-    '스킨케어 이벤트',
-    '월별 이벤트',
-    '영양주사 이벤트',
-    '제모 이벤트',
-];
+const PROMOTION_KEYS = ['event1', 'event2', 'event3', 'event4', 'event5', 'event6'] as const;
 
 export default function PromotionBoard() {
     const t = useTranslations('home');
+    const tp = useTranslations('promoBoard');
     const [hot, setHot] = useState(false);
     const reduced = useReducedMotion();
 
@@ -50,7 +44,7 @@ export default function PromotionBoard() {
                     className="w-full lg:w-[617px] lg:shrink-0"
                 >
                     <RevealGroup as="ul" className="grid grid-cols-2 lg:grid-cols-3">
-                        {PROMOTIONS.map((label, i) => (
+                        {PROMOTION_KEYS.map((label, i) => (
                             <RevealItem
                                 as="li"
                                 key={label}
@@ -60,7 +54,7 @@ export default function PromotionBoard() {
                                     i % 3 !== 2 ? 'lg:border-r' : 'lg:border-r-0'
                                 }`}
                             >
-                                {label}
+                                {tp(label)}
                             </RevealItem>
                         ))}
                     </RevealGroup>
