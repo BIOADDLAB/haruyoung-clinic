@@ -26,7 +26,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </header>
 
             {/* PC 사이드바 */}
-            <aside className="hidden w-[240px] shrink-0 flex-col justify-between bg-[#3a322c] px-7 py-8 text-white lg:flex">
+            <aside className="hidden w-[240px] shrink-0 flex-col justify-between bg-[#3a322c] px-7 py-8 text-white lg:sticky lg:top-0 lg:flex lg:h-dvh lg:self-start">
                 <div>
                     <div className="text-sm tracking-[0.2em] text-white/60">HARUYOUNG</div>
                     <div className="mt-1 text-xl font-semibold">관리자</div>

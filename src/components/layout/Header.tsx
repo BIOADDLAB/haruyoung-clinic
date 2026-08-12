@@ -4,7 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
 import { usePathname, useRouter } from '@/i18n/navigation';
-import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
+import { useCallback, useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import MobileQuickBar from './MobileQuickBar';
 import AuthModal from '@/components/auth/AuthModal';
 import { useLocale, useTranslations } from 'next-intl';
@@ -62,7 +62,6 @@ export default function Header({ dark }: { dark?: boolean }) {
             const term = q.trim();
             if (!term) return;
             setPanel(null);
-            // #TODO: 검색 결과 페이지 구현 후 연결
             router.push(`/treatments?q=${encodeURIComponent(term)}`);
         },
         [router],
@@ -283,16 +282,12 @@ export default function Header({ dark }: { dark?: boolean }) {
 
 /**
  * 레일 로그인 영역.
- * 로그인 전에는 '로그인', 후에는 이름과 로그아웃을 보여준다.
- * 판정이 끝나기 전(ready=false)에는 아무것도 그리지 않아 깜빡임을 막는다.
- */
-/**
- * 레일 로그인 영역.
  * 로그인 전에는 '로그인', 후에는 '로그아웃'.
  * 판정이 끝나기 전(ready=false)에는 아무것도 그리지 않아 깜빡임을 막는다.
  */
 function RailAuth({ dark, onLogin }: { dark?: boolean; onLogin: () => void }) {
     const { member, ready } = useAuthMember();
+    const t = useTranslations('nav');
     const line = dark ? 'border-cream' : 'border-dark';
 
     if (!ready) return <span className="h-5" />;
@@ -303,7 +298,7 @@ function RailAuth({ dark, onLogin }: { dark?: boolean; onLogin: () => void }) {
             onClick={() => (member ? signOutMember() : onLogin())}
             className="text-center text-caption-sm font-semibold"
         >
-            <span className={`border-b pb-1 ${line}`}>{member ? '로그아웃' : '로그인'}</span>
+            <span className={`border-b pb-1 ${line}`}>{member ? t('logout') : t('login')}</span>
         </button>
     );
 }
@@ -311,6 +306,7 @@ function RailAuth({ dark, onLogin }: { dark?: boolean; onLogin: () => void }) {
 /** 모바일 메뉴 로그인 영역. 로그인 전에는 '로그인', 후에는 '로그아웃' */
 function MobileAuth({ onNavigate, onLogin }: { onNavigate: () => void; onLogin: () => void }) {
     const { member, ready } = useAuthMember();
+    const t = useTranslations('nav');
 
     if (!ready) return <span />;
 
@@ -327,7 +323,7 @@ function MobileAuth({ onNavigate, onLogin }: { onNavigate: () => void; onLogin: 
             }}
             className="text-caption font-semibold"
         >
-            <span className="border-b border-dark pb-1">{member ? '로그아웃' : '로그인'}</span>
+            <span className="border-b border-dark pb-1">{member ? t('logout') : t('login')}</span>
         </button>
     );
 }
@@ -587,12 +583,13 @@ function SearchForm({
     onClose: () => void;
 }) {
     const inputRef = useRef<HTMLInputElement>(null);
+    const inputId = useId();
     const t = useTranslations('search');
     const tn = useTranslations('nav');
 
-    // 패널이 열리면 바로 타이핑할 수 있게 한다. 레이아웃 점프 방지로 preventScroll
     useEffect(() => {
-        inputRef.current?.focus({ preventScroll: true });
+        const input = inputRef.current;
+        if (input?.getClientRects().length) input.focus({ preventScroll: true });
     }, []);
 
     return (
@@ -606,12 +603,12 @@ function SearchForm({
 
             <form onSubmit={onSubmit}>
                 <div className="flex items-center justify-between border-b border-dark/50 pb-1.75">
-                    <label htmlFor="quick-search" className="sr-only">
+                    <label htmlFor={inputId} className="sr-only">
                         {t('title')}
                     </label>
                     <input
                         ref={inputRef}
-                        id="quick-search"
+                        id={inputId}
                         type="search"
                         value={keyword}
                         onChange={(e) => onChange(e.target.value)}
@@ -664,11 +661,12 @@ function CartRailLink({ dark }: { dark?: boolean }) {
 function MobileCartLink({ onNavigate }: { onNavigate: () => void }) {
     const { count } = useCart();
     const mounted = useMounted();
+    const t = useTranslations('nav');
 
     return (
         <Link href="/cart" onClick={onNavigate} className="text-caption font-semibold">
             <span className="border-b border-dark pb-1">
-                장바구니
+                {t('cart')}
                 {mounted && count > 0 && ` (${count})`}
             </span>
         </Link>

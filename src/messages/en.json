@@ -81,6 +81,22 @@
         "booster": "Skin Booster",
         "body": "Body Line"
     },
+    "productCategories": {
+        "lifting": "Lifting",
+        "pigmentRednessBlemishes": "Pigmentation / Redness / Blemishes",
+        "tattooRemoval": "Tattoo Removal",
+        "poresScarsAcne": "Pores / Scars / Acne",
+        "botox": "Botox",
+        "skinBotox": "Skin Botox",
+        "contourFatDissolving": "Contour / Fat-Dissolving Injections",
+        "filler": "Filler",
+        "skinBooster": "Skin Booster",
+        "skinCare": "Skin Care",
+        "ivTherapy": "IV Therapy",
+        "womenHairRemoval": "Women's Hair Removal",
+        "menHairRemoval": "Men's Hair Removal",
+        "bodyDiet": "Body Care / Weight Management"
+    },
     "treatments": {
         "loading": "Loading…",
         "empty": "This treatment is coming soon.",

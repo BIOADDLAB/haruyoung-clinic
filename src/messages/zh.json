@@ -81,6 +81,22 @@
         "booster": "水光针",
         "body": "身体塑形"
     },
+    "productCategories": {
+        "lifting": "提升",
+        "pigmentRednessBlemishes": "色素 / 泛红 / 色斑",
+        "tattooRemoval": "纹身去除",
+        "poresScarsAcne": "毛孔 / 疤痕 / 痘痘",
+        "botox": "肉毒素",
+        "skinBotox": "微滴肉毒",
+        "contourFatDissolving": "轮廓 / 溶脂针",
+        "filler": "玻尿酸填充",
+        "skinBooster": "水光针",
+        "skinCare": "皮肤管理",
+        "ivTherapy": "营养输液",
+        "womenHairRemoval": "女性脱毛",
+        "menHairRemoval": "男性脱毛",
+        "bodyDiet": "身体管理 / 减重"
+    },
     "treatments": {
         "loading": "加载中…",
         "empty": "该项目正在筹备中。",

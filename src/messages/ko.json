@@ -81,6 +81,22 @@
         "body": "바디라인",
         "booster": "스킨부스터"
     },
+    "productCategories": {
+        "lifting": "리프팅",
+        "pigmentRednessBlemishes": "색소/홍조/잡티",
+        "tattooRemoval": "문신 제거",
+        "poresScarsAcne": "모공/흉터/여드름",
+        "botox": "보톡스",
+        "skinBotox": "스킨보톡스",
+        "contourFatDissolving": "윤곽/지방분해주사",
+        "filler": "필러",
+        "skinBooster": "스킨부스터",
+        "skinCare": "피부관리",
+        "ivTherapy": "영양 수액",
+        "womenHairRemoval": "여성 제모",
+        "menHairRemoval": "남성 제모",
+        "bodyDiet": "바디관리/다이어트"
+    },
     "treatments": {
         "loading": "불러오는 중…",
         "empty": "준비 중인 시술입니다.",
