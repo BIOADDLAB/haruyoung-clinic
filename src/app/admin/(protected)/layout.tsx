@@ -37,7 +37,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
                     <AdminNav variant="desktop" />
                 </div>
 
-                <AdminLogoutButton className="text-sm text-white/60 hover:text-white" />
+                <AdminLogoutButton className="text-sm text-white/60 hover:text-white text-left" />
             </aside>
 
             {/* Firestore 규칙이 request.auth 를 보므로 Firebase 로그인 후에 내용을 그린다 */}
