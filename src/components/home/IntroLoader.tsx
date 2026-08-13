@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { INTRO_COOKIE_NAME, INTRO_ELEMENT_ID } from '@/lib/intro';
+import { INTRO_CLOSED_EVENT, INTRO_COOKIE_NAME, INTRO_ELEMENT_ID } from '@/lib/intro';
 import { EASE } from '@/lib/motion';
 
 /**
@@ -105,7 +105,7 @@ export default function IntroLoader({ initialOpen }: { initialOpen: boolean }) {
     }, [visible]);
 
     return (
-        <AnimatePresence>
+        <AnimatePresence onExitComplete={() => window.dispatchEvent(new Event(INTRO_CLOSED_EVENT))}>
             {visible && (
                 <motion.div
                     id={INTRO_ELEMENT_ID}

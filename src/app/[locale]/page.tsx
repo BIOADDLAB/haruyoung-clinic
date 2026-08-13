@@ -217,6 +217,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                                         key={item.en}
                                         en={item.en}
                                         n={item.n}
+                                        slug={item.slug}
                                         desc={tc(item.slug)}
                                         alt={ta(`card_${item.slug}`)}
                                     />

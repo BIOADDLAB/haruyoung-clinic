@@ -307,10 +307,10 @@
         "space": "HARU YOUNG Space",
         "promotion": "Promotion",
         "category": "Category",
-        "promotionLead": "Find the promotion \nthat suits you.",
+        "promotionLead": "Find the promotion that suits you.",
         "categoryLead": "Discover a solution\ntailored to your skin.",
         "heroTitle": "A skin retreat designed\nonly for you.",
-        "heroBody": "Like a pause in a busy day, \nHARU YOUNG CLINIC offers \nyour skin the calmest rest. \nWith care designed only for you,\nwe help natural beauty \nlast far beyond your visit.",
+        "heroBody": "Like a pause in a busy day, HARU YOUNG CLINIC\noffers your skin the calmest rest.\nWith care designed only for you,\nwe help natural beauty last far beyond your visit.",
         "treatLead": "Skin that looks younger than your years,\nremodelling care that turns time back.",
         "spaceLead": "Our space is designed as time for your skin to rest.\nA calm mood and careful detail make every moment here a true pause."
     },
@@ -323,17 +323,13 @@
         "spaceEn": "HARU YOUNG\nSpace",
         "spaceTitle": "The pause of a day, \na timeless moment.\nA skin retreat designed only for you.",
         "spaceBody": "Step away from the everyday and into the calm of\na high-end resort spa. In a refined private space,\nwith care attentive to the finest texture of your skin,\nyou return to your most comfortable state.",
-        "career1": "Former Director, Jiyu Gangnam",
-        "career2": "Former Director, Muse Gangnam",
-        "career3": "Former Director, Abiju Jamsil",
-        "career4": "Former Director, Tox&Fill Guri",
-        "society1": "Korean Academy of Cosmetic Surgery",
-        "society2": "Korean Academy of Aesthetic Laser",
-        "society3": "Korean Society of Laser Skin & Hair",
-        "society4": "Korean Society of Obesity & Aesthetic Therapy",
-        "society5": "Korean Filler Society",
+        "career1": "前 연세대학교 의과대학 졸업",
+        "career2": "前 연세대학교 세브란스병원 \n가정의학과 전문의",
+        "society1": "前 대한레이저미용학회 우수회원",
+        "society2": "前 대한비만연구의사회 정회원",
+        "society3": "스컬트라 마스터",
         "spaceBody2": "We do not follow uniform procedures or passing trends.\nWe listen to the time you have lived and the story of your skin, and design a tomorrow that shines a little more each day.",
-        "ceoName": "Hong Gil-dong"
+        "ceoName": ""
     },
     "treatCard": {
         "lifting": "Firm resilience,\nlifting that turns\nthe clock back",
@@ -348,9 +344,6 @@
     "promoBoard": {
         "event1": "Welcome Event",
         "event2": "Brightening & Pigment",
-        "event3": "Skin Care",
-        "event4": "Monthly Event",
-        "event5": "IV Therapy",
-        "event6": "Hair Removal"
+        "event3": "Skin Care"
     }
 }

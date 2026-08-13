@@ -9,7 +9,7 @@ import { RevealGroup, RevealItem } from '@/components/ui/RevealGroup';
 import { slideRight } from '@/lib/motion';
 
 /** 개별 페이지가 아직 없어서 링크가 아니다. 목록에 마우스를 올리면 More View 로 시선을 넘긴다 */
-const PROMOTION_KEYS = ['event1', 'event2', 'event3', 'event4', 'event5', 'event6'] as const;
+const PROMOTION_KEYS = ['event1', 'event2', 'event3'] as const;
 
 export default function PromotionBoard() {
     const t = useTranslations('home');
@@ -22,7 +22,7 @@ export default function PromotionBoard() {
             <div className="mx-auto flex w-full flex-col gap-8 lg:max-w-[828px] lg:flex-row lg:items-start lg:gap-[11px]">
                 <Reveal variants={slideRight} className="shrink-0 lg:w-[200px]">
                     <h2 className="font-display text-24">Promotion</h2>
-                    <p className="mt-3.5 text-caption text-cream lg:whitespace-pre-line">{t('promotionLead')}</p>
+                    <p className="mt-3.5 text-caption text-cream">{t('promotionLead')}</p>
                     <motion.div
                         animate={hot && !reduced ? 'pulse' : 'rest'}
                         variants={{
@@ -49,9 +49,9 @@ export default function PromotionBoard() {
                                 as="li"
                                 key={label}
                                 className={`flex items-center justify-center border-cream/25 px-2 py-4 text-center text-caption font-normal lg:border-cream/70 lg:text-small ${
-                                    i < 4 ? 'border-b' : ''
-                                } ${i % 2 === 0 ? 'border-r' : ''} ${i < 3 ? 'lg:border-b' : 'lg:border-b-0'} ${
-                                    i % 3 !== 2 ? 'lg:border-r' : 'lg:border-r-0'
+                                    i < 2 ? 'border-b lg:border-b-0' : ''
+                                } ${i % 2 === 0 ? 'border-r' : ''} ${
+                                    i < 2 ? 'lg:border-r' : 'lg:border-r-0'
                                 }`}
                             >
                                 {tp(label)}

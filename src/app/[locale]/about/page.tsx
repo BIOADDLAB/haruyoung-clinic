@@ -26,17 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 /** #issue 원장 약력. 병원에서 영문·중문 표기를 받으면 messages 값만 고치면 된다 */
-const CAREER_KEYS = [
-    'career1',
-    'career2',
-    'career3',
-    'career4',
-    'society1',
-    'society2',
-    'society3',
-    'society4',
-    'society5',
-] as const;
+const CAREER_KEYS = ['career1', 'career2', 'society1', 'society2', 'society3'] as const;
 
 const SPACE_PHOTOS: GalleryPhoto[] = [
     {
@@ -259,7 +249,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                                             <RevealItem
                                                 as="li"
                                                 key={t(c)}
-                                                className="text-small leading-[32px] text-dark lg:leading-[35px]"
+                                                className="text-small leading-[32px] text-dark lg:leading-[35px] lg:whitespace-pre-line"
                                             >
                                                 {t(c)}
                                             </RevealItem>

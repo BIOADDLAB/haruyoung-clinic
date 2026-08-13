@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from 'framer-motion';
 import Image from 'next/image';
+import { Link } from '@/i18n/navigation';
 import { EASE } from '@/lib/motion';
 
 /** 목표를 살짝 넘겼다 되돌아오는 이징. 등장·호버 모두 이걸로 살랑인다 */
@@ -37,7 +38,19 @@ const PHOTO = {
 };
 
 /** 좌상단 점을 축으로 매달린 택. 회전축 = pl 11+4, pt 7+4+4 */
-export default function TreatmentCard({ en, n, desc, alt }: { en: string; n: string; desc: string; alt: string }) {
+export default function TreatmentCard({
+    en,
+    n,
+    desc,
+    alt,
+    slug,
+}: {
+    en: string;
+    n: string;
+    desc: string;
+    alt: string;
+    slug: string;
+}) {
     const reduced = useReducedMotion();
 
     return (
@@ -48,24 +61,28 @@ export default function TreatmentCard({ en, n, desc, alt }: { en: string; n: str
             style={{ transformOrigin: '15px 15px' }}
             className="flex h-[198px] w-[288px] overflow-hidden rounded-tl-[13px] bg-paper py-[7px] pl-[11px] pr-[8px] text-dark"
         >
-            <div className="flex w-[133px] shrink-0 flex-col">
-                <span aria-hidden="true" className="mt-1 h-2 w-2 rounded-full bg-dark" />
-                <h3 className="mt-6.5 font-gara text-22 font-bold italic leading-[1.15] lg:pl-2">{en}</h3>
-                <p className="mt-3.25 whitespace-pre-line text-caption-sm leading-[1.7] text-dark lg:pl-2">{desc}</p>
-            </div>
+            <Link href={`/treatments/${slug}`} className="flex h-full w-full">
+                <div className="flex w-[133px] shrink-0 flex-col">
+                    <span aria-hidden="true" className="mt-1 h-2 w-2 rounded-full bg-dark" />
+                    <h3 className="mt-6.5 font-gara text-22 font-bold italic leading-[1.15] lg:pl-2">{en}</h3>
+                    <p className="mt-3.25 whitespace-pre-line text-caption-sm leading-[1.7] text-dark lg:pl-2">
+                        {desc}
+                    </p>
+                </div>
 
-            <div className="relative h-full w-[136px] shrink-0 overflow-hidden">
-                <motion.div variants={PHOTO} className="absolute inset-0">
-                    <Image
-                        src={`/images/img-s2-${n}.jpg`}
-                        alt={alt}
-                        fill
-                        quality={90}
-                        sizes="136px"
-                        className="object-cover"
-                    />
-                </motion.div>
-            </div>
+                <div className="relative h-full w-[136px] shrink-0 overflow-hidden">
+                    <motion.div variants={PHOTO} className="absolute inset-0">
+                        <Image
+                            src={`/images/img-s2-${n}.jpg`}
+                            alt={alt}
+                            fill
+                            quality={90}
+                            sizes="136px"
+                            className="object-cover"
+                        />
+                    </motion.div>
+                </div>
+            </Link>
         </motion.li>
     );
 }

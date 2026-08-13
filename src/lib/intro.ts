@@ -4,3 +4,4 @@
  */
 export const INTRO_COOKIE_NAME = 'haruyoung_intro_seen';
 export const INTRO_ELEMENT_ID = 'haruyoung-intro-loader';
+export const INTRO_CLOSED_EVENT = 'haruyoung:intro-closed';
