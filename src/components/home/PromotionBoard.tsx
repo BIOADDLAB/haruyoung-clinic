@@ -19,7 +19,7 @@ export default function PromotionBoard() {
 
     return (
         <div className="relative flex h-full items-center">
-            <div className="mx-auto flex w-full flex-col gap-8 lg:max-w-[828px] lg:flex-row lg:items-start lg:gap-[11px]">
+            <div className="mx-auto flex w-full flex-col gap-8 lg:max-w-[828px] lg:flex-row lg:items-center lg:gap-[11px]">
                 <Reveal variants={slideRight} className="shrink-0 lg:w-[200px]">
                     <h2 className="font-display text-24">Promotion</h2>
                     <p className="mt-3.5 text-caption text-cream">{t('promotionLead')}</p>
@@ -50,9 +50,7 @@ export default function PromotionBoard() {
                                 key={label}
                                 className={`flex items-center justify-center border-cream/25 px-2 py-4 text-center text-caption font-normal lg:border-cream/70 lg:text-small ${
                                     i < 2 ? 'border-b lg:border-b-0' : ''
-                                } ${i % 2 === 0 ? 'border-r' : ''} ${
-                                    i < 2 ? 'lg:border-r' : 'lg:border-r-0'
-                                }`}
+                                } ${i % 2 === 0 ? 'border-r' : ''} ${i < 2 ? 'lg:border-r' : 'lg:border-r-0'}`}
                             >
                                 {tp(label)}
                             </RevealItem>
