@@ -45,7 +45,7 @@ export default function CartView() {
                     disabled={picked.length === 0}
                     className="text-caption text-dark/50 transition-colors duration-500 ease-brand hover:text-dark disabled:opacity-30"
                 >
-                    선택 삭제
+                    {t('removeSelected')}
                 </button>
             </div>
 
