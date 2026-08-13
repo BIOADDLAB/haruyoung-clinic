@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
+import { useLayoutEffect } from 'react';
 import { Link } from '@/i18n/navigation';
 import { DUR, EASE } from '@/lib/motion';
 
@@ -13,6 +14,19 @@ export default function HeroVisual() {
     const th = useTranslations('home');
     const reduced = useReducedMotion();
     const { scrollY } = useScroll();
+
+    // 다른 페이지의 스크롤 진행률이 메인 히어로에 이어지지 않도록 진입 시 즉시 초기화한다.
+    useLayoutEffect(() => {
+        if (window.location.hash) {
+            window.history.replaceState(
+                window.history.state,
+                '',
+                `${window.location.pathname}${window.location.search}`,
+            );
+        }
+        scrollY.set(0);
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    }, [scrollY]);
 
     const scale = useTransform(scrollY, [0, HERO_HOLD], [1, 1.18]);
     const y = useTransform(scrollY, [0, HERO_HOLD], [0, 200]);

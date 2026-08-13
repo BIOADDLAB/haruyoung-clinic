@@ -145,15 +145,9 @@ export default function ReservationsPage() {
                                                 {RESERVATION_STATUS[s]}
                                             </button>
                                         ))}
-                                        <a
-                                            href={`tel:${r.phone.replace(/-/g, '')}`}
-                                            className="ml-auto rounded-full border border-black/10 px-3 py-1 text-xs"
-                                        >
-                                            전화 걸기
-                                        </a>
                                         <button
                                             onClick={() => remove(r)}
-                                            className="rounded-full border border-red-200 px-3 py-1 text-xs text-red-500"
+                                            className="ml-auto rounded-full border border-red-200 px-3 py-1 text-xs text-red-500"
                                         >
                                             삭제
                                         </button>
