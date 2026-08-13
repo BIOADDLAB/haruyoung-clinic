@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
+import { cookies } from 'next/headers';
 import MoreView from '@/components/ui/MoreView';
 import CategoryGrid from '@/components/home/CategoryGrid';
 import HeroVisual, { HERO_HOLD } from '@/components/home/HeroVisual';
@@ -13,6 +14,7 @@ import PhotoGallery, { type GalleryPhoto } from '@/components/ui/PhotoGallery';
 import Reveal from '@/components/ui/Reveal';
 import { RevealGroup } from '@/components/ui/RevealGroup';
 import { fadeUpSlow, slideLeft, slideRight } from '@/lib/motion';
+import { INTRO_COOKIE_NAME } from '@/lib/intro';
 import IntroLoader from '@/components/home/IntroLoader';
 
 const TREATMENTS = [
@@ -98,12 +100,17 @@ const SPACE_PHOTOS: GalleryPhoto[] = [
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params;
-    const t = await getTranslations({ locale, namespace: 'home' });
-    const ta = await getTranslations({ locale, namespace: 'a11y' });
-    const tc = await getTranslations({ locale, namespace: 'treatCard' });
+    const [t, ta, tc, cookieStore] = await Promise.all([
+        getTranslations({ locale, namespace: 'home' }),
+        getTranslations({ locale, namespace: 'a11y' }),
+        getTranslations({ locale, namespace: 'treatCard' }),
+        cookies(),
+    ]);
+    const showIntro = cookieStore.get(INTRO_COOKIE_NAME)?.value !== '1';
+
     return (
         <>
-            <IntroLoader />
+            <IntroLoader initialOpen={showIntro} />
 
             <Header />
 

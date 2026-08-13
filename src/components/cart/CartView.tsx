@@ -51,7 +51,7 @@ export default function CartView() {
 
             {/* 장바구니 목록 */}
             {items.length === 0 ? (
-                <div className="mt-8 rounded-xl border border-beige bg-dark/[0.02] px-6 py-20 text-center">
+                <div className="mt-8 rounded-xl border border-beige bg-cream px-6 py-20 text-center">
                     <p className="text-caption text-dark/55">{t('empty')}</p>
                     <Link href="/promotion" className="mt-6 inline-block text-caption font-semibold tracking-wide">
                         <span className="border-b border-dark/70 pb-0.5 transition-colors duration-500 ease-brand hover:border-dark">
@@ -120,7 +120,7 @@ export default function CartView() {
             {/* 다른 상품 추가 */}
             <Link
                 href="/promotion"
-                className="mt-6 block rounded-xl border border-beige bg-dark/[0.03] py-4 text-center text-caption tracking-wide transition-colors duration-500 ease-brand hover:bg-dark/[0.06]"
+                className="mt-6 block rounded-xl border border-beige bg-cream py-4 text-center text-caption tracking-wide transition-colors duration-500 ease-brand hover:bg-sand/[0.004]"
             >
                 {t('addMore')}
             </Link>
@@ -129,7 +129,7 @@ export default function CartView() {
             <section className="mt-14">
                 <h2 className="text-small font-semibold tracking-wide">{t('summary')}</h2>
 
-                <div className="mt-5 rounded-xl border border-beige bg-dark/[0.02] px-6 py-6">
+                <div className="mt-5 rounded-xl border border-beige bg-cream px-6 py-6">
                     <dl className="flex flex-col gap-4">
                         <div className="flex items-center justify-between">
                             <dt className="text-caption text-dark/60">{t('count')}</dt>

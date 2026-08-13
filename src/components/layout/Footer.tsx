@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
 import { CLINIC, POLICY_LINKS } from '@/data/site';
@@ -9,6 +9,7 @@ export default function Footer() {
     const t = useTranslations('policy');
     const tf = useTranslations('footer');
     const ta = useTranslations('a11y');
+    const locale = useLocale();
     return (
         <footer className="flex flex-col bg-dark text-cream lg:h-dvh">
             <div className="relative h-[32vh] w-full shrink-0 sm:h-[40vh] lg:h-auto lg:min-h-0 lg:flex-1">
@@ -48,7 +49,7 @@ export default function Footer() {
                             </li>
                             <li className="flex items-center gap-5 border-b border-cream/40 pb-3.5 pl-3">
                                 <h4 className="shrink-0 text-caption w-[55px]  tracking-wide">{tf('labelHours')}</h4>
-                                <div className="flex min-w-0 flex-col gap-3 lg:flex-row lg:items-center lg:gap-7">
+                                <div className="flex min-w-0 flex-col gap-3 xl:flex-row xl:items-center xl:gap-7">
                                     <div className="flex flex-col">
                                         {CLINIC.hours.map((h) => (
                                             <p key={h.key} className="flex gap-2.5">
@@ -58,12 +59,17 @@ export default function Footer() {
                                                 </span>
                                                 <span
                                                     aria-hidden="true"
-                                                    className="flex w-[43px] shrink-0 justify-between text-caption  tracking-wide"
+                                                    className={`shrink-0 whitespace-nowrap text-caption tracking-wide ${
+                                                        locale === 'ko'
+                                                            ? 'flex w-[43px] justify-between'
+                                                            : 'min-w-[88px]'
+                                                    }`}
                                                 >
-                                                    {/* 같은 글자가 반복될 수 있어 위치를 key 로 쓴다 (Mon Fri 의 n 등) */}
-                                                    {[...tf(h.key).replace(/\s/g, '')].map((c, ci) => (
-                                                        <span key={`${h.key}-${ci}`}>{c}</span>
-                                                    ))}
+                                                    {locale === 'ko'
+                                                        ? [...tf(h.key).replace(/\s/g, '')].map((c, ci) => (
+                                                              <span key={`${h.key}-${ci}`}>{c}</span>
+                                                          ))
+                                                        : tf(h.key)}
                                                 </span>
                                                 <span
                                                     aria-hidden="true"

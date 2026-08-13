@@ -75,7 +75,7 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
     return (
         <div className="w-full max-w-[800px]">
             {/* 기본 정보 카드 */}
-            <section className="rounded-xl border border-beige bg-dark/[0.015] px-6 py-8 sm:px-8">
+            <section className="rounded-xl border border-beige bg-cream px-6 py-8 sm:px-8">
                 <h2 className="text-small font-semibold tracking-wide">{t('secInfo')}</h2>
 
                 <div className="mt-7 grid grid-cols-1 gap-x-10 gap-y-7 sm:grid-cols-2">
@@ -140,7 +140,7 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
             {/* 날짜 */}
             <section className="mt-10">
                 <h2 className="text-small font-semibold tracking-wide">{t('secDate')}</h2>
-                <div className="mt-5 rounded-xl border border-beige bg-dark/[0.015] p-5 sm:p-6">
+                <div className="mt-5 rounded-xl border border-beige bg-cream p-5 sm:p-6">
                     <Calendar
                         value={date}
                         onChange={(v) => {
@@ -155,7 +155,7 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
             <section className="mt-10">
                 <h2 className="text-small font-semibold tracking-wide">{t('secTime')}</h2>
 
-                <div className="mt-5 rounded-xl border border-beige bg-dark/[0.015] px-5 py-6 sm:px-6">
+                <div className="mt-5 rounded-xl border border-beige bg-cream px-5 py-6 sm:px-6">
                     {date === '' ? (
                         <p className="text-caption text-dark/50">{t('pickDateFirst')}</p>
                     ) : slots.length === 0 ? (
@@ -190,7 +190,7 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
             <section className="mt-10">
                 <h2 className="text-small font-semibold tracking-wide">{t('secAgree')}</h2>
 
-                <div className="mt-5 rounded-xl border border-beige bg-dark/[0.015] px-6 py-6">
+                <div className="mt-5 rounded-xl border border-beige bg-cream px-6 py-6">
                     <div className="flex flex-col gap-5">
                         <div className="flex items-center justify-between gap-4">
                             <Check checked={agreePrivacy} onChange={setAgreePrivacy} label={t('agreePrivacy')} />

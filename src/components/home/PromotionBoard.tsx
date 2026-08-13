@@ -22,7 +22,7 @@ export default function PromotionBoard() {
             <div className="mx-auto flex w-full flex-col gap-8 lg:max-w-[828px] lg:flex-row lg:items-start lg:gap-[11px]">
                 <Reveal variants={slideRight} className="shrink-0 lg:w-[200px]">
                     <h2 className="font-display text-24">Promotion</h2>
-                    <p className="mt-3.5 text-caption text-cream">{t('promotionLead')}</p>
+                    <p className="mt-3.5 text-caption text-cream lg:whitespace-pre-line">{t('promotionLead')}</p>
                     <motion.div
                         animate={hot && !reduced ? 'pulse' : 'rest'}
                         variants={{

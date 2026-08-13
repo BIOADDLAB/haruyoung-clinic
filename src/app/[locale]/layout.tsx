@@ -29,6 +29,7 @@ const cormorantGaramond = Cormorant_Garamond({
 const astaSans = Asta_Sans({
     subsets: ['latin'],
     variable: '--font-asta-sans',
+    adjustFontFallback: false,
 });
 
 export function generateStaticParams() {
