@@ -3,16 +3,21 @@ import { getTranslations } from 'next-intl/server';
 import SearchResult from '@/components/treatments/SearchResult';
 import Header from '@/components/layout/Header';
 import SubNav from '@/components/layout/SubNav';
+import { createPageMetadata } from '@/lib/seo';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
     const { locale } = await params;
     const t = await getTranslations({ locale, namespace: 'meta' });
 
-    return {
+    return createPageMetadata({
+        locale,
+        path: '/treatments',
         title: t('search'),
         description: t('searchDesc'),
-        alternates: { canonical: '/treatments' },
-    };
+        clinic: t('clinic'),
+        ogAlt: t('ogAlt'),
+        index: false,
+    });
 }
 
 export default async function TreatmentsPage({

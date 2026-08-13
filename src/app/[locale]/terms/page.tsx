@@ -3,16 +3,20 @@ import { getTranslations } from 'next-intl/server';
 import Header from '@/components/layout/Header';
 import SidePanel from '@/components/layout/SidePanel';
 import { TERMS_EFFECTIVE, TERMS_SECTIONS } from '@/data/terms';
+import { createPageMetadata } from '@/lib/seo';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
     const { locale } = await params;
     const t = await getTranslations({ locale, namespace: 'meta' });
 
-    return {
+    return createPageMetadata({
+        locale,
+        path: '/terms',
         title: t('terms'),
         description: t('termsDesc'),
-        alternates: { canonical: '/terms' },
-    };
+        clinic: t('clinic'),
+        ogAlt: t('ogAlt'),
+    });
 }
 
 export default async function TermsPage({ params }: { params: Promise<{ locale: string }> }) {

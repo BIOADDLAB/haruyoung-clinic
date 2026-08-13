@@ -3,16 +3,20 @@ import { getTranslations } from 'next-intl/server';
 import PromotionList from '@/components/promotion/PromotionList';
 import Header from '@/components/layout/Header';
 import SubNav from '@/components/layout/SubNav';
+import { createPageMetadata } from '@/lib/seo';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
     const { locale } = await params;
     const t = await getTranslations({ locale, namespace: 'meta' });
 
-    return {
+    return createPageMetadata({
+        locale,
+        path: '/promotion',
         title: t('promotion'),
         description: t('promotionDesc'),
-        alternates: { canonical: '/promotion' },
-    };
+        clinic: t('clinic'),
+        ogAlt: t('ogAlt'),
+    });
 }
 
 export default async function PromotionPage({ params }: { params: Promise<{ locale: string }> }) {

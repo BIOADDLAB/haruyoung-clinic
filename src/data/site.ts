@@ -1,5 +1,10 @@
 const TREATMENT_ORDER = ['lifting', 'pigment', 'acne', 'petit', 'care', 'hair', 'body', 'booster'] as const;
 
+export const SITE_CONFIG = {
+    url: 'https://haruyoung-clinic.vercel.app',
+    googleSiteVerification: '',
+};
+
 /** key 는 messages 의 banner 네임스페이스 키다 */
 const treatments = TREATMENT_ORDER.map((slug) => ({ key: slug, href: `/treatments/${slug}` }));
 
@@ -27,10 +32,10 @@ export const CLINIC = {
      */
     /** 시간은 언어와 무관하다. 요일 라벨만 messages 의 footer 에서 꺼낸다 */
     hours: [
-        { key: 'day1', time: '13:00 - 21:00' },
-        { key: 'day2', time: '10:00 - 19:00' },
-        { key: 'day3', time: '10:00 - 15:00' },
-        { key: 'day4', time: '13:00 - 14:00' },
+        { key: 'day1', time: '13:00 - 21:00', schemaDays: ['Monday', 'Friday'] },
+        { key: 'day2', time: '10:00 - 19:00', schemaDays: ['Tuesday', 'Wednesday', 'Thursday'] },
+        { key: 'day3', time: '10:00 - 15:00', schemaDays: ['Saturday'] },
+        { key: 'day4', time: '13:00 - 14:00', schemaDays: [] },
     ],
     hourNotes: ['note1', 'note2'],
 

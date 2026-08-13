@@ -3,16 +3,20 @@ import { getTranslations } from 'next-intl/server';
 import Header from '@/components/layout/Header';
 import SidePanel from '@/components/layout/SidePanel';
 import ReservationForm from '@/components/reservation/ReservationForm';
+import { createPageMetadata } from '@/lib/seo';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
     const { locale } = await params;
     const t = await getTranslations({ locale, namespace: 'meta' });
 
-    return {
+    return createPageMetadata({
+        locale,
+        path: '/reservation',
         title: t('reservation'),
         description: t('reservationDesc'),
-        alternates: { canonical: '/reservation' },
-    };
+        clinic: t('clinic'),
+        ogAlt: t('ogAlt'),
+    });
 }
 
 export default async function ReservationPage({ params }: { params: Promise<{ locale: string }> }) {

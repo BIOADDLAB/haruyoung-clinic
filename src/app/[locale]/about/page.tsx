@@ -9,16 +9,20 @@ import PhotoGallery, { type GalleryPhoto } from '@/components/ui/PhotoGallery';
 import Reveal from '@/components/ui/Reveal';
 import { RevealGroup, RevealItem } from '@/components/ui/RevealGroup';
 import { drawLine, fadeUpSlow, slideLeft } from '@/lib/motion';
+import { createPageMetadata } from '@/lib/seo';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
     const { locale } = await params;
     const t = await getTranslations({ locale, namespace: 'meta' });
 
-    return {
+    return createPageMetadata({
+        locale,
+        path: '/about',
         title: t('about'),
         description: t('aboutDesc'),
-        alternates: { canonical: '/about' },
-    };
+        clinic: t('clinic'),
+        ogAlt: t('ogAlt'),
+    });
 }
 
 /** #issue 원장 약력. 병원에서 영문·중문 표기를 받으면 messages 값만 고치면 된다 */

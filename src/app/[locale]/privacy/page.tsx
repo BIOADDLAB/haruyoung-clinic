@@ -3,16 +3,20 @@ import { getTranslations } from 'next-intl/server';
 import Header from '@/components/layout/Header';
 import SidePanel from '@/components/layout/SidePanel';
 import { PRIVACY_EFFECTIVE, PRIVACY_SECTIONS } from '@/data/privacy';
+import { createPageMetadata } from '@/lib/seo';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
     const { locale } = await params;
     const t = await getTranslations({ locale, namespace: 'meta' });
 
-    return {
+    return createPageMetadata({
+        locale,
+        path: '/privacy',
         title: t('privacy'),
         description: t('privacyDesc'),
-        alternates: { canonical: '/privacy' },
-    };
+        clinic: t('clinic'),
+        ogAlt: t('ogAlt'),
+    });
 }
 
 export default async function PrivacyPage({ params }: { params: Promise<{ locale: string }> }) {

@@ -3,16 +3,20 @@ import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
 import PrecautionsView from '@/components/precautions/PrecautionsView';
 import Header from '@/components/layout/Header';
+import { createPageMetadata } from '@/lib/seo';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
     const { locale } = await params;
     const t = await getTranslations({ locale, namespace: 'meta' });
 
-    return {
+    return createPageMetadata({
+        locale,
+        path: '/precautions',
         title: t('precautions'),
         description: t('precautionsDesc'),
-        alternates: { canonical: '/precautions' },
-    };
+        clinic: t('clinic'),
+        ogAlt: t('ogAlt'),
+    });
 }
 
 export default function PrecautionsPage() {
