@@ -536,23 +536,52 @@ function MenuNav({ onNavigate, onLogin }: { onNavigate: () => void; onLogin: () 
                             <ul aria-labelledby={id} className="ml-[2px] mt-3 flex flex-col gap-2.5">
                                 {group.items.map((item) => {
                                     const current = item.href === pathname;
+                                    const [itemPathname, hash] = item.href.split('#');
+                                    const isSamePageAnchor = pathname === itemPathname && Boolean(hash);
+                                    const linkClassName = `group/item relative inline-block pb-1 text-small transition-colors duration-500 ease-brand hover:font-semibold hover:text-dark ${
+                                        current ? 'font-semibold text-dark' : 'text-dark/80'
+                                    }`;
+                                    const label = (
+                                        <>
+                                            {t(item.key)}
+                                            <span
+                                                className={`absolute inset-x-0 bottom-0 h-px origin-left bg-dark transition-transform duration-500 ease-brand group-hover/item:scale-x-100 ${
+                                                    current ? 'scale-x-100' : 'scale-x-0'
+                                                }`}
+                                            />
+                                        </>
+                                    );
+
                                     return (
                                         <li key={item.href}>
-                                            <Link
-                                                href={item.href}
-                                                onClick={onNavigate}
-                                                aria-current={current ? 'page' : undefined}
-                                                className={`group/item relative inline-block pb-1 text-small transition-colors duration-500 ease-brand hover:font-semibold hover:text-dark ${
-                                                    current ? 'font-semibold text-dark' : 'text-dark/80'
-                                                }`}
-                                            >
-                                                {t(item.key)}
-                                                <span
-                                                    className={`absolute inset-x-0 bottom-0 h-px origin-left bg-dark transition-transform duration-500 ease-brand group-hover/item:scale-x-100 ${
-                                                        current ? 'scale-x-100' : 'scale-x-0'
-                                                    }`}
-                                                />
-                                            </Link>
+                                            {isSamePageAnchor ? (
+                                                <a
+                                                    href={`#${hash}`}
+                                                    onClick={(event) => {
+                                                        if (window.matchMedia('(min-width: 1024px)').matches) {
+                                                            event.preventDefault();
+                                                            const nextHash = `#${hash}`;
+                                                            if (window.location.hash !== nextHash) {
+                                                                window.history.pushState(null, '', nextHash);
+                                                            }
+                                                            window.dispatchEvent(new HashChangeEvent('hashchange'));
+                                                        }
+                                                        onNavigate();
+                                                    }}
+                                                    className={linkClassName}
+                                                >
+                                                    {label}
+                                                </a>
+                                            ) : (
+                                                <Link
+                                                    href={item.href}
+                                                    onClick={onNavigate}
+                                                    aria-current={current ? 'page' : undefined}
+                                                    className={linkClassName}
+                                                >
+                                                    {label}
+                                                </Link>
+                                            )}
                                         </li>
                                     );
                                 })}

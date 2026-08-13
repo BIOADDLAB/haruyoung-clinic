@@ -114,7 +114,7 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
                         <option value="">{t('visitTypePlaceholder')}</option>
                         {VISIT_TYPES.map((v) => (
                             <option key={v} value={v}>
-                                {v}
+                                {t(v)}
                             </option>
                         ))}
                     </select>

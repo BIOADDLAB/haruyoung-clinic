@@ -101,7 +101,11 @@ export default function HorizontalScroll({
         };
         goto();
         window.addEventListener('hashchange', goto);
-        return () => window.removeEventListener('hashchange', goto);
+        window.addEventListener('popstate', goto);
+        return () => {
+            window.removeEventListener('hashchange', goto);
+            window.removeEventListener('popstate', goto);
+        };
     }, [travel, holdStart]);
 
     const { scrollYProgress } = useScroll({ target: wrapRef, offset: ['start start', 'end end'] });

@@ -72,7 +72,7 @@ export default function CartView() {
                                 key={i.key}
                                 className={`rounded-xl border p-6 transition-all duration-500 ease-brand ${
                                     isPicked
-                                        ? 'border-dark/25 bg-dark/[0.03]'
+                                        ? 'border-dark/25 bg-cream'
                                         : 'border-beige bg-transparent hover:border-dark/15'
                                 }`}
                             >
@@ -120,7 +120,7 @@ export default function CartView() {
             {/* 다른 상품 추가 */}
             <Link
                 href="/promotion"
-                className="mt-6 block rounded-xl border border-beige bg-cream py-4 text-center text-caption tracking-wide transition-colors duration-500 ease-brand hover:bg-sand/[0.004]"
+                className="mt-6 block rounded-xl border border-beige bg-cream py-4 text-center text-caption tracking-wide transition-colors duration-500 ease-brand hover:bg-[#f0ddb324]"
             >
                 {t('addMore')}
             </Link>
