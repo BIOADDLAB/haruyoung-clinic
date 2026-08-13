@@ -1,14 +1,20 @@
+import { cookies } from 'next/headers';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import AdminAuth from './AdminAuth';
+import AdminLogoutButton from './AdminLogoutButton';
 import AdminNav from './AdminNav';
-import { logoutAdmin } from '../actions';
+import { ADMIN_COOKIE_NAME, isValidAdminAuthToken } from '../auth';
 
 /**
  * 관리자 레이아웃.
  * PC 는 좌측 고정 사이드바, 모바일·태블릿은 상단 바 + 가로 스크롤 탭이다.
  * 원장·데스크에서 폰으로 예약을 확인하는 경우가 많아 모바일이 필수다.
  */
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+    const store = await cookies();
+    if (!isValidAdminAuthToken(store.get(ADMIN_COOKIE_NAME)?.value)) redirect('/admin/login');
+
     return (
         <div className="min-h-screen bg-[#f3efe9] lg:flex">
             {/* 모바일·태블릿 상단 */}
@@ -18,9 +24,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         <span className="text-xs tracking-[0.2em] text-white/60">HARUYOUNG</span>
                         <span className="ml-2 text-base font-semibold">관리자</span>
                     </Link>
-                    <form action={logoutAdmin}>
-                        <button className="text-xs text-white/60">로그아웃</button>
-                    </form>
+                    <AdminLogoutButton className="text-xs text-white/60" />
                 </div>
                 <AdminNav variant="mobile" />
             </header>
@@ -33,9 +37,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     <AdminNav variant="desktop" />
                 </div>
 
-                <form action={logoutAdmin}>
-                    <button className="text-sm text-white/60 hover:text-white">로그아웃</button>
-                </form>
+                <AdminLogoutButton className="text-sm text-white/60 hover:text-white" />
             </aside>
 
             {/* Firestore 규칙이 request.auth 를 보므로 Firebase 로그인 후에 내용을 그린다 */}

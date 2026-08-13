@@ -1,8 +1,9 @@
 'use client';
 
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { ADMIN_FIREBASE_EMAIL, ADMIN_FIREBASE_PW } from '../auth';
+import { ADMIN_FIREBASE_EMAIL } from '../firebase-auth';
 import { auth } from '@/lib/firebase';
 
 /**
@@ -13,28 +14,21 @@ import { auth } from '@/lib/firebase';
  */
 export default function AdminAuth({ children }: { children: React.ReactNode }) {
     const [ready, setReady] = useState(false);
-    const [error, setError] = useState('');
+    const router = useRouter();
 
     useEffect(() => {
-        let alive = true;
+        return onAuthStateChanged(auth, (user) => {
+            if (user?.email === ADMIN_FIREBASE_EMAIL) {
+                setReady(true);
+                return;
+            }
 
-        // 이미 로그인돼 있으면 건너뛴다. 두 경우 모두 비동기로 흘려야
-        // effect 안에서 동기 setState 가 일어나지 않는다
-        const run = auth.currentUser
-            ? Promise.resolve()
-            : signInWithEmailAndPassword(auth, ADMIN_FIREBASE_EMAIL, ADMIN_FIREBASE_PW).then(() => undefined);
+            if (user) void signOut(auth);
+            router.replace('/admin/login');
+        });
+    }, [router]);
 
-        run.then(() => alive && setReady(true)).catch(
-            () => alive && setError('Firebase 인증에 실패했습니다. 콘솔에서 관리자 계정을 확인해주세요.'),
-        );
-
-        return () => {
-            alive = false;
-        };
-    }, []);
-
-    if (error) return <div className="text-sm text-red-500">{error}</div>;
-    if (!ready) return <div className="text-sm text-neutral-500">불러오는 중...</div>;
+    if (!ready) return <div className="text-sm text-neutral-500">관리자 인증 확인 중...</div>;
 
     return <>{children}</>;
 }

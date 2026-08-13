@@ -22,8 +22,10 @@ export type Promotion = {
      */
     priceEn?: number | null;
     priceZh?: number | null;
-    /** 'YYYY-MM-DD'. 이 날짜까지 노출된다 */
+    /** 'YYYY-MM-DD'. 이 날짜까지 노출되며 상시 진행이면 빈 문자열이다 */
     until: string;
+    /** true면 마감일 없이 계속 노출한다. 기존 데이터는 false로 취급한다 */
+    isOngoing?: boolean;
     /**
      * 노출할 언어. 비어 있거나 없으면 모두 노출한다.
      * 기존 데이터에 이 필드가 없어도 그대로 보이므로 재입력이 필요 없다.
@@ -42,8 +44,12 @@ export function discountRate(p: Pick<Promotion, 'originPrice' | 'price'>) {
 
 /** 마감일까지 남은 일수. 지났으면 음수 */
 export function daysLeft(until: string) {
-    const end = new Date(`${until}T23:59:59`);
-    return Math.ceil((end.getTime() - Date.now()) / 86400000);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(until)) return Number.NEGATIVE_INFINITY;
+    const [year, month, day] = until.split('-').map(Number);
+    const now = new Date();
+    const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+    const end = Date.UTC(year, month - 1, day);
+    return Math.round((end - today) / 86400000);
 }
 
 /** 화면에 쓸 언어 */

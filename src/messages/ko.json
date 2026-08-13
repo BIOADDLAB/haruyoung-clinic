@@ -109,6 +109,7 @@
         "daysLeft": "{days}일 남음",
         "today": "오늘 마감",
         "closed": "마감됨",
+        "ongoing": "상시 진행",
         "from": "부터~"
     },
     "cart": {

@@ -20,7 +20,7 @@ function SortableCard({
     editing: boolean;
 }) {
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: p.id });
-    const left = daysLeft(p.until);
+    const left = p.isOngoing ? null : daysLeft(p.until);
 
     return (
         <div
@@ -41,7 +41,9 @@ function SortableCard({
             <div className="mt-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
                 <p className="text-small font-medium text-brown">{p.highlight}</p>
                 <p className="shrink-0 text-caption text-dark/60">
-                    ~{p.until} ({left < 0 ? '마감됨' : left === 0 ? '오늘 마감' : `${left}일 남음`})
+                    {left === null
+                        ? '상시 진행'
+                        : `~${p.until} (${left < 0 ? '마감됨' : left === 0 ? '오늘 마감' : `${left}일 남음`})`}
                 </p>
             </div>
 
@@ -74,6 +76,7 @@ export default function PromotionsPage() {
     const [all, setAll] = useState<Promotion[]>([]);
     const [loading, setLoading] = useState(true);
     const [editing, setEditing] = useState<Promotion | null>(null);
+    const [formVersion, setFormVersion] = useState(0);
     const sensors = useSensors(useSensor(PointerSensor));
     const formRef = useRef<HTMLDivElement>(null);
 
@@ -120,6 +123,7 @@ export default function PromotionsPage() {
 
     const onSaved = () => {
         setEditing(null);
+        setFormVersion((version) => version + 1);
         load();
     };
 
@@ -131,7 +135,7 @@ export default function PromotionsPage() {
 
             <div ref={formRef} className="mt-6">
                 <PromotionForm
-                    key={editing?.id ?? 'new'}
+                    key={editing?.id ?? `new-${formVersion}`}
                     initial={editing ?? undefined}
                     onSaved={onSaved}
                     onCancel={() => setEditing(null)}

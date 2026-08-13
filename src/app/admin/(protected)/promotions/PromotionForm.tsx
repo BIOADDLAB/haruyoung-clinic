@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { formatPriceInput, parsePriceInput } from '@/lib/price';
 import { addPromotion, updatePromotion } from '@/lib/promotions';
 import { discountRate, type Promotion } from '@/types/promotion';
 
@@ -48,16 +49,17 @@ export default function PromotionForm({
         Boolean(text[l].name.trim() || text[l].highlight.trim() || text[l].description.trim());
     /** 언어별 가격. 비우면 한국어 가격을 쓴다 */
     const [originBy, setOriginBy] = useState({
-        ko: initial?.originPrice?.toString() ?? '',
-        en: initial?.originPriceEn?.toString() ?? '',
-        zh: initial?.originPriceZh?.toString() ?? '',
+        ko: formatPriceInput(initial?.originPrice),
+        en: formatPriceInput(initial?.originPriceEn),
+        zh: formatPriceInput(initial?.originPriceZh),
     });
     const [priceBy, setPriceBy] = useState({
-        ko: initial?.price?.toString() ?? '',
-        en: initial?.priceEn?.toString() ?? '',
-        zh: initial?.priceZh?.toString() ?? '',
+        ko: formatPriceInput(initial?.price),
+        en: formatPriceInput(initial?.priceEn),
+        zh: formatPriceInput(initial?.priceZh),
     });
     const [until, setUntil] = useState(initial?.until ?? '');
+    const [isOngoing, setIsOngoing] = useState(initial?.isOngoing ?? false);
     const [busy, setBusy] = useState(false);
     /** 노출 언어. 비어 있으면 모든 언어에 노출한다 */
     const [locales, setLocales] = useState<('ko' | 'en' | 'zh')[]>(initial?.locales ?? []);
@@ -66,8 +68,8 @@ export default function PromotionForm({
         setLocales((prev) => (prev.includes(l) ? prev.filter((x) => x !== l) : [...prev, l]));
 
     const rate = discountRate({
-        originPrice: Number(originBy[lang]) || 0,
-        price: Number(priceBy[lang]) || 0,
+        originPrice: parsePriceInput(originBy[lang]) ?? 0,
+        price: parsePriceInput(priceBy[lang]) ?? 0,
     });
 
     const submit = async () => {
@@ -75,14 +77,15 @@ export default function PromotionForm({
             setLang('ko');
             return alert('한국어 프로모션명을 입력하세요.');
         }
-        if (!priceBy.ko) {
+        if (parsePriceInput(priceBy.ko) === null) {
             setLang('ko');
             return alert('한국어 판매가를 입력하세요.');
         }
-        if (!until) return alert('마감일을 입력하세요.');
+        if (!isOngoing && !until) return alert('마감일을 입력하거나 상시 진행을 선택하세요.');
 
         setBusy(true);
         try {
+            const koPrice = parsePriceInput(priceBy.ko) ?? 0;
             const data = {
                 name: text.ko.name,
                 nameEn: text.en.name,
@@ -93,13 +96,14 @@ export default function PromotionForm({
                 description: text.ko.description,
                 descriptionEn: text.en.description,
                 descriptionZh: text.zh.description,
-                originPrice: Number(originBy.ko) || Number(priceBy.ko),
-                originPriceEn: originBy.en === '' ? null : Number(originBy.en),
-                originPriceZh: originBy.zh === '' ? null : Number(originBy.zh),
-                priceEn: priceBy.en === '' ? null : Number(priceBy.en),
-                priceZh: priceBy.zh === '' ? null : Number(priceBy.zh),
-                price: Number(priceBy.ko),
-                until,
+                originPrice: parsePriceInput(originBy.ko) ?? koPrice,
+                originPriceEn: parsePriceInput(originBy.en),
+                originPriceZh: parsePriceInput(originBy.zh),
+                priceEn: parsePriceInput(priceBy.en),
+                priceZh: parsePriceInput(priceBy.zh),
+                price: koPrice,
+                until: isOngoing ? '' : until,
+                isOngoing,
                 locales,
                 order: initial?.order ?? Date.now(),
             };
@@ -118,7 +122,9 @@ export default function PromotionForm({
                 <h2 className="text-xl font-bold tracking-tight text-[#3a322c] sm:text-2xl">
                     {initial ? '프로모션 수정' : '프로모션 추가'}
                 </h2>
-                <p className="mt-1 text-sm text-neutral-500">마감일이 지나면 사이트에서 자동으로 내려갑니다.</p>
+                <p className="mt-1 text-sm text-neutral-500">
+                    마감일이 지난 프로모션은 자동으로 내려가며, 상시 진행은 계속 노출됩니다.
+                </p>
             </div>
 
             <div className="relative overflow-hidden rounded-2xl border border-black/[0.04] bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
@@ -206,10 +212,13 @@ export default function PromotionForm({
                                 정가 <span className="font-normal text-neutral-400">(할인 없으면 비움)</span>
                             </span>
                             <input
-                                type="number"
+                                type="text"
+                                inputMode="numeric"
                                 value={originBy[lang]}
-                                onChange={(e) => setOriginBy((prev) => ({ ...prev, [lang]: e.target.value }))}
-                                placeholder="2700000"
+                                onChange={(e) =>
+                                    setOriginBy((prev) => ({ ...prev, [lang]: formatPriceInput(e.target.value) }))
+                                }
+                                placeholder="2,700,000"
                                 className={inputBase}
                             />
                         </label>
@@ -219,25 +228,37 @@ export default function PromotionForm({
                                 판매가 <span className="text-rose-500">*</span>
                             </span>
                             <input
-                                type="number"
+                                type="text"
+                                inputMode="numeric"
                                 value={priceBy[lang]}
-                                onChange={(e) => setPriceBy((prev) => ({ ...prev, [lang]: e.target.value }))}
-                                placeholder="2200000"
+                                onChange={(e) =>
+                                    setPriceBy((prev) => ({ ...prev, [lang]: formatPriceInput(e.target.value) }))
+                                }
+                                placeholder="2,200,000"
                                 className={inputBase}
                             />
                         </label>
 
-                        <label className="flex flex-col gap-1.5">
+                        <div className="flex flex-col gap-1.5">
                             <span className="text-[13px] font-medium text-neutral-600">
-                                마감일 <span className="text-rose-500">*</span>
+                                마감일 {!isOngoing && <span className="text-rose-500">*</span>}
                             </span>
                             <input
                                 type="date"
                                 value={until}
                                 onChange={(e) => setUntil(e.target.value)}
+                                disabled={isOngoing}
                                 className={inputBase}
                             />
-                        </label>
+                            <label className="flex items-center gap-2 text-sm text-neutral-600">
+                                <input
+                                    type="checkbox"
+                                    checked={isOngoing}
+                                    onChange={(e) => setIsOngoing(e.target.checked)}
+                                />
+                                상시 진행 (마감일 없이 계속 노출)
+                            </label>
+                        </div>
                     </div>
 
                     {rate > 0 && <p className="text-sm text-neutral-500">화면에 {rate}% 할인으로 표시됩니다.</p>}

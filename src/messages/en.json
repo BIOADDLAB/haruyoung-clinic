@@ -109,6 +109,7 @@
         "daysLeft": "{days} days left",
         "today": "Ends today",
         "closed": "Ended",
+        "ongoing": "Always available",
         "from": "and up"
     },
     "cart": {

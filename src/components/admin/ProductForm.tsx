@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { MENU_CATEGORIES } from '@/constants/categories';
+import { formatPriceInput, parsePriceInput } from '@/lib/price';
 import { addProduct, updateProduct } from '@/lib/products';
 import type { Product } from '@/types/product';
 
@@ -61,9 +62,9 @@ export default function ProductForm({
         setLocales((prev) => (prev.includes(l) ? prev.filter((x) => x !== l) : [...prev, l]));
     /** 언어별 가격. 비우면 한국어 가격을 쓴다 */
     const [priceBy, setPriceBy] = useState({
-        ko: initial?.price?.toString() ?? '',
-        en: initial?.priceEn?.toString() ?? '',
-        zh: initial?.priceZh?.toString() ?? '',
+        ko: formatPriceInput(initial?.price),
+        en: formatPriceInput(initial?.priceEn),
+        zh: formatPriceInput(initial?.priceZh),
     });
     const [busy, setBusy] = useState(false);
 
@@ -100,9 +101,9 @@ export default function ProductForm({
                 description: text.ko.description,
                 descriptionEn: text.en.description,
                 descriptionZh: text.zh.description,
-                price: priceBy.ko === '' ? null : Number(priceBy.ko),
-                priceEn: priceBy.en === '' ? null : Number(priceBy.en),
-                priceZh: priceBy.zh === '' ? null : Number(priceBy.zh),
+                price: parsePriceInput(priceBy.ko),
+                priceEn: parsePriceInput(priceBy.en),
+                priceZh: parsePriceInput(priceBy.zh),
                 locales,
                 order: initial?.order ?? Date.now(),
             };
@@ -325,9 +326,12 @@ export default function ProductForm({
                         </span>
                         <div className="relative">
                             <input
-                                type="number"
+                                type="text"
+                                inputMode="numeric"
                                 value={priceBy[lang]}
-                                onChange={(e) => setPriceBy((prev) => ({ ...prev, [lang]: e.target.value }))}
+                                onChange={(e) =>
+                                    setPriceBy((prev) => ({ ...prev, [lang]: formatPriceInput(e.target.value) }))
+                                }
                                 placeholder="0"
                                 className={`${inputBase} pr-10`}
                             />

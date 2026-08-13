@@ -70,6 +70,7 @@ export default function ProductsPage() {
     const [menu, setMenu] = useState<string>(MENU_CATEGORIES[0].slug);
     const [loading, setLoading] = useState(true);
     const [editing, setEditing] = useState<Product | null>(null);
+    const [formVersion, setFormVersion] = useState(0);
     const sensors = useSensors(useSensor(PointerSensor));
     const formRef = useRef<HTMLDivElement>(null);
 
@@ -121,6 +122,7 @@ export default function ProductsPage() {
 
     const onSaved = () => {
         setEditing(null);
+        setFormVersion((version) => version + 1);
         load();
     };
 
@@ -133,7 +135,7 @@ export default function ProductsPage() {
             {/* 폼: key로 편집 대상 바뀔 때 폼 리셋 */}
             <div ref={formRef} className="mt-6">
                 <ProductForm
-                    key={editing?.id ?? 'new'}
+                    key={editing?.id ?? `new-${formVersion}`}
                     initial={editing ?? undefined}
                     allProducts={all}
                     onSaved={onSaved}

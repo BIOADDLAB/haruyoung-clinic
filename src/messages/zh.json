@@ -109,6 +109,7 @@
         "daysLeft": "剩余 {days} 天",
         "today": "今日截止",
         "closed": "已结束",
+        "ongoing": "长期进行",
         "from": "起"
     },
     "cart": {

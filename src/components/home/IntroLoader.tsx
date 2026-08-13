@@ -45,6 +45,34 @@ const READY_TIMEOUT_MS = 1500;
 const INTRO_MODE: 'always' | 'session' | 'daily' | 'once' | 'off' = 'session';
 
 const SEEN_KEY = 'haruyoung:intro-seen';
+const INTRO_ID = 'haruyoung-intro-loader';
+const SKIP_STYLE_ID = 'haruyoung-intro-skip-style';
+
+/** 이미 본 세션이면 첫 화면이 그려지기 전에 인트로를 감춘다. */
+const BEFORE_PAINT_SCRIPT = `
+try {
+    const mode = ${JSON.stringify(INTRO_MODE)};
+    const key = ${JSON.stringify(SEEN_KEY)};
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let seen = mode === 'off' || reduced;
+
+    if (mode === 'session') seen ||= sessionStorage.getItem(key) !== null;
+    else if (mode === 'daily') seen ||= localStorage.getItem(key) === new Date().toDateString();
+    else if (mode === 'once') seen ||= localStorage.getItem(key) !== null;
+
+    if (seen && !document.getElementById(${JSON.stringify(SKIP_STYLE_ID)})) {
+        const style = document.createElement('style');
+        style.id = ${JSON.stringify(SKIP_STYLE_ID)};
+        style.textContent = '#${INTRO_ID}{display:none!important}';
+        document.head.appendChild(style);
+    }
+} catch {
+    const style = document.createElement('style');
+    style.id = ${JSON.stringify(SKIP_STYLE_ID)};
+    style.textContent = '#${INTRO_ID}{display:none!important}';
+    document.head.appendChild(style);
+}
+`;
 
 const tickOf = (n: number) => (n <= SLOW_FROM ? SLOW_MS : FAST_MS);
 
@@ -97,7 +125,7 @@ function markSeen() {
  */
 export default function IntroLoader() {
     const reduced = useReducedMotion();
-    // 서버에서는 false, 클라이언트 첫 렌더에서 true. effect 안 setState 없이 판정한다
+    // 서버 렌더부터 인트로를 덮어 메인 화면이 먼저 비치는 것을 막는다.
     const mounted = useSyncExternalStore(
         noopSubscribe,
         () => true,
@@ -108,7 +136,7 @@ export default function IntroLoader() {
     const [count, setCount] = useState(10);
     const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    const open = mounted && !reduced && !skipped && !hasSeen();
+    const open = !mounted || (!reduced && !skipped && !hasSeen());
 
     const close = useCallback(() => {
         if (timer.current) clearTimeout(timer.current);
@@ -147,67 +175,75 @@ export default function IntroLoader() {
     }, [open]);
 
     return (
-        <AnimatePresence>
-            {open && (
-                <motion.div
-                    // 확대되며 사라진다. 영상이 히어로로 빨려드는 느낌이라 이어짐이 부드럽다
-                    exit={{ opacity: 0, scale: 1.08, transition: { duration: 1, ease: EASE } }}
-                    onClick={close}
-                    className="fixed inset-0 z-[100] cursor-pointer overflow-hidden bg-dark"
-                >
-                    <video
-                        src="/videos/intro.mp4"
-                        poster="/images/intro-s.jpg"
-                        autoPlay
-                        muted
-                        playsInline
-                        preload="auto"
-                        onCanPlay={() => setReady(true)}
-                        className="absolute inset-0 h-full w-full object-cover"
-                    />
-
-                    {/* 영상 위에 글자가 묻히지 않게 눌러준다. 값이 높을수록 글자가 또렷해진다 */}
-                    <span aria-hidden="true" className="absolute inset-0 bg-dark/40" />
-
+        <>
+            <script dangerouslySetInnerHTML={{ __html: BEFORE_PAINT_SCRIPT }} />
+            <AnimatePresence>
+                {open && (
                     <motion.div
-                        initial={{ opacity: 0, y: 12 }}
-                        animate={ready ? { opacity: 1, y: 0 } : { opacity: 0 }}
-                        transition={{ duration: 0.9, ease: EASE }}
-                        className="absolute inset-0 flex items-center justify-center"
+                        id={INTRO_ID}
+                        // 확대되며 사라진다. 영상이 히어로로 빨려드는 느낌이라 이어짐이 부드럽다
+                        exit={{
+                            opacity: 0,
+                            scale: skipped ? 1.08 : 1,
+                            transition: { duration: skipped ? 1 : 0, ease: EASE },
+                        }}
+                        onClick={close}
+                        className="fixed inset-0 z-[100] cursor-pointer overflow-hidden bg-dark"
                     >
-                        <p className="flex items-baseline gap-3 font-display text-cream drop-shadow-[0_2px_12px_rgba(0,0,0,0.4)] sm:gap-5">
-                            <span className="text-32 tracking-[0.14em] sm:text-48">HA</span>
-                            <span className="text-24 opacity-60 sm:text-32">:</span>
-                            <span className="text-32 tracking-[0.14em] sm:text-48">RU</span>
-                            <span className="text-24 opacity-60 sm:text-32">:</span>
+                        <video
+                            src="/videos/intro.mp4"
+                            poster="/images/intro-s.jpg"
+                            autoPlay
+                            muted
+                            playsInline
+                            preload="auto"
+                            onCanPlay={() => setReady(true)}
+                            className="absolute inset-0 h-full w-full object-cover"
+                        />
 
-                            {/* mode="wait" 을 쓰지 않아 나가는 숫자와 들어오는 숫자가 겹친다.
+                        {/* 영상 위에 글자가 묻히지 않게 눌러준다. 값이 높을수록 글자가 또렷해진다 */}
+                        <span aria-hidden="true" className="absolute inset-0 bg-dark/40" />
+
+                        <motion.div
+                            initial={{ opacity: 0, y: 12 }}
+                            animate={ready ? { opacity: 1, y: 0 } : { opacity: 0 }}
+                            transition={{ duration: 0.9, ease: EASE }}
+                            className="absolute inset-0 flex items-center justify-center"
+                        >
+                            <p className="flex items-baseline gap-3 font-display text-cream drop-shadow-[0_2px_12px_rgba(0,0,0,0.4)] sm:gap-5">
+                                <span className="text-32 tracking-[0.14em] sm:text-48">HA</span>
+                                <span className="text-24 opacity-60 sm:text-32">:</span>
+                                <span className="text-32 tracking-[0.14em] sm:text-48">RU</span>
+                                <span className="text-24 opacity-60 sm:text-32">:</span>
+
+                                {/* mode="wait" 을 쓰지 않아 나가는 숫자와 들어오는 숫자가 겹친다.
                                 빠른 구간에서 잔상이 이어져 툭툭 끊기지 않는다 */}
-                            <span className="relative inline-block w-[2.2ch] text-32 tabular-nums sm:text-48">
-                                {/* 자리를 잡아두는 투명 글자. absolute 만 있으면 폭이 0 이 된다 */}
-                                <span className="invisible">00</span>
+                                <span className="relative inline-block w-[2.2ch] text-32 tabular-nums sm:text-48">
+                                    {/* 자리를 잡아두는 투명 글자. absolute 만 있으면 폭이 0 이 된다 */}
+                                    <span className="invisible">00</span>
 
-                                <AnimatePresence initial={false}>
-                                    <motion.span
-                                        key={count}
-                                        initial={{ opacity: 0, y: 16, filter: 'blur(4px)' }}
-                                        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                                        exit={{ opacity: 0, y: -16, filter: 'blur(4px)' }}
-                                        transition={{ duration: swapOf(count), ease: EASE }}
-                                        className="absolute inset-0 block"
-                                    >
-                                        {String(count).padStart(2, '0')}
-                                    </motion.span>
-                                </AnimatePresence>
-                            </span>
+                                    <AnimatePresence initial={false}>
+                                        <motion.span
+                                            key={count}
+                                            initial={{ opacity: 0, y: 16, filter: 'blur(4px)' }}
+                                            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                                            exit={{ opacity: 0, y: -16, filter: 'blur(4px)' }}
+                                            transition={{ duration: swapOf(count), ease: EASE }}
+                                            className="absolute inset-0 block"
+                                        >
+                                            {String(count).padStart(2, '0')}
+                                        </motion.span>
+                                    </AnimatePresence>
+                                </span>
+                            </p>
+                        </motion.div>
+
+                        <p className="absolute inset-x-0 bottom-10 text-center text-caption-sm tracking-[0.1em] text-cream/45">
+                            SKIP
                         </p>
                     </motion.div>
-
-                    <p className="absolute inset-x-0 bottom-10 text-center text-caption-sm tracking-[0.1em] text-cream/45">
-                        SKIP
-                    </p>
-                </motion.div>
-            )}
-        </AnimatePresence>
+                )}
+            </AnimatePresence>
+        </>
     );
 }

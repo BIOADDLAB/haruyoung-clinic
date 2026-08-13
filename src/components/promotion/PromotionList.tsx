@@ -30,7 +30,11 @@ export default function PromotionList() {
             // 마감일이 지난 항목은 감춘다. 관리자가 지우지 않아도 알아서 내려간다
             if (alive)
                 setList(
-                    all.filter((p) => daysLeft(p.until) >= 0 && (!p.locales?.length || p.locales.includes(locale))),
+                    all.filter(
+                        (p) =>
+                            (p.isOngoing || daysLeft(p.until) >= 0) &&
+                            (!p.locales?.length || p.locales.includes(locale)),
+                    ),
                 );
         });
         return () => {
@@ -92,7 +96,7 @@ function PromotionCard({ p }: { p: Promotion }) {
         originPrice: localizedOriginPrice(p, locale),
         price: localizedPromoPrice(p, locale),
     });
-    const left = daysLeft(p.until);
+    const left = p.isOngoing ? null : daysLeft(p.until);
 
     return (
         <RevealItem
@@ -105,7 +109,9 @@ function PromotionCard({ p }: { p: Promotion }) {
             <div className="mt-4 flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
                 <p className="text-small font-medium text-brown">{localizedPromo(p, 'highlight', locale)}</p>
                 <p className="text-caption text-dark/60 sm:shrink-0">
-                    ~{p.until} ({left === 0 ? t('today') : t('daysLeft', { days: left })})
+                    {left === null
+                        ? t('ongoing')
+                        : `~${p.until} (${left === 0 ? t('today') : t('daysLeft', { days: left })})`}
                 </p>
             </div>
 

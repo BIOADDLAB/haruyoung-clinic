@@ -2,16 +2,15 @@
 
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { ADMIN_COOKIE_NAME, ADMIN_ID, ADMIN_PASSWORD, getAdminAuthToken } from './auth';
+import { ADMIN_COOKIE_NAME, getAdminAuthToken, isValidAdminCredentials } from './auth';
 
 const MAX_AGE = 60 * 60 * 8;
 
 export const loginAdmin = async (formData: FormData) => {
     const id = String(formData.get('id') ?? '');
     const password = String(formData.get('password') ?? '');
-    if (id !== ADMIN_ID || password !== ADMIN_PASSWORD) {
-        redirect('/admin/login?error=1');
-    }
+    if (!isValidAdminCredentials(id, password)) return { ok: false as const };
+
     const store = await cookies();
     store.set(ADMIN_COOKIE_NAME, getAdminAuthToken(), {
         httpOnly: true,
@@ -20,7 +19,7 @@ export const loginAdmin = async (formData: FormData) => {
         path: '/',
         maxAge: MAX_AGE,
     });
-    redirect('/admin');
+    return { ok: true as const };
 };
 
 export const logoutAdmin = async () => {
