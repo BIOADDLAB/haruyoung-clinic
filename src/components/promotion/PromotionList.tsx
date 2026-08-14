@@ -46,8 +46,6 @@ export default function PromotionList() {
 
     return (
         <div className="pb-28 lg:pb-24">
-            <p className="px-6 pt-8 text-small font-semibold lg:pl-12 lg:pt-16">{month}월 promotion</p>
-
             <Banner
                 file={PROMOTION_BANNER.file}
                 lead={PROMOTION_BANNER.lead}
