@@ -307,10 +307,10 @@
         "space": "HARU YOUNG Space",
         "promotion": "Promotion",
         "category": "Category",
-        "promotionLead": "Find the promotion that suits you.",
+        "promotionLead": "Find the promotion \nthat suits you.",
         "categoryLead": "Discover a solution\ntailored to your skin.",
         "heroTitle": "A skin retreat designed\nonly for you.",
-        "heroBody": "Like a pause in a busy day, HARU YOUNG CLINIC\noffers your skin the calmest rest.\nWith care designed only for you,\nwe help natural beauty last far beyond your visit.",
+        "heroBody": "Like a pause in a busy day, \nHARU YOUNG CLINIC\noffers your skin the calmest rest.\nWith care designed only for you,\nwe help natural beauty \nlast far beyond your visit.",
         "treatLead": "Skin that looks younger than your years,\nremodelling care that turns time back.",
         "spaceLead": "Our space is designed as time for your skin to rest.\nA calm mood and careful detail make every moment here a true pause."
     },
@@ -323,13 +323,13 @@
         "spaceEn": "HARU YOUNG\nSpace",
         "spaceTitle": "The pause of a day, \na timeless moment.\nA skin retreat designed only for you.",
         "spaceBody": "Step away from the everyday and into the calm of\na high-end resort spa. In a refined private space,\nwith care attentive to the finest texture of your skin,\nyou return to your most comfortable state.",
-        "career1": "前 연세대학교 의과대학 졸업",
-        "career2": "前 연세대학교 세브란스병원\n가정의학과 전문의",
-        "society1": "前 대한레이저미용학회 우수회원",
-        "society2": "前 대한비만연구의사회 정회원",
-        "society3": "스컬트라 마스터",
+        "career1": "Graduated from Yonsei University College of Medicine",
+        "career2": "Former Family Medicine Specialist at\nSeverance Hospital, Yonsei University",
+        "society1": "Former Distinguished Member, Korean Society for Laser Aesthetic Medicine",
+        "society2": "Former Full Member, Korean Association of Physicians for Obesity Research",
+        "society3": "Sculptra Master",
         "spaceBody2": "We do not follow uniform procedures or passing trends.\nWe listen to the time you have lived and the story of your skin, and design a tomorrow that shines a little more each day.",
-        "ceoName": ""
+        "ceoName": "Jane Doe"
     },
     "treatCard": {
         "lifting": "Firm resilience,\nlifting that turns\nthe clock back",

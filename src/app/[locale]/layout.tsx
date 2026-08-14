@@ -1,28 +1,18 @@
 import type { Metadata } from 'next';
 import { Marcellus, Cormorant_Garamond } from 'next/font/google';
-import Script from 'next/script';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import '@fontsource-variable/asta-sans';
 import '../globals.css';
 import CartProvider from '@/components/cart/CartProvider';
+import IntroSessionScript from '@/components/home/IntroSessionScript';
 import JsonLd from '@/components/seo/JsonLd';
 import { SITE_CONFIG } from '@/data/site';
 import { routing } from '@/i18n/routing';
 import type { Locale } from '@/i18n/routing';
 import { absoluteUrl, getAlternates, getLocalizedUrl, LANGUAGE_TAG, OG_LOCALE, SITE_URL } from '@/lib/seo';
 import { createClinicSchema } from '@/lib/schema';
-import { INTRO_DISPLAY_PROPERTY, INTRO_STORAGE_KEY } from '@/lib/intro';
-
-const INTRO_SESSION_SCRIPT = `
-try {
-    const root = document.documentElement;
-    const seen = window.sessionStorage.getItem('${INTRO_STORAGE_KEY}') === '1';
-    if (seen) root.style.setProperty('${INTRO_DISPLAY_PROPERTY}', 'none');
-    else root.style.removeProperty('${INTRO_DISPLAY_PROPERTY}');
-} catch {}
-`;
 
 const marcellus = Marcellus({
     weight: ['400'],
@@ -114,9 +104,7 @@ export default async function LocaleLayout({
             suppressHydrationWarning
         >
             <head>
-                <Script id="haruyoung-intro-session" strategy="beforeInteractive">
-                    {INTRO_SESSION_SCRIPT}
-                </Script>
+                <IntroSessionScript />
             </head>
             <body>
                 <JsonLd data={schema} />

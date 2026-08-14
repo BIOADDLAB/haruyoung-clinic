@@ -22,7 +22,7 @@ export default function PromotionBoard() {
             <div className="mx-auto flex w-full flex-col gap-8 lg:max-w-[828px] lg:flex-row lg:items-center lg:gap-[11px]">
                 <Reveal variants={slideRight} className="shrink-0 lg:w-[200px]">
                     <h2 className="font-display text-24">Promotion</h2>
-                    <p className="mt-3.5 text-caption text-cream">{t('promotionLead')}</p>
+                    <p className="mt-3.5 text-caption text-cream lg:whitespace-pre-line">{t('promotionLead')}</p>
                     <motion.div
                         animate={hot && !reduced ? 'pulse' : 'rest'}
                         variants={{
@@ -61,7 +61,9 @@ export default function PromotionBoard() {
                                     {String(i + 1).padStart(2, '0')}
                                 </span>
                                 <span aria-hidden="true" className="h-px w-8 bg-cream/35 lg:hidden" />
-                                <span className="whitespace-nowrap tracking-[0.02em] lg:tracking-normal">{tp(label)}</span>
+                                <span className="whitespace-nowrap tracking-[0.02em] lg:tracking-normal">
+                                    {tp(label)}
+                                </span>
                             </RevealItem>
                         ))}
                     </RevealGroup>

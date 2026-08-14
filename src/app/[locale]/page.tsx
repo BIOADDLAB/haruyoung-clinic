@@ -8,7 +8,6 @@ import TreatmentCard from '@/components/home/TreatmentCard';
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
 import HorizontalScroll, { Panel } from '@/components/ui/HorizontalScroll';
-import { Icon } from '@/components/ui/Icons';
 import PhotoGallery, { type GalleryPhoto } from '@/components/ui/PhotoGallery';
 import Reveal from '@/components/ui/Reveal';
 import { RevealGroup } from '@/components/ui/RevealGroup';
@@ -156,7 +155,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
                             <Reveal variants={slideLeft} delay={0.2} className="hidden shrink-0 mt-0 lg:mt-4 lg:block">
                                 <div className="mb-2 flex justify-end">
-                                    <Icon name="i-sig" width={168} height={44} />
+                                    <Image src="/images/i-sig.png" alt="" width={144} height={40} unoptimized />
                                 </div>
                                 <div className="relative h-[290px] w-[220px] rounded-tl-[80px] overflow-hidden lg:h-[294px] lg:w-[235px]">
                                     <Image

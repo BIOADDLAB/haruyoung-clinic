@@ -4,7 +4,6 @@ import Image from 'next/image';
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
 import HorizontalScroll, { Panel } from '@/components/ui/HorizontalScroll';
-import { Icon } from '@/components/ui/Icons';
 import PhotoGallery, { type GalleryPhoto } from '@/components/ui/PhotoGallery';
 import Reveal from '@/components/ui/Reveal';
 import { RevealGroup, RevealItem } from '@/components/ui/RevealGroup';
@@ -233,7 +232,9 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                                                 <span className="text-16 font-normal">{t('ceoTitle')}</span>
                                             </span>
                                         </p>
-                                        <Icon name="i-sig" width={129} height={37} className="pb-1" />
+                                        <span className="pb-1">
+                                            <Image src="/images/i-sig.png" alt="" width={126} height={35} unoptimized />
+                                        </span>
                                     </Reveal>
 
                                     {/* 구분선 */}
@@ -257,7 +258,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                                                     {lines.length === 1 ? (
                                                         lines[0]
                                                     ) : (
-                                                        <span className="inline-block text-left  leading-[22px] lg:leading-[24px]">
+                                                        <span className="inline-block text-left leading-[22px] lg:leading-[24px]">
                                                             {lines.map((line, index) => (
                                                                 <span
                                                                     key={`${c}-${index}`}
