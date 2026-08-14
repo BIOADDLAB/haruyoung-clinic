@@ -43,16 +43,25 @@ export default function PromotionBoard() {
                     onMouseLeave={() => setHot(false)}
                     className="w-full lg:w-[617px] lg:shrink-0"
                 >
-                    <RevealGroup as="ul" className="grid grid-cols-2 lg:grid-cols-3">
+                    <RevealGroup
+                        as="ul"
+                        className="flex flex-col border-y border-cream/35 lg:grid lg:grid-cols-3 lg:border-y-0"
+                    >
                         {PROMOTION_KEYS.map((label, i) => (
                             <RevealItem
                                 as="li"
                                 key={label}
-                                className={`flex items-center justify-center border-cream/25 px-2 py-4 text-center text-caption font-normal lg:border-cream/70 lg:text-small ${
-                                    i < 2 ? 'border-b lg:border-b-0' : ''
-                                } ${i % 2 === 0 ? 'border-r' : ''} ${i < 2 ? 'lg:border-r' : 'lg:border-r-0'}`}
+                                className={`flex items-center gap-4 px-1 py-5 text-left text-caption font-normal ${
+                                    i < 2 ? 'border-b border-cream/25' : ''
+                                } lg:justify-center lg:gap-0 lg:border-b-0 lg:border-cream/70 lg:px-2 lg:py-4 lg:text-center lg:text-small ${
+                                    i < 2 ? 'lg:border-r' : 'lg:border-r-0'
+                                }`}
                             >
-                                {tp(label)}
+                                <span className="font-display text-caption-sm tracking-[0.16em] text-cream/45 lg:hidden">
+                                    {String(i + 1).padStart(2, '0')}
+                                </span>
+                                <span aria-hidden="true" className="h-px w-8 bg-cream/35 lg:hidden" />
+                                <span className="whitespace-nowrap tracking-[0.02em] lg:tracking-normal">{tp(label)}</span>
                             </RevealItem>
                         ))}
                     </RevealGroup>

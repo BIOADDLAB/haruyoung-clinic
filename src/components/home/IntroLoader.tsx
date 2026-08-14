@@ -2,7 +2,12 @@
 
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { INTRO_CLOSED_EVENT, INTRO_COOKIE_NAME, INTRO_ELEMENT_ID } from '@/lib/intro';
+import {
+    INTRO_CLOSED_EVENT,
+    INTRO_DISPLAY_PROPERTY,
+    INTRO_ELEMENT_ID,
+    INTRO_STORAGE_KEY,
+} from '@/lib/intro';
 import { EASE } from '@/lib/motion';
 
 /**
@@ -40,10 +45,11 @@ const tickOf = (n: number) => (n <= SLOW_FROM ? SLOW_MS : FAST_MS);
  */
 const swapOf = (n: number) => (n === 0 ? 0.7 : n <= SLOW_FROM ? 0.5 : 0.16);
 
-/** 만료일 없는 쿠키로 기록한다. 브라우저 세션이 끝나면 함께 사라진다. */
+/** 새 탭에서는 다시 열리고, 같은 탭의 새로고침에서는 열리지 않는다. */
 function markSeen() {
-    const secure = window.location.protocol === 'https:' ? '; Secure' : '';
-    document.cookie = `${INTRO_COOKIE_NAME}=1; Path=/; SameSite=Lax${secure}`;
+    try {
+        window.sessionStorage.setItem(INTRO_STORAGE_KEY, '1');
+    } catch {}
 }
 
 /**
@@ -55,17 +61,27 @@ function markSeen() {
  * onCanPlay 이후에 카운트다운을 시작해 숫자와 모래가 어긋나지 않게 한다.
  *
  * 클릭하면 즉시 건너뛴다. 모션 최소화 설정이면 아예 뜨지 않는다.
- * 서버가 세션 쿠키를 확인해 첫 HTML부터 노출 여부를 정한다.
- * 개발 중 다시 보려면 브라우저에서 haruyoung_intro_seen 쿠키를 지우고 새로고침한다.
+ * 탭마다 한 번 노출하고, 같은 탭의 새로고침에서는 다시 열리지 않는다.
  */
-export default function IntroLoader({ initialOpen }: { initialOpen: boolean }) {
+export default function IntroLoader() {
     const reduced = useReducedMotion();
-    const [open, setOpen] = useState(initialOpen);
+    const [open, setOpen] = useState(true);
     const [skipped, setSkipped] = useState(false);
     const [ready, setReady] = useState(false);
     const [count, setCount] = useState(10);
     const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const visible = open && !reduced;
+
+    useEffect(() => {
+        let seen = false;
+        try {
+            seen = window.sessionStorage.getItem(INTRO_STORAGE_KEY) === '1';
+        } catch {}
+
+        if (!seen) return;
+        const frame = window.requestAnimationFrame(() => setOpen(false));
+        return () => window.cancelAnimationFrame(frame);
+    }, []);
 
     const close = useCallback(() => {
         if (timer.current) clearTimeout(timer.current);
@@ -105,10 +121,16 @@ export default function IntroLoader({ initialOpen }: { initialOpen: boolean }) {
     }, [visible]);
 
     return (
-        <AnimatePresence onExitComplete={() => window.dispatchEvent(new Event(INTRO_CLOSED_EVENT))}>
+        <AnimatePresence
+            onExitComplete={() => {
+                document.documentElement.style.setProperty(INTRO_DISPLAY_PROPERTY, 'none');
+                window.dispatchEvent(new Event(INTRO_CLOSED_EVENT));
+            }}
+        >
             {visible && (
                 <motion.div
                     id={INTRO_ELEMENT_ID}
+                    style={{ display: `var(${INTRO_DISPLAY_PROPERTY}, block)` }}
                     // 확대되며 사라진다. 영상이 히어로로 빨려드는 느낌이라 이어짐이 부드럽다
                     exit={{
                         opacity: 0,

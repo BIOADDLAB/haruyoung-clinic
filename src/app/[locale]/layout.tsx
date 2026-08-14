@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
-import { Marcellus, Cormorant_Garamond, Asta_Sans } from 'next/font/google';
+import { Marcellus, Cormorant_Garamond } from 'next/font/google';
+import Script from 'next/script';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+import '@fontsource-variable/asta-sans';
 import '../globals.css';
 import CartProvider from '@/components/cart/CartProvider';
 import JsonLd from '@/components/seo/JsonLd';
@@ -11,6 +13,16 @@ import { routing } from '@/i18n/routing';
 import type { Locale } from '@/i18n/routing';
 import { absoluteUrl, getAlternates, getLocalizedUrl, LANGUAGE_TAG, OG_LOCALE, SITE_URL } from '@/lib/seo';
 import { createClinicSchema } from '@/lib/schema';
+import { INTRO_DISPLAY_PROPERTY, INTRO_STORAGE_KEY } from '@/lib/intro';
+
+const INTRO_SESSION_SCRIPT = `
+try {
+    const root = document.documentElement;
+    const seen = window.sessionStorage.getItem('${INTRO_STORAGE_KEY}') === '1';
+    if (seen) root.style.setProperty('${INTRO_DISPLAY_PROPERTY}', 'none');
+    else root.style.removeProperty('${INTRO_DISPLAY_PROPERTY}');
+} catch {}
+`;
 
 const marcellus = Marcellus({
     weight: ['400'],
@@ -26,11 +38,9 @@ const cormorantGaramond = Cormorant_Garamond({
     variable: '--font-cormorant-garamond',
 });
 
-const astaSans = Asta_Sans({
-    subsets: ['latin'],
-    variable: '--font-asta-sans',
-    adjustFontFallback: false,
-});
+const astaSansVariable = {
+    '--font-asta-sans': "'Asta Sans Variable'",
+} as React.CSSProperties;
 
 export function generateStaticParams() {
     return routing.locales.map((locale) => ({ locale }));
@@ -99,8 +109,15 @@ export default async function LocaleLayout({
     return (
         <html
             lang={LANGUAGE_TAG[locale as Locale] ?? LANGUAGE_TAG.ko}
-            className={`${marcellus.variable} ${cormorantGaramond.variable} ${astaSans.variable}`}
+            className={`${marcellus.variable} ${cormorantGaramond.variable}`}
+            style={astaSansVariable}
+            suppressHydrationWarning
         >
+            <head>
+                <Script id="haruyoung-intro-session" strategy="beforeInteractive">
+                    {INTRO_SESSION_SCRIPT}
+                </Script>
+            </head>
             <body>
                 <JsonLd data={schema} />
                 <NextIntlClientProvider>

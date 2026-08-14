@@ -34,7 +34,7 @@ export default function HeroVisual() {
         const reveal = () => {
             void backgroundControls.start({
                 filter: 'blur(0px)',
-                transition: { duration: 2.4, ease: EASE },
+                transition: { duration: 2.9, ease: EASE },
             });
         };
 

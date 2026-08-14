@@ -184,7 +184,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                         </div>
                     </Panel>
 
-                    {/* 원장 소개 */}
+                    {/* 의료진 소개 */}
                     <Panel id="specialist" width={816} className="bg-paper">
                         <Image
                             src="/images/bg-sub-01.jpg"
@@ -245,15 +245,34 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 
                                     {/* 경력 리스트 */}
                                     <RevealGroup as="ul" className="mt-7 text-center lg:mt-[33px] lg:text-left">
-                                        {CAREER_KEYS.map((c) => (
-                                            <RevealItem
-                                                as="li"
-                                                key={t(c)}
-                                                className="text-small leading-[32px] text-dark lg:leading-[35px] lg:whitespace-pre-line"
-                                            >
-                                                {t(c)}
-                                            </RevealItem>
-                                        ))}
+                                        {CAREER_KEYS.map((c) => {
+                                            const lines = t(c).split('\n');
+
+                                            return (
+                                                <RevealItem
+                                                    as="li"
+                                                    key={c}
+                                                    className="text-small leading-[32px] text-dark lg:leading-[35px]"
+                                                >
+                                                    {lines.length === 1 ? (
+                                                        lines[0]
+                                                    ) : (
+                                                        <span className="inline-block text-left  leading-[22px] lg:leading-[24px]">
+                                                            {lines.map((line, index) => (
+                                                                <span
+                                                                    key={`${c}-${index}`}
+                                                                    className={
+                                                                        index === 0 ? 'block' : 'block pl-[1.15em]'
+                                                                    }
+                                                                >
+                                                                    {line}
+                                                                </span>
+                                                            ))}
+                                                        </span>
+                                                    )}
+                                                </RevealItem>
+                                            );
+                                        })}
                                     </RevealGroup>
                                 </div>
 
