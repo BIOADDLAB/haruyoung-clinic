@@ -81,7 +81,7 @@ export default function HeroVisual() {
                         Timeless Beauty
                     </h1>
 
-                    <p className="mt-5 text-30 font-normal [text-shadow:2px_0_10.6px_rgba(59,37,9,0.64)] whitespace-pre-line">
+                    <p className="mt-5 text-30 font-normal whitespace-pre-line [text-shadow:2px_0_10.6px_rgba(59,37,9,0.64)] ">
                         {th('heroSub')}
                     </p>
 
