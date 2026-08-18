@@ -81,7 +81,7 @@ export default function HeroVisual() {
                         Timeless Beauty
                     </h1>
 
-                    <p className="mt-5 text-30 font-normal [text-shadow:2px_0_10.6px_rgba(59,37,9,0.64)]">
+                    <p className="mt-5 text-30 font-normal [text-shadow:2px_0_10.6px_rgba(59,37,9,0.64)] whitespace-pre-line">
                         {th('heroSub')}
                     </p>
 
@@ -90,7 +90,7 @@ export default function HeroVisual() {
                             href="/about"
                             className="inline-flex items-center border border-cream/80 px-8.25 py-2 font-display text-lead transition-colors duration-500 [text-shadow:2px_0_10.6px_rgba(59,37,9,0.64)] hover:border-dark hover:bg-dark hover:text-cream"
                         >
-                            VISIT HARU YOUNG
+                            VISIT HARUYOUNG
                         </Link>
                     </div>
                 </motion.div>
