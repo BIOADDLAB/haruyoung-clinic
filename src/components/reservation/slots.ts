@@ -1,4 +1,4 @@
-import { RESERVATION_HOURS } from '@/data/site';
+import { RESERVATION_HOURS, RESERVATION_LUNCH } from '@/data/site';
 
 const toMin = (hhmm: string) => {
     const [h, m] = hhmm.split(':').map(Number);
@@ -31,7 +31,7 @@ export function slotsOf(dateKey: string): string[] {
 
     const out: string[] = [];
     for (let m = toMin(rule.start); m <= toMin(rule.end) - 30; m += 30) {
-        if (rule.lunch && m >= toMin('13:00') && m < toMin('14:00')) continue;
+        if (rule.lunch && m >= toMin(RESERVATION_LUNCH.start) && m < toMin(RESERVATION_LUNCH.end)) continue;
         if (m < cutoff) continue;
         out.push(toLabel(m));
     }

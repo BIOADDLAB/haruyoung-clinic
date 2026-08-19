@@ -76,9 +76,9 @@ export default function HeroVisual() {
                     transition={{ duration: DUR.slow, ease: EASE }}
                 >
                     <h1 className="font-display text-40 font-normal leading-13 [text-shadow:2px_0_10.6px_rgba(59,37,9,0.64)]">
-                        A Moment of Pause,
-                        <br />
-                        Timeless Beauty
+                        HA:RU:00
+                        <br />A LITTLE YOUNGER, <br className="lg:hidden" />
+                        EVERY DAY
                     </h1>
 
                     <p className="mt-5 text-30 font-normal whitespace-pre-line [text-shadow:2px_0_10.6px_rgba(59,37,9,0.64)] ">

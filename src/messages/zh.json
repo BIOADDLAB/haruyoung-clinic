@@ -72,14 +72,16 @@
     },
     "banner": {
         "promotion": "优惠活动",
+        "zeroaging": "Zero Aging Project",
         "lifting": "提升",
         "pigment": "色素治疗",
         "acne": "痘痘治疗",
+        "body": "身体塑形",
         "petit": "微整形",
-        "care": "皮肤管理 · 营养输液",
+        "care": "皮肤管理",
+        "iv": "营养输液",
         "hair": "脱毛",
-        "booster": "水光针",
-        "body": "身体塑形"
+        "booster": "水光针"
     },
     "productCategories": {
         "lifting": "提升",
@@ -233,7 +235,7 @@
         "browse": "浏览项目"
     },
     "intro": {
-        "skip": "SKIP"
+        "skip": "START YOUR YOUNGER DAY"
     },
     "footer": {
         "labelLocation": "Location",
@@ -241,9 +243,9 @@
         "labelSubway": "地铁",
         "labelParking": "停车",
         "hours": "诊疗时间",
-        "address": "首尔江南区彦州路 538 大雄大厦 1 层",
-        "subway": "9 号线宣靖陵站 4 号出口 步行 11 分钟",
-        "parking": "免费停车 / 代客泊车 3,000 韩元",
+        "address": "京畿道龙仁市水枝区光教中央路 319 号 301~2 室",
+        "subway": "新盆唐线光教上岘站 4 号出口 步行 1 分钟",
+        "parking": "免费停车",
         "ceo": "代表",
         "bizNo": "营业执照号",
         "tel": "代表电话",
@@ -256,9 +258,9 @@
         "day3Aria": "周六",
         "day4": "午休",
         "day4Aria": "午休时间",
-        "note1": "周一 / 周六：午间不休诊",
+        "note1": "周六：午间不休诊",
         "note2": "周日：休诊",
-        "ceoName": "柳善敏"
+        "ceoName": "尹京彩"
     },
     "a11y": {
         "hero": "HARU YOUNG 医院前台休息区",
@@ -302,7 +304,9 @@
         "room07": "木格栅走廊"
     },
     "home": {
-        "heroSub": "从零开始的一天, \n明天比今天更年轻",
+        "heroMark": "HA:RU:00",
+        "heroSlogan": "A LITTLE YOUNGER, EVERY DAY.",
+        "heroSub": "比今天，更年轻一天。",
         "moreView": "More View",
         "treatments": "Treatments",
         "space": "HARU YOUNG Space",
@@ -346,5 +350,11 @@
         "event1": "Welcome Event",
         "event2": "美白 / 色素活动",
         "event3": "护肤活动"
+    },
+    "popup": {
+        "close": "Close",
+        "hideToday": "今日不再显示",
+        "label": "哈鲁荣医院公告弹窗",
+        "tab": "公告 {n}"
     }
 }

@@ -150,7 +150,7 @@ export default function IntroLoader() {
                     </motion.div>
 
                     <p className="absolute inset-x-0 bottom-10 text-center text-caption-sm tracking-[0.1em] text-cream/45">
-                        SKIP
+                        START YOUR YOUNGER DAY
                     </p>
                 </motion.div>
             )}

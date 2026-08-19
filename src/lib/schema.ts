@@ -10,8 +10,7 @@ type ClinicSchemaOptions = {
 };
 
 export function createClinicSchema({ locale, name, description, address }: ClinicSchemaOptions) {
-    const hasValidTelephone = CLINIC.tel !== '00-000-0000' && /^\d{2,3}-\d{3,4}-\d{4}$/.test(CLINIC.tel);
-    const telephone = hasValidTelephone ? CLINIC.tel : undefined;
+    const telephone = /^\d{2,3}-\d{3,4}-\d{4}$/.test(CLINIC.tel) ? CLINIC.tel : undefined;
     const openingHours = CLINIC.hours.flatMap(({ time, schemaDays }) => {
         if (schemaDays.length === 0) return [];
         const [opens, closes] = time.split(' - ');

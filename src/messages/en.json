@@ -72,14 +72,16 @@
     },
     "banner": {
         "promotion": "Promotion",
+        "zeroaging": "Zero Aging Project",
         "lifting": "Lifting",
         "pigment": "Pigment Care",
         "acne": "Acne Care",
+        "body": "Body Line",
         "petit": "Petit",
-        "care": "Skin Care · IV Therapy",
+        "care": "Skin Care",
+        "iv": "IV Therapy",
         "hair": "Hair Removal",
-        "booster": "Skin Booster",
-        "body": "Body Line"
+        "booster": "Skin Booster"
     },
     "productCategories": {
         "lifting": "Lifting",
@@ -233,16 +235,17 @@
         "browse": "Browse treatments"
     },
     "intro": {
-        "skip": "SKIP"
+        "skip": "START YOUR YOUNGER DAY"
     },
     "footer": {
         "labelLocation": "Location",
         "labelHours": "Hours",
         "labelSubway": "Subway",
         "labelParking": "Parking",
-        "address": "1F Daewoong Bldg, 538 Eonju-ro, Gangnam-gu, Seoul",
-        "subway": "Line 9 Seonjeongneung Stn. Exit 4, 11 min walk",
-        "parking": "Free parking / Valet KRW 3,000",
+        "hours": "Hours",
+        "address": "301-2, 319 Gwanggyojungang-ro, Suji-gu, Yongin-si, Gyeonggi-do",
+        "subway": "Shinbundang Line Gwanggyo Sanghyeon Stn. Exit 4, 1 min walk",
+        "parking": "Free parking",
         "ceo": "CEO",
         "bizNo": "Business No.",
         "tel": "Phone",
@@ -255,9 +258,9 @@
         "day3Aria": "Saturday",
         "day4": "Lunch",
         "day4Aria": "Lunch break",
-        "note1": "Mon / Sat: open through lunch",
+        "note1": "Sat: open through lunch",
         "note2": "Sunday: closed",
-        "ceoName": "Yoo Seon-min"
+        "ceoName": "Yoon Kyung-chae"
     },
     "a11y": {
         "hero": "HARU YOUNG CLINIC reception lounge",
@@ -301,7 +304,9 @@
         "room07": "Wood-louvre corridor"
     },
     "home": {
-        "heroSub": "A Day from Zero, \nYounger Tomorrow",
+        "heroMark": "HA:RU:00",
+        "heroSlogan": "A LITTLE YOUNGER, EVERY DAY.",
+        "heroSub": "One day younger than today",
         "moreView": "More View",
         "treatments": "Treatments",
         "space": "HARU YOUNG Space",
@@ -317,7 +322,7 @@
     "about": {
         "ceoTitle": "Medical Director",
         "heroEn": "A Moment of Pause,\nTimeless Beauty",
-        "heroTitle": "We design the deepest rest\nfor your skin.",
+        "heroTitle": "",
         "heroBody": "Beyond a simple procedure, HARU YOUNG \ndesigns the moment your skin feels most at ease. \nWith care made only for you, we offer rest where \nnatural beauty lasts long after time has passed.",
         "specialistEn": "HARU YOUNG\nSpecialist",
         "spaceEn": "HARU YOUNG\nSpace",
@@ -345,5 +350,11 @@
         "event1": "Welcome Event",
         "event2": "Brightening & Pigment",
         "event3": "Skin Care"
+    },
+    "popup": {
+        "close": "Close",
+        "hideToday": "Don't show again today",
+        "label": "HARU YOUNG notice popup",
+        "tab": "Notice {n}"
     }
 }
