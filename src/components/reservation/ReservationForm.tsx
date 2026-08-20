@@ -216,7 +216,7 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
                 type="button"
                 onClick={submit}
                 disabled={busy}
-                className="mt-12 w-full rounded-xl bg-dark py-4.5 text-caption font-semibold tracking-wide text-cream transition-colors duration-500 ease-brand hover:bg-brown disabled:opacity-50"
+                className="mt-12 w-full rounded-xl bg-dark py-4.5 text-caption font-semibold tracking-wide text-cream transition-colors duration-500 ease-brand hover:bg-brown disabled:opacity-50 hover:cursor-pointer"
             >
                 {busy ? t('submitting') : t('submit')}
             </button>

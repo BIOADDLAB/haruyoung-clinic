@@ -61,6 +61,7 @@
     "search": {
         "title": "Treatment search",
         "placeholder": "Search",
+        "clear": "Clear search",
         "hint": "Enter the treatment you are looking for.",
         "suggestions": "Suggested",
         "resultFor": "Results for ‘{keyword}’",

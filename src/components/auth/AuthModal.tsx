@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { isLoginIdTaken, signIn, signUp } from '@/lib/members';
+import { ID_TAKEN_CODE, signIn, signUp } from '@/lib/members';
 import { DUR, EASE } from '@/lib/motion';
 import { useMounted } from '@/lib/useMounted';
 import PrivacyModal from '@/components/ui/PrivacyModal';
@@ -88,7 +88,6 @@ export default function AuthModal({ open, onClose }: { open: boolean; onClose: (
             if (pw.length < 6) return setError(t('errPwShort'));
             if (pw !== pw2) return setError(t('errPwMismatch'));
             if (!agree) return setError(t('errAgree'));
-            if (await isLoginIdTaken(loginId)) return setError(t('errIdTaken'));
 
             await signUp({
                 loginId: loginId.trim().toLowerCase(),
@@ -99,8 +98,11 @@ export default function AuthModal({ open, onClose }: { open: boolean; onClose: (
             });
             alert(t('signupDone', { name: name.trim() }));
             reset();
-        } catch {
-            setError(mode === 'login' ? t('errLogin') : t('errSignup'));
+        } catch (e) {
+            if (mode === 'login') return setError(t('errLogin'));
+            // 이미 쓰는 아이디면 Firebase Auth 가 이 코드를 준다
+            const code = (e as { code?: string })?.code;
+            setError(code === ID_TAKEN_CODE ? t('errIdTaken') : t('errSignup'));
         } finally {
             setBusy(false);
         }

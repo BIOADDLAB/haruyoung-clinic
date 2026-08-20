@@ -9,7 +9,7 @@ const POPUP_DOC = doc(db, 'settings', 'popup');
 
 /**
  * 문서가 없거나 Firestore 규칙이 막혀 있어도 null 을 돌려준다.
- * 사이트 설정은 곁다리 값이라 이것 때문에 화면이 죽으면 안 된다.
+ * 프로모션 배너 설정은 곁다리 값이라 이것 때문에 화면이 죽으면 안 된다.
  */
 async function readDoc<T>(ref: typeof PROMOTION_BANNER_DOC): Promise<T | null> {
     try {

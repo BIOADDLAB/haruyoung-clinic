@@ -1,6 +1,6 @@
 export type SettingLocale = 'ko' | 'en' | 'zh';
 
-/** 프로모션 배너 문구. 관리자 > 사이트 설정에서 언어별로 바꾼다 */
+/** 프로모션 배너 문구. 관리자 > 프로모션 배너 설정에서 언어별로 바꾼다 */
 export type PromotionBannerSetting = {
     title: string;
     titleEn?: string;
@@ -28,6 +28,9 @@ export type PopupSetting = {
 };
 
 export const POPUP_MAX_TABS = 5;
+
+/** 팝업 이미지 권장 규격(정사각). 관리자 안내 문구와 화면 렌더에 같이 쓴다 */
+export const POPUP_IMAGE_SIZE = 520;
 
 /** 해당 언어가 비어 있으면 한국어로 떨어진다. 시술·프로모션 데이터와 같은 규칙이다 */
 export function localizedSetting<T extends Record<string, unknown>>(

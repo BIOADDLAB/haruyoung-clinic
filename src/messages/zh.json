@@ -61,6 +61,7 @@
     "search": {
         "title": "项目搜索",
         "placeholder": "搜索",
+        "clear": "清除输入",
         "hint": "请输入您想查找的项目名称。",
         "suggestions": "推荐搜索",
         "resultFor": "‘{keyword}’ 的搜索结果",

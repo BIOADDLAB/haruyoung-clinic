@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { deletePopupImage, getPopupSetting, savePopupSetting, uploadPopupImage } from '@/lib/settings';
-import { POPUP_MAX_TABS, type PopupTab } from '@/types/settings';
+import { POPUP_IMAGE_SIZE, POPUP_MAX_TABS, type PopupTab } from '@/types/settings';
 
 const inputBase =
     'w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-[15px] text-[#3a322c] placeholder:text-neutral-400 outline-none transition focus:border-[#3a322c]/30 focus:ring-2 focus:ring-[#3a322c]/10';
@@ -81,7 +81,12 @@ export default function PopupsPage() {
             <h1 className="text-2xl font-bold text-[#3a322c] lg:text-3xl">팝업 관리</h1>
             <p className="mt-1 text-sm text-neutral-500">
                 홈 화면 진입 시 뜨는 팝업입니다. 탭은 최대 {POPUP_MAX_TABS}개까지 등록할 수 있고, 이미지가 없는 탭은
-                저장할 때 자동으로 빠집니다.
+                저장할 때 자동으로 빠집니다. 탭이 둘 이상이면 5초마다 자동으로 넘어갑니다.
+                <br />
+                이미지는 <b>
+                    {POPUP_IMAGE_SIZE}×{POPUP_IMAGE_SIZE}px 정사각
+                </b>
+                을 권장합니다. 다른 비율은 가운데를 기준으로 잘려 보입니다.
             </p>
 
             <label className="mt-6 flex w-fit items-center gap-2.5 rounded-xl border border-neutral-200 bg-white px-4 py-3">
@@ -104,13 +109,13 @@ export default function PopupsPage() {
 
                         <div className="space-y-5 p-6">
                             <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
-                                <div className="flex h-[150px] w-[120px] shrink-0 items-center justify-center overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50">
+                                <div className="flex aspect-square w-[140px] shrink-0 items-center justify-center overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50">
                                     {tab.imageUrl ? (
                                         <Image
                                             src={tab.imageUrl}
                                             alt=""
-                                            width={240}
-                                            height={300}
+                                            width={POPUP_IMAGE_SIZE}
+                                            height={POPUP_IMAGE_SIZE}
                                             unoptimized
                                             className="h-full w-full object-cover"
                                         />
@@ -129,7 +134,7 @@ export default function PopupsPage() {
                                         className="mt-1.5 block w-full text-sm text-neutral-600 file:mr-3 file:rounded-lg file:border-0 file:bg-[#3a322c] file:px-4 file:py-2 file:text-sm file:text-white"
                                     />
                                     <p className="mt-2 text-xs text-neutral-400">
-                                        {uploading === i ? '업로드 중…' : '세로가 긴 이미지(3:4 안팎)를 권장합니다.'}
+                                        {uploading === i ? '업로드 중…' : `${POPUP_IMAGE_SIZE}×${POPUP_IMAGE_SIZE}px 정사각 이미지를 올려주세요.`}
                                     </p>
                                 </div>
                             </div>

@@ -128,7 +128,7 @@ export const TREATMENT_BANNER: Record<string, { file: string; en: string }> = {
 
 /**
  * 프로모션 배너 기본값.
- * 문구는 관리자 > 사이트 설정에서 덮어쓴다. Firestore 에 값이 없을 때만 이 값이 보인다.
+ * 문구는 관리자 > 프로모션 배너 설정에서 덮어쓴다. Firestore 에 값이 없을 때만 이 값이 보인다.
  */
 export const PROMOTION_BANNER = {
     file: 'bg-pro',

@@ -5,11 +5,14 @@ import { toAuthEmail, type Member, type MemberSeed } from '@/types/member';
 
 const col = collection(db, 'members');
 
-/** 아이디 중복 확인. loginId 는 문서에만 있으므로 전체를 훑는다 (회원 수가 적을 때 충분) */
-export async function isLoginIdTaken(loginId: string) {
-    const snap = await getDocs(col);
-    return snap.docs.some((d) => (d.data() as MemberSeed).loginId === loginId.trim().toLowerCase());
-}
+/**
+ * 아이디 중복은 Firebase Auth 가 막는다.
+ * loginId 는 아이디@haruyoung.local 로 1:1 변환되므로, 이미 쓰는 아이디면
+ * createUserWithEmailAndPassword 가 auth/email-already-in-use 를 던진다.
+ * 예전에는 members 전체를 훑어 미리 확인했는데, 그러려면 회원 목록을
+ * 누구에게나 열어야 해서(개인정보) 그만뒀다.
+ */
+export const ID_TAKEN_CODE = 'auth/email-already-in-use';
 
 export async function signUp(data: MemberSeed & { password: string }) {
     const { password, ...profile } = data;

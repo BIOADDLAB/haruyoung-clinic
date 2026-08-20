@@ -4,5 +4,5 @@ export const NAV = [
     { href: '/admin/popups', label: '팝업 관리' },
     { href: '/admin/reservations', label: '예약 관리' },
     { href: '/admin/members', label: '회원 관리' },
-    { href: '/admin/settings', label: '사이트 설정' },
+    { href: '/admin/settings', label: '프로모션 배너 설정' },
 ];

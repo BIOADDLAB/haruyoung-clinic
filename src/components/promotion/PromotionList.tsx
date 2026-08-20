@@ -28,7 +28,7 @@ export default function PromotionList() {
     const month = new Date().getMonth() + 1;
     const locale = useLocale() as 'ko' | 'en' | 'zh';
 
-    // 배너 문구는 관리자 > 사이트 설정 값이 있으면 그걸 쓰고, 없으면 site.ts 기본값이다
+    // 배너 문구는 관리자 > 프로모션 배너 설정 값이 있으면 그걸 쓰고, 없으면 site.ts 기본값이다
     useEffect(() => {
         let alive = true;
         getPromotionBannerSetting().then((s) => {

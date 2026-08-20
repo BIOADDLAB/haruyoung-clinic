@@ -643,9 +643,30 @@ function SearchForm({
                         onChange={(e) => onChange(e.target.value)}
                         placeholder={t('placeholder')}
                         autoComplete="off"
-                        className="w-[90%] bg-transparent outline-none placeholder:text-dark/40"
+                        className="min-w-0 flex-1 bg-transparent outline-none placeholder:text-dark/40"
                     />
-                    <button type="submit" aria-label={t('title')}>
+
+                    {keyword && (
+                        <button
+                            type="button"
+                            onClick={() => onChange('')}
+                            aria-label={t('clear')}
+                            className="mr-3 shrink-0 text-dark/30 transition-colors duration-500 ease-brand hover:text-dark"
+                        >
+                            <svg
+                                viewBox="0 0 12 12"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="1.3"
+                                strokeLinecap="round"
+                                className="h-3 w-3"
+                            >
+                                <path d="M1.5 1.5l9 9M10.5 1.5l-9 9" />
+                            </svg>
+                        </button>
+                    )}
+
+                    <button type="submit" className="shrink-0" aria-label={t('title')}>
                         <Image src="/images/i-search.svg" alt="" width={20} height={20} />
                     </button>
                 </div>

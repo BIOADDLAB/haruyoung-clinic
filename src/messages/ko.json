@@ -61,6 +61,7 @@
     "search": {
         "title": "시술 바로 검색",
         "placeholder": "Search",
+        "clear": "입력 지우기",
         "hint": "원하는 시술명을 입력해주세요.",
         "suggestions": "추천 검색어",
         "resultFor": "‘{keyword}’ 검색 결과",

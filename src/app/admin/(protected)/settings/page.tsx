@@ -70,7 +70,7 @@ export default function SettingsPage() {
 
     return (
         <div className="w-full max-w-4xl">
-            <h1 className="text-2xl font-bold text-[#3a322c] lg:text-3xl">사이트 설정</h1>
+            <h1 className="text-2xl font-bold text-[#3a322c] lg:text-3xl">프로모션 배너 설정</h1>
             <p className="mt-1 text-sm text-neutral-500">
                 프로모션 페이지 배너 문구를 바꿉니다. 로고 이미지는 고정이고 아래 두 줄만 바뀝니다.
             </p>

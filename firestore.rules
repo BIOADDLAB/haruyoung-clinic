@@ -1,0 +1,53 @@
+rules_version = '2';
+
+// Firebase 콘솔 > Firestore Database > 규칙 에 통째로 붙여넣고 게시한다.
+// 이 파일은 콘솔 내용과 항상 같게 유지한다. 콘솔에서만 고치면 다음 사람이 알 수 없다.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 관리자 계정 UID. Authentication > Users 의 admin@haruyoung.local 행에서 복사한 값
+    // 일반 회원도 Firebase Auth 로 로그인하므로(아이디@haruyoung.local),
+    // request.auth != null 로 막으면 회원 아무나 통과한다. 반드시 UID 로 본다.
+    function isAdmin() {
+      return request.auth != null && request.auth.uid == '3zaErqhP1rNXzG9V9MCQc2jSTLw1';
+    }
+
+    // 프로모션 배너 설정 (프로모션 배너 문구, 팝업)
+    match /settings/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 수가표
+    match /products/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 프로모션
+    match /promotions/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 예약은 쓰기만 열고 읽기는 관리자만
+    match /reservations/{id} {
+      allow create: if request.resource.data.status == 'pending'
+                 && request.resource.data.keys().hasAll(['name','phone','date','time','createdAt']);
+      allow read, update, delete: if isAdmin();
+    }
+
+    // 회원. 문서 id 는 Firebase Auth uid 다
+    match /members/{uid} {
+      allow create: if request.auth != null && request.auth.uid == uid;
+      allow get: if request.auth != null && (request.auth.uid == uid || isAdmin());
+
+      // 회원 목록 조회는 관리자만. 이름·전화번호가 담긴 개인정보다.
+      // 아이디 중복은 가입 때 Firebase Auth 가 막으므로 목록을 열 필요가 없다.
+      allow list: if isAdmin();
+
+      allow update: if request.auth != null && (request.auth.uid == uid || isAdmin());
+      allow delete: if false;
+    }
+  }
+}
