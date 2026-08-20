@@ -46,14 +46,17 @@
         "space": "空间介绍",
         "promotion": "优惠活动",
         "precautions": "术后注意事项",
-        "lifting": "提升",
-        "pigment": "色素治疗",
-        "acne": "痘痘治疗",
-        "petit": "微整形",
-        "care": "皮肤管理 · 营养输液",
-        "hair": "脱毛",
-        "body": "身体塑形",
-        "booster": "水光针"
+        "subPromotion": "PROMOTION",
+        "zeroaging": "ZERO AGING PROJECT",
+        "lifting": "ZERO LIFTING",
+        "pigment": "ZERO PIGMENTS",
+        "acne": "ZERO ACNE",
+        "body": "ZERO FAT",
+        "petit": "PETITE",
+        "care": "SKIN CARE",
+        "iv": "IV THERAPY",
+        "hair": "HAIR REMOVAL",
+        "booster": "SKIN BOOSTERS"
     },
     "search": {
         "title": "项目搜索",
@@ -82,22 +85,6 @@
         "iv": "营养输液",
         "hair": "脱毛",
         "booster": "水光针"
-    },
-    "productCategories": {
-        "lifting": "提升",
-        "pigmentRednessBlemishes": "色素 / 泛红 / 色斑",
-        "tattooRemoval": "纹身去除",
-        "poresScarsAcne": "毛孔 / 疤痕 / 痘痘",
-        "botox": "肉毒素",
-        "skinBotox": "微滴肉毒",
-        "contourFatDissolving": "轮廓 / 溶脂针",
-        "filler": "玻尿酸填充",
-        "skinBooster": "水光针",
-        "skinCare": "皮肤管理",
-        "ivTherapy": "营养输液",
-        "womenHairRemoval": "女性脱毛",
-        "menHairRemoval": "男性脱毛",
-        "bodyDiet": "身体管理 / 减重"
     },
     "treatments": {
         "loading": "加载中…",
@@ -245,7 +232,7 @@
         "hours": "诊疗时间",
         "address": "京畿道龙仁市水枝区光教中央路 319 号 301~2 室",
         "subway": "新盆唐线光教上岘站 4 号出口 步行 1 分钟",
-        "parking": "免费停车",
+        "parking": "免费停车 / 如停车位已满，可提供光教普鲁吉奥城一期停车。",
         "ceo": "代表",
         "bizNo": "营业执照号",
         "tel": "代表电话",
@@ -304,7 +291,6 @@
         "room07": "木格栅走廊"
     },
     "home": {
-        "heroMark": "HA:RU:00",
         "heroSlogan": "A LITTLE YOUNGER, EVERY DAY.",
         "heroSub": "比今天，更年轻一天。",
         "moreView": "More View",
@@ -322,8 +308,8 @@
     "about": {
         "ceoTitle": "院长",
         "heroEn": "A Moment of Pause,\nTimeless Beauty",
-        "heroTitle": "为肌肤设计\n最深层的休息。",
-        "heroBody": "哈鲁荣不止于简单的项目，\n而是设计让肌肤最为舒适的瞬间。\n以专属于您的定制护理，\n带来历久弥新的自然之美\n与长久的休憩。",
+        "heroTitle": "从零开始的一天。\n明天比今天，更年轻一点。",
+        "heroBody": "我们无法让时间停下。\n但我们相信，时间留下的痕迹\n可以变得有些不同。\n日复一日的细微改变累积起来，\n造就更年轻的明天。",
         "specialistEn": "HARU YOUNG\nSpecialist",
         "spaceEn": "HARU YOUNG\nSpace",
         "spaceTitle": "一日之息，永恒之时，\n专为您设计的特别肌肤休憩。",
@@ -334,7 +320,7 @@
         "society2": "曾任大韩肥胖研究医师会正式会员",
         "society3": "Sculptra Master",
         "spaceBody2": "我们不追随千篇一律的项目或流行。\n我们倾听您走过的时间与肌肤的故事，\n设计每天多一分光彩的明天。",
-        "ceoName": "張三"
+        "ceoName": "尹京彩"
     },
     "treatCard": {
         "lifting": "紧致不下垂，\n逆转衰老时钟的\n提升护理",

@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { MENU_CATEGORIES } from '@/constants/categories';
+import { MENU_CATEGORIES, SECTION_PRESETS } from '@/constants/categories';
 import { formatPriceInput, parsePriceInput } from '@/lib/price';
 import { addProduct, updateProduct } from '@/lib/products';
 import type { Product } from '@/types/product';
@@ -21,7 +21,6 @@ export default function ProductForm({
 }) {
     const router = useRouter();
     const [menuSlug, setMenuSlug] = useState(initial?.menuSlug ?? MENU_CATEGORIES[0].slug);
-    const [mainCategory, setMainCategory] = useState(initial?.mainCategory ?? '');
     const [subCategory, setSubCategory] = useState(initial?.subCategory ?? '');
     const [customSub, setCustomSub] = useState(false);
     /**
@@ -68,13 +67,12 @@ export default function ProductForm({
     });
     const [busy, setBusy] = useState(false);
 
+    /** 기본 섹션 목록을 먼저 깔고, 이미 등록된 값을 뒤에 붙인다 */
     const subOptions = Array.from(
-        new Set(allProducts.filter((p) => p.menuSlug === menuSlug && p.subCategory).map((p) => p.subCategory)),
-    );
-
-    /** 같은 카테고리에 이미 쓰인 대분류. datalist 로 자동완성한다 */
-    const mainOptions = Array.from(
-        new Set(allProducts.filter((p) => p.menuSlug === menuSlug && p.mainCategory).map((p) => p.mainCategory)),
+        new Set([
+            ...(SECTION_PRESETS[menuSlug] ?? []),
+            ...allProducts.filter((p) => p.menuSlug === menuSlug && p.subCategory).map((p) => p.subCategory),
+        ]),
     );
 
     const menuName = MENU_CATEGORIES.find((c) => c.slug === menuSlug)!.name;
@@ -90,7 +88,6 @@ export default function ProductForm({
             const data = {
                 menuSlug,
                 menuCategory: menuName,
-                mainCategory,
                 subCategory,
                 name: text.ko.name,
                 nameEn: text.en.name,
@@ -145,7 +142,7 @@ export default function ProductForm({
             <div className="relative overflow-hidden rounded-2xl border border-black/[0.04] bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
                 <div className="space-y-6 p-6 sm:p-8">
                     {/* 대메뉴 + 중제목 */}
-                    <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
+                    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                         <label className="flex flex-col gap-1.5">
                             <span className="text-[13px] font-medium text-neutral-600">대메뉴</span>
                             <select
@@ -167,25 +164,7 @@ export default function ProductForm({
 
                         <label className="flex flex-col gap-1.5">
                             <span className="text-[13px] font-medium text-neutral-600">
-                                대분류 <span className="font-normal text-neutral-400">(페이지 섹션 제목)</span>
-                            </span>
-                            <input
-                                value={mainCategory}
-                                onChange={(e) => setMainCategory(e.target.value)}
-                                placeholder="예: 초음파 리프팅"
-                                list="main-options"
-                                className={inputBase}
-                            />
-                            <datalist id="main-options">
-                                {mainOptions.map((m) => (
-                                    <option key={m} value={m} />
-                                ))}
-                            </datalist>
-                        </label>
-
-                        <label className="flex flex-col gap-1.5">
-                            <span className="text-[13px] font-medium text-neutral-600">
-                                중제목 <span className="font-normal text-neutral-400">(선택)</span>
+                                섹션 제목 <span className="font-normal text-neutral-400">(선택)</span>
                             </span>
                             {!customSub ? (
                                 <select
@@ -200,7 +179,7 @@ export default function ProductForm({
                                     }}
                                     className={inputBase}
                                 >
-                                    <option value="">(중제목 없음)</option>
+                                    <option value="">(섹션 없음)</option>
                                     {subOptions.map((s) => (
                                         <option key={s} value={s}>
                                             {s}
@@ -213,7 +192,7 @@ export default function ProductForm({
                                     <input
                                         value={subCategory}
                                         onChange={(e) => setSubCategory(e.target.value)}
-                                        placeholder="새 중제목 입력"
+                                        placeholder="새 섹션 제목 입력"
                                         className={`${inputBase} flex-1`}
                                         autoFocus
                                     />
@@ -330,7 +309,10 @@ export default function ProductForm({
                                 inputMode="numeric"
                                 value={priceBy[lang]}
                                 onChange={(e) =>
-                                    setPriceBy((prev) => ({ ...prev, [lang]: formatPriceInput(e.target.value) }))
+                                    setPriceBy((prev) => ({
+                                        ...prev,
+                                        [lang]: formatPriceInput(e.target.value),
+                                    }))
                                 }
                                 placeholder="0"
                                 className={`${inputBase} pr-10`}

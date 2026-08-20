@@ -14,3 +14,12 @@ export const MENU_CATEGORIES = [
     { slug: 'hair', name: '제모' },
     { slug: 'booster', name: '스킨부스터' },
 ] as const;
+
+/**
+ * 카테고리별 기본 섹션 제목.
+ * 등록된 시술이 하나도 없어도 관리자 폼 드롭다운에 항상 뜨게 한다.
+ * 여기 없는 값은 '+ 직접 입력' 으로 넣으면 되고, 넣는 순간 다음부터 목록에 같이 나온다.
+ */
+export const SECTION_PRESETS: Record<string, readonly string[]> = {
+    zeroaging: ['Day Young', 'Week Young', 'Month Young', 'Year Young'],
+};

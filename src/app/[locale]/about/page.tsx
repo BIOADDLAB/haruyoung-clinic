@@ -94,11 +94,9 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                                     <Reveal
                                         as="p"
                                         variants={fadeUpSlow}
-                                        className="text-center font-gara text-[34px] font-bold italic leading-[30px] text-dark lg:text-left lg:text-34 lg:leading-[38px]"
+                                        className="whitespace-pre-line text-center font-gara text-[34px] font-bold italic leading-[30px] text-dark lg:text-left lg:text-34 lg:leading-[38px]"
                                     >
-                                        A Moment of Pause,
-                                        <br />
-                                        Timeless Beauty
+                                        {t('heroEn')}
                                     </Reveal>
 
                                     {/* 모바일 전용 이미지 (겹침 유지) */}

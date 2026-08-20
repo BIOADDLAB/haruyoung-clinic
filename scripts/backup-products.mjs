@@ -6,19 +6,12 @@
  * 결과: products-backup-YYYYMMDD-HHmm.json
  */
 import { writeFile } from 'node:fs/promises';
-import { initializeApp } from 'firebase/app';
-import { collection, getDocs, getFirestore } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
+import { db, signInAdmin } from './firebase.mjs';
 
-const app = initializeApp({
-    apiKey: 'AIzaSyCkn1jYr3-SaLypMjmJjp7WYg9Xlr70rGQ',
-    authDomain: 'haruyoungclinic.firebaseapp.com',
-    projectId: 'haruyoungclinic',
-    storageBucket: 'haruyoungclinic.firebasestorage.app',
-    messagingSenderId: '463252084085',
-    appId: '1:463252084085:web:c0f43e3ecd63a58fc82f3c',
-});
+await signInAdmin();
 
-const snap = await getDocs(collection(getFirestore(app), 'products'));
+const snap = await getDocs(collection(db, 'products'));
 const d = new Date();
 const p = (n) => String(n).padStart(2, '0');
 const file = `products-backup-${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}.json`;

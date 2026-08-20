@@ -3,7 +3,7 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 import CartToggle from '@/components/cart/CartToggle';
-import { getMainCategoryKey, MENU_CATEGORIES } from '@/constants/categories';
+import { MENU_CATEGORIES } from '@/constants/categories';
 import { getProducts } from '@/lib/products';
 import { localized, localizedPrice, type Locale, type Product } from '@/types/product';
 import { Link } from '@/i18n/navigation';
@@ -14,7 +14,7 @@ type SearchHit = {
     highlight: string;
     description: string;
     menuCategory: string;
-    mainCategory: string;
+    subCategory: string;
     price: number | null;
 };
 
@@ -29,7 +29,6 @@ export default function SearchResult({ keyword }: { keyword: string }) {
     const t = useTranslations('search');
     const tt = useTranslations('treatments');
     const tb = useTranslations('banner');
-    const tc = useTranslations('productCategories');
     const locale = useLocale() as Locale;
     const [all, setAll] = useState<Product[] | null>(null);
 
@@ -56,10 +55,8 @@ export default function SearchResult({ keyword }: { keyword: string }) {
             const menuCategory = MENU_CATEGORY_SLUGS.has(product.menuSlug)
                 ? tb(product.menuSlug as MenuCategorySlug)
                 : product.menuCategory;
-            const mainCategoryKey = getMainCategoryKey(product.mainCategory);
-            const mainCategory = mainCategoryKey ? tc(mainCategoryKey) : product.mainCategory;
             const searchText = normalizeSearchText(
-                [menuCategory, mainCategory, name, highlight, description].filter(Boolean).join(' '),
+                [menuCategory, product.subCategory, name, highlight, description].filter(Boolean).join(' '),
             );
 
             if (!searchText.includes(query)) return [];
@@ -71,12 +68,12 @@ export default function SearchResult({ keyword }: { keyword: string }) {
                     highlight,
                     description,
                     menuCategory,
-                    mainCategory,
+                    subCategory: product.subCategory,
                     price: localizedPrice(product, locale),
                 },
             ];
         });
-    }, [all, keyword, locale, tb, tc]);
+    }, [all, keyword, locale, tb]);
 
     return (
         <div className="px-6 pb-28 pt-8 lg:pb-24 lg:pl-12 lg:pr-0 lg:pt-16">
@@ -103,14 +100,14 @@ export default function SearchResult({ keyword }: { keyword: string }) {
                 <p className="pt-16 text-caption text-dark/50">{t('empty')}</p>
             ) : (
                 <ul className="flex flex-col gap-4 pt-9">
-                    {hits.map(({ product, name, highlight, description, menuCategory, mainCategory, price }) => (
+                    {hits.map(({ product, name, highlight, description, menuCategory, subCategory, price }) => (
                         <li key={product.id} className="w-full max-w-[800px] rounded-lg border border-beige p-5 lg:p-6">
                             <Link
                                 href={`/treatments/${product.menuSlug}`}
                                 className="text-caption-sm text-dark/50 transition-colors duration-500 ease-brand hover:text-brown"
                             >
                                 {menuCategory}
-                                {mainCategory && ` · ${mainCategory}`}
+                                {subCategory && ` · ${subCategory}`}
                             </Link>
                             <h2 className="mt-2 whitespace-pre-line text-18 font-bold lg:text-20">{name}</h2>
 

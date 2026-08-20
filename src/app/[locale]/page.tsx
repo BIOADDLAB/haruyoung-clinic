@@ -9,52 +9,21 @@ import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
 import HorizontalScroll, { Panel } from '@/components/ui/HorizontalScroll';
 import PhotoGallery, { type GalleryPhoto } from '@/components/ui/PhotoGallery';
+import PopupModal from '@/components/ui/PopupModal';
 import Reveal from '@/components/ui/Reveal';
 import { RevealGroup } from '@/components/ui/RevealGroup';
 import { fadeUpSlow, slideLeft, slideRight } from '@/lib/motion';
 import IntroLoader from '@/components/home/IntroLoader';
 
 const TREATMENTS = [
-    {
-        en: 'Zero Lifting',
-        slug: 'lifting',
-        n: '01',
-    },
-    {
-        en: 'Zero Pigment',
-        slug: 'pigment',
-        n: '02',
-    },
-    {
-        en: 'Zero Acne',
-        slug: 'acne',
-        n: '03',
-    },
-    {
-        en: 'Zero Petit',
-        slug: 'petit',
-        n: '04',
-    },
-    {
-        en: 'Zero Care',
-        slug: 'care',
-        n: '05',
-    },
-    {
-        en: 'Zero Smooth',
-        slug: 'hair',
-        n: '06',
-    },
-    {
-        en: 'Zero Body',
-        slug: 'body',
-        n: '07',
-    },
-    {
-        en: 'Zero Skinbooster',
-        slug: 'booster',
-        n: '08',
-    },
+    { en: 'Zero Lifting', slug: 'lifting', n: '01' },
+    { en: 'Zero Pigments', slug: 'pigment', n: '02' },
+    { en: 'Zero Acne', slug: 'acne', n: '03' },
+    { en: 'Zero Fat', slug: 'body', n: '07' },
+    { en: 'Petite', slug: 'petit', n: '04' },
+    { en: 'Skin Care', slug: 'care', n: '05' },
+    { en: 'Hair Removal', slug: 'hair', n: '06' },
+    { en: 'Skin Boosters', slug: 'booster', n: '08' },
 ];
 
 const SPACE_PHOTOS: GalleryPhoto[] = [
@@ -106,6 +75,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     return (
         <>
             <IntroLoader />
+
+            <PopupModal />
 
             <Header />
 

@@ -2,8 +2,7 @@ export type Product = {
     id: string;
     menuCategory: string;
     menuSlug: string;
-    /** 페이지 안 섹션 제목. 예: 초음파 리프팅 / 여성 제모 */
-    mainCategory: string;
+    /** 페이지 안 섹션 제목. 예: 주름 보톡스 / 여성 제모 - 얼굴 */
     subCategory: string;
     name: string;
     /** 영문·중문 시술명. 비어 있으면 화면에서 한국어로 떨어진다 */

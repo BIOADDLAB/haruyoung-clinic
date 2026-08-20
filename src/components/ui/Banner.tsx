@@ -4,15 +4,18 @@ export default function Banner({
     file,
     en,
     ko,
-    lead,
+    logo,
+    logoAlt,
     tall,
 }: {
     file: string;
     /** 영문. 양옆에 작은 점이 붙는다 */
     en: string;
-    ko: string;
-    /** 프로모션 배너 맨 위 로고 타이포 */
-    lead?: string;
+    /** 영문 아래 한 줄. 영문과 같은 값이면 넘기지 않는다 */
+    ko?: string;
+    /** 프로모션 배너 맨 위 로고 타이포 이미지 경로 */
+    logo?: string;
+    logoAlt?: string;
     /** 프로모션은 세로가 두 배 이상이다 */
     tall?: boolean;
 }) {
@@ -33,7 +36,18 @@ export default function Banner({
             />
 
             <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
-                {lead && <p className="mb-10 font-display text-h3 text-cream">{lead}</p>}
+                {logo && (
+                    <span className="mb-10 block w-[160px] lg:w-[204px]">
+                        <Image
+                            src={logo}
+                            alt={logoAlt ?? ''}
+                            width={408}
+                            height={52}
+                            priority
+                            className="h-auto w-full"
+                        />
+                    </span>
+                )}
 
                 <p
                     className={`flex items-center gap-3 font-display ${
@@ -45,9 +59,11 @@ export default function Banner({
                     <Dot tall={tall} />
                 </p>
 
-                <p className={`text-small font-semibold ${tall ? 'mt-1 text-cream/85' : 'mt-1.5 text-dark/85'}`}>
-                    {ko}
-                </p>
+                {ko && (
+                    <p className={`text-small font-semibold ${tall ? 'mt-1 text-cream/85' : 'mt-1.5 text-dark/85'}`}>
+                        {ko}
+                    </p>
+                )}
             </div>
         </div>
     );

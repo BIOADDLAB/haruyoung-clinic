@@ -46,14 +46,17 @@
         "space": "Our Space",
         "promotion": "Promotion",
         "precautions": "Aftercare",
-        "lifting": "Lifting",
-        "pigment": "Pigment Care",
-        "acne": "Acne Care",
-        "petit": "Petit",
-        "care": "Skin Care · IV",
-        "hair": "Hair Removal",
-        "body": "Body Line",
-        "booster": "Skin Booster"
+        "subPromotion": "PROMOTION",
+        "zeroaging": "ZERO AGING PROJECT",
+        "lifting": "ZERO LIFTING",
+        "pigment": "ZERO PIGMENTS",
+        "acne": "ZERO ACNE",
+        "body": "ZERO FAT",
+        "petit": "PETITE",
+        "care": "SKIN CARE",
+        "iv": "IV THERAPY",
+        "hair": "HAIR REMOVAL",
+        "booster": "SKIN BOOSTERS"
     },
     "search": {
         "title": "Treatment search",
@@ -82,22 +85,6 @@
         "iv": "IV Therapy",
         "hair": "Hair Removal",
         "booster": "Skin Booster"
-    },
-    "productCategories": {
-        "lifting": "Lifting",
-        "pigmentRednessBlemishes": "Pigmentation / Redness / Blemishes",
-        "tattooRemoval": "Tattoo Removal",
-        "poresScarsAcne": "Pores / Scars / Acne",
-        "botox": "Botox",
-        "skinBotox": "Skin Botox",
-        "contourFatDissolving": "Contour / Fat-Dissolving Injections",
-        "filler": "Filler",
-        "skinBooster": "Skin Booster",
-        "skinCare": "Skin Care",
-        "ivTherapy": "IV Therapy",
-        "womenHairRemoval": "Women's Hair Removal",
-        "menHairRemoval": "Men's Hair Removal",
-        "bodyDiet": "Body Care / Weight Management"
     },
     "treatments": {
         "loading": "Loading…",
@@ -245,7 +232,7 @@
         "hours": "Hours",
         "address": "301-2, 319 Gwanggyojungang-ro, Suji-gu, Yongin-si, Gyeonggi-do",
         "subway": "Shinbundang Line Gwanggyo Sanghyeon Stn. Exit 4, 1 min walk",
-        "parking": "Free parking",
+        "parking": "Free parking / If full, parking is available at Gwanggyo Prugio City Phase 1",
         "ceo": "CEO",
         "bizNo": "Business No.",
         "tel": "Phone",
@@ -304,9 +291,8 @@
         "room07": "Wood-louvre corridor"
     },
     "home": {
-        "heroMark": "HA:RU:00",
         "heroSlogan": "A LITTLE YOUNGER, EVERY DAY.",
-        "heroSub": "One day younger than today",
+        "heroSub": "One day younger than today.",
         "moreView": "More View",
         "treatments": "Treatments",
         "space": "HARU YOUNG Space",
@@ -322,8 +308,8 @@
     "about": {
         "ceoTitle": "Medical Director",
         "heroEn": "A Moment of Pause,\nTimeless Beauty",
-        "heroTitle": "",
-        "heroBody": "Beyond a simple procedure, HARU YOUNG \ndesigns the moment your skin feels most at ease. \nWith care made only for you, we offer rest where \nnatural beauty lasts long after time has passed.",
+        "heroTitle": "A day that starts from zero.\nA little younger tomorrow than today.",
+        "heroBody": "We cannot stop time from passing.\nBut we believe the marks it leaves\ncan be made a little different.\nSmall changes, day after day,\nbuild a younger tomorrow.",
         "specialistEn": "HARU YOUNG\nSpecialist",
         "spaceEn": "HARU YOUNG\nSpace",
         "spaceTitle": "The pause of a day, \na timeless moment.\nA skin retreat designed only for you.",
@@ -334,7 +320,7 @@
         "society2": "Former Full Member, Korean Association of Physicians for Obesity Research",
         "society3": "Sculptra Master",
         "spaceBody2": "We do not follow uniform procedures or passing trends.\nWe listen to the time you have lived and the story of your skin, and design a tomorrow that shines a little more each day.",
-        "ceoName": "Jane Doe"
+        "ceoName": "Yoon Kyung-chae"
     },
     "treatCard": {
         "lifting": "Firm resilience,\nlifting that turns\nthe clock back",

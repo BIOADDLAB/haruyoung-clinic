@@ -75,10 +75,20 @@ export default function HeroVisual() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: DUR.slow, ease: EASE }}
                 >
+                    {/* 프로모션 배너와 같은 로고 타이포 이미지를 쓴다 */}
+                    <span className="mx-auto mb-2 block w-[160px] lg:w-[230px]">
+                        <Image
+                            src="/images/l-haru-w.png"
+                            alt={t('logo')}
+                            width={408}
+                            height={52}
+                            priority
+                            className="h-auto w-full"
+                        />
+                    </span>
+
                     <h1 className="font-display text-40 font-normal leading-13 [text-shadow:2px_0_10.6px_rgba(59,37,9,0.64)]">
-                        HA:RU:00
-                        <br />A LITTLE YOUNGER, <br className="lg:hidden" />
-                        EVERY DAY
+                        {th('heroSlogan')}
                     </h1>
 
                     <p className="mt-5 text-30 font-normal whitespace-pre-line [text-shadow:2px_0_10.6px_rgba(59,37,9,0.64)] ">

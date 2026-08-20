@@ -15,7 +15,7 @@ export function toKey(d: Date) {
 
 /**
  * 'YYYY-MM-DD' 의 예약 가능 시간을 30분 단위로 만든다.
- * 마지막 슬롯은 마감 30분 전. 점심시간이 있는 요일은 13:00~14:00 을 뺀다.
+ * 마지막 슬롯은 마감 30분 전. 점심시간이 있는 요일은 RESERVATION_LUNCH 구간을 뺀다.
  * 오늘이면 이미 지난 시간과 1시간 안쪽은 제외한다.
  */
 export function slotsOf(dateKey: string): string[] {

@@ -8,6 +8,8 @@ import { PROMOTION_BANNER } from '@/data/site';
 import { RevealGroup, RevealItem } from '@/components/ui/RevealGroup';
 import { fadeUp } from '@/lib/motion';
 import { getPromotions } from '@/lib/promotions';
+import { getPromotionBannerSetting } from '@/lib/settings';
+import { localizedSetting, type PromotionBannerSetting } from '@/types/settings';
 import {
     daysLeft,
     discountRate,
@@ -20,9 +22,22 @@ import {
 export default function PromotionList() {
     const t = useTranslations('promotion');
     const tt = useTranslations('treatments');
+    const ta = useTranslations('a11y');
     const [list, setList] = useState<Promotion[] | null>(null);
+    const [banner, setBanner] = useState<PromotionBannerSetting | null>(null);
     const month = new Date().getMonth() + 1;
     const locale = useLocale() as 'ko' | 'en' | 'zh';
+
+    // 배너 문구는 관리자 > 사이트 설정 값이 있으면 그걸 쓰고, 없으면 site.ts 기본값이다
+    useEffect(() => {
+        let alive = true;
+        getPromotionBannerSetting().then((s) => {
+            if (alive) setBanner(s);
+        });
+        return () => {
+            alive = false;
+        };
+    }, []);
 
     useEffect(() => {
         let alive = true;
@@ -48,9 +63,10 @@ export default function PromotionList() {
         <div className="pb-28 lg:pb-24">
             <Banner
                 file={PROMOTION_BANNER.file}
-                lead={PROMOTION_BANNER.lead}
-                en={PROMOTION_BANNER.title}
-                ko={PROMOTION_BANNER.subtitle}
+                logo={PROMOTION_BANNER.logo}
+                logoAlt={ta('logo')}
+                en={banner ? localizedSetting(banner, 'title', locale) : PROMOTION_BANNER.title}
+                ko={banner ? localizedSetting(banner, 'subtitle', locale) : PROMOTION_BANNER.subtitle}
                 tall
             />
 

@@ -6,13 +6,12 @@ import { SUB_NAV } from '@/data/site';
 
 export default function SubNav() {
     const pathname = usePathname();
-    const t = useTranslations('banner');
-    const tn = useTranslations('nav');
-
+    /** 헤더와 같은 영문 대문자 표기를 쓴다 */
+    const t = useTranslations('nav');
     return (
         <>
             <nav
-                aria-label={tn('treatmentMenu')}
+                aria-label={t('treatmentMenu')}
                 className="fixed left-rail top-0 z-40 hidden h-dvh w-[277px] border-r border-dark/15 bg-cream lg:block"
             >
                 <ul className="flex flex-col gap-[13px] pl-14 pt-[91px]">
@@ -41,7 +40,7 @@ export default function SubNav() {
             </nav>
 
             <nav
-                aria-label={tn('treatmentMenu')}
+                aria-label={t('treatmentMenu')}
                 className="fixed inset-x-0 top-16 z-40 h-12 border-b border-dark/10 bg-cream lg:hidden"
             >
                 <ul className="flex h-full items-center gap-5 overflow-x-auto px-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">

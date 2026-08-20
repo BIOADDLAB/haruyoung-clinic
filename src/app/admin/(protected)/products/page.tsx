@@ -24,7 +24,11 @@ function SortableCard({
     return (
         <div
             ref={setNodeRef}
-            style={{ transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.5 : 1 }}
+            style={{
+                transform: CSS.Transform.toString(transform),
+                transition,
+                opacity: isDragging ? 0.5 : 1,
+            }}
             className={`w-full max-w-[800px] rounded-lg border bg-cream p-5 lg:p-6 ${
                 editing ? 'border-dark ring-1 ring-dark' : 'border-beige'
             }`}
@@ -36,10 +40,7 @@ function SortableCard({
                 </button>
 
                 <div className="min-w-0 flex-1">
-                    <p className="text-caption-sm text-dark/45">
-                        {p.mainCategory || '(대분류 없음)'}
-                        {p.subCategory && ` · ${p.subCategory}`}
-                    </p>
+                    <p className="text-caption-sm text-dark/45">{p.subCategory || '(섹션 없음)'}</p>
                     <h3 className="mt-1 whitespace-pre-line text-18 font-bold text-dark lg:text-20">{p.name}</h3>
                     {p.highlight && <p className="mt-2 text-small font-medium text-brown">{p.highlight}</p>}
                     {p.description && (

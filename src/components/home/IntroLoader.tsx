@@ -1,6 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { INTRO_CLOSED_EVENT, INTRO_DISPLAY_PROPERTY, INTRO_ELEMENT_ID, INTRO_STORAGE_KEY } from '@/lib/intro';
 import { EASE } from '@/lib/motion';
@@ -29,6 +30,7 @@ function markSeen() {
  * 클릭하면 즉시 건너뛴다. 모션 최소화 설정이면 아예 뜨지 않는다.
  */
 export default function IntroLoader() {
+    const t = useTranslations('intro');
     const reduced = useReducedMotion();
     const [open, setOpen] = useState(true);
     const [skipped, setSkipped] = useState(false);
@@ -150,7 +152,7 @@ export default function IntroLoader() {
                     </motion.div>
 
                     <p className="absolute inset-x-0 bottom-10 text-center text-caption-sm tracking-[0.1em] text-cream/45">
-                        START YOUR YOUNGER DAY
+                        {t('skip')}
                     </p>
                 </motion.div>
             )}

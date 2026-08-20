@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed": "node scripts/backup-products.mjs && node scripts/seed-products.mjs && node scripts/seed-zeroaging.mjs"
   },
   "dependencies": {
     "@fontsource-variable/asta-sans": "5.3.0",
