@@ -25,7 +25,18 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 /** #issue 원장 약력. 병원에서 영문·중문 표기를 받으면 messages 값만 고치면 된다 */
-const CAREER_KEYS = ['career1', 'career2', 'society1', 'society2', 'society3'] as const;
+const CAREER_KEYS = [
+    'career1',
+    'career2',
+    'career3',
+    'career4',
+    'career5',
+    'career6',
+    'career7',
+    'career8',
+    'career9',
+    'career10',
+] as const;
 
 const SPACE_PHOTOS: GalleryPhoto[] = [
     {
@@ -69,6 +80,8 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
     const { locale } = await params;
     const t = await getTranslations({ locale, namespace: 'about' });
     const ta = await getTranslations({ locale, namespace: 'a11y' });
+    /** 영문·중문 약력은 한 줄이 길어 같은 크기로 두면 넘친다. 언어별로 한 단계 줄인다 */
+    const isKo = locale === 'ko';
 
     return (
         <>
@@ -219,14 +232,18 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                                     {/* 이름 + 서명 */}
                                     <Reveal
                                         delay={0.1}
-                                        className="mt-9 flex items-end justify-center gap-2 lg:mt-[109px] lg:justify-start"
+                                        className="mt-9 flex items-end justify-center gap-2 lg:mt-[60px] lg:justify-start"
                                     >
                                         <p className="text-center lg:text-left">
                                             <span className="block font-display text-caption-sm tracking-[0.18em] text-dark/70">
                                                 HARUYOUNG
                                             </span>
-                                            <span className="mt-2.5 block text-[22px] font-bold lg:text-24">
-                                                {t('ceoName')}{' '}
+                                            <span
+                                                className={`mt-2.5 block font-bold [word-break:keep-all] ${
+                                                    isKo ? 'text-[22px] lg:text-24' : 'text-18 lg:text-20'
+                                                }`}
+                                            >
+                                                <span className="whitespace-nowrap">{t('ceoName')}</span>{' '}
                                                 <span className="text-16 font-normal">{t('ceoTitle')}</span>
                                             </span>
                                         </p>
@@ -239,11 +256,11 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                                     <Reveal
                                         variants={drawLine}
                                         delay={0.2}
-                                        className="mt-6 h-px w-[46px] origin-left bg-dark/40 lg:mt-[26px]"
+                                        className="mt-6 h-px w-[46px] origin-left bg-dark/40 lg:mt-[22px]"
                                     />
 
                                     {/* 경력 리스트 */}
-                                    <RevealGroup as="ul" className="mt-7 text-center lg:mt-[33px] lg:text-left">
+                                    <RevealGroup as="ul" className="mt-6 text-center lg:mt-[24px] lg:text-left">
                                         {CAREER_KEYS.map((c) => {
                                             const lines = t(c).split('\n');
 
@@ -251,7 +268,11 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                                                 <RevealItem
                                                     as="li"
                                                     key={c}
-                                                    className="text-small leading-[32px] text-dark lg:leading-[35px]"
+                                                    className={`text-dark ${
+                                                        isKo
+                                                            ? 'text-small leading-[28px] lg:leading-[30px]'
+                                                            : 'text-caption leading-[21px] lg:leading-[23px]'
+                                                    }`}
                                                 >
                                                     {lines.length === 1 ? (
                                                         lines[0]

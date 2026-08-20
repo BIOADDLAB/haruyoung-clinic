@@ -43,7 +43,7 @@ export const CLINIC = {
     /** 시간은 언어와 무관하다. 요일 라벨만 messages 의 footer 에서 꺼낸다 */
     hours: [
         { key: 'day1', time: '11:00 - 20:00', schemaDays: ['Monday', 'Friday'] },
-        { key: 'day2', time: '10:00 - 19:00', schemaDays: ['Tuesday', 'Wednesday', 'Thursday'] },
+        { key: 'day2', time: '10:00 - 19:00', schemaDays: ['Tuesday', 'Thursday'] },
         { key: 'day3', time: '10:00 - 16:30', schemaDays: ['Saturday'] },
         { key: 'day4', time: '14:00 - 15:00', schemaDays: [] },
     ],
@@ -78,25 +78,30 @@ export const POLICY_LINKS = [
 ] as const;
 
 /**
- * 시술·프로모션 페이지 좌측 서브 내비. 헤더와 같은 영문 대문자 표기를 쓴다 (messages 의 nav).
+ * 좌측 서브 내비. 헤더와 같은 영문 대문자 표기를 쓴다 (messages 의 nav).
  * 헤더 Promotion 그룹 항목은 언어별 표기를 유지해야 해서 키를 subPromotion 으로 따로 뒀다.
+ *
+ * 프로모션과 시술은 서로 섞지 않는다.
+ * 프로모션 페이지에서는 프로모션만, 시술 페이지에서는 시술만 보인다.
  */
-export const SUB_NAV = [
-    { key: 'subPromotion', href: '/promotion' },
-    ...TREATMENT_ORDER.map((slug) => ({ key: slug, href: `/treatments/${slug}` })),
-] as const;
+export const PROMOTION_SUB_NAV = [{ key: 'subPromotion', href: '/promotion' }] as const;
+
+export const TREATMENT_SUB_NAV = TREATMENT_ORDER.map((slug) => ({
+    key: slug,
+    href: `/treatments/${slug}`,
+})) as readonly { key: string; href: string }[];
 
 /** 방문 형태. 값은 키로 저장하고 화면에서만 번역한다 */
 export const VISIT_TYPES = ['visitFirst', 'visitAgain'] as const;
 
 /**
  * 요일별 예약 가능 구간. 0=일 … 6=토. 없는 요일은 휴진이다.
- * lunch 가 true 면 점심시간 슬롯을 뺀다 (토는 점심시간 없이 진료).
+ * 수(3)·일(0)은 휴진이라 아예 없다.
+ * lunch 가 false 면 점심시간에도 예약을 받는다 (토는 점심시간 없이 진료).
  */
 export const RESERVATION_HOURS: Record<number, { start: string; end: string; lunch: boolean }> = {
     1: { start: '11:00', end: '20:00', lunch: true },
     2: { start: '10:00', end: '19:00', lunch: true },
-    3: { start: '10:00', end: '19:00', lunch: true },
     4: { start: '10:00', end: '19:00', lunch: true },
     5: { start: '11:00', end: '20:00', lunch: true },
     6: { start: '10:00', end: '16:30', lunch: false },
@@ -108,11 +113,6 @@ export const RESERVATION_LUNCH = { start: '14:00', end: '15:00' } as const;
 /** 오늘부터 이만큼 뒤까지만 예약을 받는다 */
 export const RESERVATION_MAX_DAYS = 60;
 
-/**
- * 시술 페이지 배너. 892×194.
- * 번호는 SUB_NAV 순서를 따른다. 새 카테고리가 생기면 여기에 한 줄 추가한다.
- * #TODO: zeroaging·iv 는 전용 배너가 나오기 전까지 기존 이미지를 빌려 쓴다
- */
 export const TREATMENT_BANNER: Record<string, { file: string; en: string }> = {
     zeroaging: { file: 'bg-tre-08', en: 'Zero Aging Project' },
     lifting: { file: 'bg-tre-01', en: 'Zero Lifting' },
@@ -128,7 +128,7 @@ export const TREATMENT_BANNER: Record<string, { file: string; en: string }> = {
 
 /**
  * 프로모션 배너 기본값.
- * 문구는 관리자 > 프로모션 배너 설정에서 덮어쓴다. Firestore 에 값이 없을 때만 이 값이 보인다.
+ * 문구는 관리자 > 사이트 설정에서 덮어쓴다. Firestore 에 값이 없을 때만 이 값이 보인다.
  */
 export const PROMOTION_BANNER = {
     file: 'bg-pro',
