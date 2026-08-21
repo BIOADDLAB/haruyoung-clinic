@@ -5,10 +5,10 @@ const TREATMENT_ORDER = [
     'acne',
     'body',
     'petit',
+    'booster',
     'care',
     'iv',
     'hair',
-    'booster',
 ] as const;
 
 export const SITE_CONFIG = {
@@ -21,7 +21,7 @@ const treatments = TREATMENT_ORDER.map((slug) => ({ key: slug, href: `/treatment
 
 export const MENU_GROUPS = [
     {
-        title: 'HARU YOUNG',
+        title: 'HARUYOUNG',
         items: [
             { key: 'philosophy', href: '/about#philosophy' },
             { key: 'specialist', href: '/about#specialist' },
@@ -54,7 +54,7 @@ export const CLINIC = {
 } as const;
 
 /** TODO: 실제 카카오 채널 주소로 교체 */
-export const KAKAO_CHANNEL = 'https://pf.kakao.com/_haruyoung';
+export const KAKAO_CHANNEL = 'http://pf.kakao.com/_kbhSX';
 
 /** 헤더 레일 하단 바로가기 — 상담예약은 전화연결, 바로예약은 예약 페이지, 카카오톡은 채널 */
 export const QUICK_LINKS = [

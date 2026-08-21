@@ -215,7 +215,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                                         variants={fadeUpSlow}
                                         className="text-center font-display text-[22px] leading-[30px] lg:text-left lg:text-24 lg:leading-[34px]"
                                     >
-                                        HARU YOUNG
+                                        HARUYOUNG
                                         <br />
                                         Specialist
                                     </Reveal>
@@ -248,7 +248,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                                             </span>
                                         </p>
                                         <span className="pb-1">
-                                            <Image src="/images/i-sig.png" alt="" width={126} height={35} unoptimized />
+                                            <Image src="/images/i-sig-02.png" alt="" width={126} height={25} unoptimized />
                                         </span>
                                     </Reveal>
 
@@ -259,16 +259,16 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                                         className="mt-6 h-px w-[46px] origin-left bg-dark/40 lg:mt-[22px]"
                                     />
 
-                                    {/* 경력 리스트 */}
+                                    {/* 경력 리스트. 학력·경력(1~3)과 학회 활동(4~) 사이를 한 줄 띄운다 */}
                                     <RevealGroup as="ul" className="mt-6 text-center lg:mt-[24px] lg:text-left">
-                                        {CAREER_KEYS.map((c) => {
+                                        {CAREER_KEYS.map((c, i) => {
                                             const lines = t(c).split('\n');
 
                                             return (
                                                 <RevealItem
                                                     as="li"
                                                     key={c}
-                                                    className={`text-dark ${
+                                                    className={`text-dark ${i === 3 || i === 9 ? 'mt-3' : ''} ${
                                                         isKo
                                                             ? 'text-small leading-[28px] lg:leading-[30px]'
                                                             : 'text-caption leading-[21px] lg:leading-[23px]'

@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ID_TAKEN_CODE, signIn, signUp } from '@/lib/members';
@@ -135,9 +136,19 @@ export default function AuthModal({ open, onClose }: { open: boolean; onClose: (
                     >
                         {/* 모달은 화면 안에 갇히고 안쪽만 스크롤된다 */}
                         <div className="overflow-y-auto overscroll-contain px-8 py-12 lg:px-12">
-                            <p className="text-center font-gara text-24 italic text-brown">
-                                {signup ? t('welcome') : t('brand')}
-                            </p>
+                            <div className="flex justify-center">
+                                {signup ? (
+                                    <p className="font-gara text-24 italic text-brown">{t('welcome')}</p>
+                                ) : (
+                                    <Image
+                                        src="/images/logo-sub.svg"
+                                        alt={t('brand')}
+                                        width={110}
+                                        height={24}
+                                        priority
+                                    />
+                                )}
+                            </div>
                             <h2 className="mt-3 text-center text-22 font-bold">{signup ? t('signup') : t('login')}</h2>
 
                             <div className="mt-10 flex flex-col gap-6">

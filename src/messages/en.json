@@ -1,9 +1,9 @@
 {
     "meta": {
-        "clinic": "HARU YOUNG CLINIC",
-        "title": "HARU YOUNG CLINIC | A Moment of Pause, Timeless Beauty",
-        "description": "HARU YOUNG CLINIC offers your skin the calmest rest, like a pause in a busy day. Personalised care designed only for you, so that natural beauty lasts.",
-        "ogAlt": "HARU YOUNG CLINIC - A skin retreat designed only for you",
+        "clinic": "HARUYOUNG CLINIC",
+        "title": "HARUYOUNG CLINIC | A Little Younger, Every Day",
+        "description": "HARUYOUNG CLINIC offers your skin the calmest rest, like a pause in a busy day. Personalised care designed only for you, so that natural beauty lasts.",
+        "ogAlt": "HARUYOUNG CLINIC - A skin retreat designed only for you",
         "about": "About",
         "cart": "Cart",
         "reservation": "Book now",
@@ -12,16 +12,16 @@
         "precautions": "Aftercare",
         "promotion": "Promotion",
         "search": "Treatment search",
-        "homeDesc": "HARU YOUNG CLINIC offers your skin the calmest rest, like a pause in a busy day.",
+        "homeDesc": "HARUYOUNG CLINIC offers your skin the calmest rest, like a pause in a busy day.",
         "aboutDesc": "Our philosophy, our specialist, and our private space.",
         "cartDesc": "Review what you saved and book right away.",
-        "reservationDesc": "Book your treatment at HARU YOUNG CLINIC.",
-        "privacyDesc": "How HARU YOUNG CLINIC collects and uses personal information.",
+        "reservationDesc": "Book your treatment at HARUYOUNG CLINIC.",
+        "privacyDesc": "How HARUYOUNG CLINIC collects and uses personal information.",
         "termsDesc": "Terms of service for online booking and membership.",
         "precautionsDesc": "Aftercare guidance for each treatment.",
         "promotionDesc": "Current promotions and event prices.",
-        "searchDesc": "Search treatments at HARU YOUNG CLINIC.",
-        "treatmentDesc": "{name} treatments and pricing at HARU YOUNG CLINIC."
+        "searchDesc": "Search treatments at HARUYOUNG CLINIC.",
+        "treatmentDesc": "{name} treatments and pricing at HARUYOUNG CLINIC."
     },
     "nav": {
         "menu": "MENU",
@@ -29,7 +29,7 @@
         "cart": "Cart",
         "login": "Log in",
         "logout": "Log out",
-        "home": "Go to HARU YOUNG home",
+        "home": "Go to HARUYOUNG home",
         "openMenu": "Open menu",
         "closeMenu": "Close menu",
         "openSearch": "Open treatment search",
@@ -179,7 +179,7 @@
         "login": "Log in",
         "signup": "Sign up",
         "welcome": "Welcome",
-        "brand": "Haru Young",
+        "brand": "HARUYOUNG",
         "loginId": "ID",
         "loginIdPlaceholder": "Enter your ID.",
         "loginIdRule": "4–16 lowercase letters and numbers",
@@ -223,7 +223,7 @@
         "browse": "Browse treatments"
     },
     "intro": {
-        "skip": "START YOUR YOUNGER DAY"
+        "skip": "START YOUR YOUNGER DAY →"
     },
     "footer": {
         "labelLocation": "Location",
@@ -233,7 +233,8 @@
         "hours": "Hours",
         "address": "301-2, 319 Gwanggyojungang-ro, Suji-gu, Yongin-si, Gyeonggi-do",
         "subway": "Shinbundang Line Gwanggyo Sanghyeon Stn. Exit 4, 1 min walk",
-        "parking": "Free parking / If full, parking is available at Gwanggyo Prugio City Phase 1",
+        "parking": "Free parking (basement level)",
+        "parkingNote": "If full, parking is available at Gwanggyo Prugio City Phase 1",
         "ceo": "CEO",
         "bizNo": "Business No.",
         "tel": "Phone",
@@ -251,14 +252,14 @@
         "ceoName": "Yoon Kyungchae"
     },
     "a11y": {
-        "hero": "HARU YOUNG CLINIC reception lounge",
+        "hero": "HARUYOUNG CLINIC reception lounge",
         "close": "Close",
         "prev": "Previous photo",
         "next": "Next photo",
         "photoOf": "View photo {n}",
-        "bannerOf": "HARU YOUNG CLINIC {name}",
+        "bannerOf": "HARUYOUNG CLINIC {name}",
         "skipToContent": "Skip to content",
-        "heroImg": "HARU YOUNG CLINIC reception lounge",
+        "heroImg": "HARUYOUNG CLINIC reception lounge",
         "linen": "Linen bedding in the treatment room",
         "flower": "A flower on fabric, symbolising our care",
         "silk": "Hands wrapped in silk, symbolising our care",
@@ -266,7 +267,7 @@
         "lounge": "First-floor reception lounge",
         "mapAlt": "Clinic location map (available after opening)",
         "enlarge": "View larger",
-        "logo": "HARU YOUNG CLINIC",
+        "logo": "HARUYOUNG CLINIC",
         "card_lifting": "Cream texture symbolising our lifting treatments",
         "card_pigment": "Clear neck and shoulder skin after pigment care",
         "card_acne": "Clear skin texture symbolising our acne care",
@@ -296,23 +297,23 @@
         "heroSub": "One day younger than today.",
         "moreView": "More View",
         "treatments": "Treatments",
-        "space": "HARU YOUNG Space",
+        "space": "HARUYOUNG Space",
         "promotion": "Promotion",
         "category": "Category",
         "promotionLead": "Find the promotion \nthat suits you.",
         "categoryLead": "Discover a solution\ntailored to your skin.",
         "heroTitle": "A skin retreat designed\nonly for you.",
-        "heroBody": "Like a pause in a busy day, \nHARU YOUNG CLINIC\noffers your skin the calmest rest.\nWith care designed only for you,\nwe help natural beauty \nlast far beyond your visit.",
+        "heroBody": "Like a pause in a busy day, \nHARUYOUNG CLINIC\noffers your skin the calmest rest.\nWith care designed only for you,\nwe help natural beauty \nlast far beyond your visit.",
         "treatLead": "Skin that looks younger than your years,\nremodelling care that turns time back.",
         "spaceLead": "Our space is designed as time for your skin to rest.\nA calm mood and careful detail make every moment here a true pause."
     },
     "about": {
         "ceoTitle": "Medical Director",
-        "heroEn": "A Moment of Pause,\nTimeless Beauty",
+        "heroEn": "A Little Younger,\nEvery Day.",
         "heroTitle": "A day that starts from zero.\nA little younger tomorrow than today.",
         "heroBody": "We cannot stop time from passing.\nBut we believe the marks it leaves\ncan be made a little different.\nSmall changes, day after day,\nbuild a younger tomorrow.",
-        "specialistEn": "HARU YOUNG\nSpecialist",
-        "spaceEn": "HARU YOUNG\nSpace",
+        "specialistEn": "HARUYOUNG\nSpecialist",
+        "spaceEn": "HARUYOUNG\nSpace",
         "spaceTitle": "The pause of a day, \na timeless moment.\nA skin retreat designed only for you.",
         "spaceBody": "Step away from the everyday and into the calm of\na high-end resort spa. In a refined private space,\nwith care attentive to the finest texture of your skin,\nyou return to your most comfortable state.",
         "spaceBody2": "We do not follow uniform procedures or passing trends.\nWe listen to the time you have lived and the story of your skin, and design a tomorrow that shines a little more each day.",
@@ -346,7 +347,7 @@
     "popup": {
         "close": "Close",
         "hideToday": "Don't show again today",
-        "label": "HARU YOUNG notice popup",
+        "label": "HARUYOUNG notice popup",
         "tab": "Notice {n}"
     }
 }

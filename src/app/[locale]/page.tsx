@@ -21,9 +21,9 @@ const TREATMENTS = [
     { en: 'Zero Acne', slug: 'acne', n: '03' },
     { en: 'Zero Fat', slug: 'body', n: '07' },
     { en: 'Petite', slug: 'petit', n: '04' },
+    { en: 'Skin Boosters', slug: 'booster', n: '08' },
     { en: 'Skin Care', slug: 'care', n: '05' },
     { en: 'Hair Removal', slug: 'hair', n: '06' },
-    { en: 'Skin Boosters', slug: 'booster', n: '08' },
 ];
 
 const SPACE_PHOTOS: GalleryPhoto[] = [
@@ -208,7 +208,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                         <div className="relative flex h-full flex-col justify-center px-6 py-20 lg:px-0 lg:py-0">
                             <div className="mx-auto w-full lg:max-w-[843px]">
                                 <Reveal className="flex flex-col gap-3 lg:flex-row lg:items-start lg:gap-10">
-                                    <h2 className="shrink-0 font-display text-h3">HARU YOUNG Space</h2>
+                                    <h2 className="shrink-0 font-display text-h3">HARUYOUNG Space</h2>
                                     <div className="flex gap-2 mt-1.5">
                                         <span>:</span>
                                         <p className="whitespace-normal text-caption leading-[1.9] font-medium lg:whitespace-pre-line">

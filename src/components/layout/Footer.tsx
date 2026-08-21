@@ -47,7 +47,7 @@ export default function Footer() {
                                 <h4 className="shrink-0 text-caption w-[55px]  tracking-wide">{tf('labelLocation')}</h4>
                                 <p className="text-caption tracking-wide">{tf('address')}</p>
                             </li>
-                            <li className="flex items-center gap-5 border-b border-cream/40 pb-3.5 pl-3">
+                            <li className="flex items-center gap-7 border-b border-cream/40 pb-3.5 pl-3">
                                 <h4 className="shrink-0 text-caption w-[55px]  tracking-wide">{tf('labelHours')}</h4>
                                 <div className="flex min-w-0 flex-col gap-3 xl:flex-row xl:items-center xl:gap-7">
                                     <div className="flex flex-col">
@@ -104,7 +104,10 @@ export default function Footer() {
 
                             <li className="flex items-center gap-7 border-b border-cream/40 pb-3.5 pl-3">
                                 <h4 className="shrink-0 text-caption w-[55px]  tracking-wide">{tf('labelParking')}</h4>
-                                <p className="text-caption tracking-wide">{tf('parking')}</p>
+                                <div className="min-w-0">
+                                    <p className="text-caption tracking-wide">{tf('parking')}</p>
+                                    <p className="text-caption-sm tracking-wide text-cream/80">{tf('parkingNote')}</p>
+                                </div>
                             </li>
                         </ul>
                     </div>
@@ -154,7 +157,7 @@ export default function Footer() {
                             </address>
 
                             <p className="mt-3.75 text-[10px]">
-                                COPYRIGHT © {new Date().getFullYear()} HARU YOUNG CLINIC ALL RIGHT RESERVED. Made By
+                                COPYRIGHT © {new Date().getFullYear()} HARUYOUNG CLINIC ALL RIGHT RESERVED. Made By
                                 BIOADDLAB
                             </p>
                         </div>
