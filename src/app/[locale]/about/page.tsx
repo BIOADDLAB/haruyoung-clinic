@@ -232,7 +232,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                                     {/* 이름 + 서명 */}
                                     <Reveal
                                         delay={0.1}
-                                        className="mt-9 flex items-end justify-center gap-2 lg:mt-[60px] lg:justify-start"
+                                        className="mt-9 flex flex-col items-center gap-2.5 lg:mt-[60px] lg:flex-row lg:items-end lg:gap-2"
                                     >
                                         <p className="text-center lg:text-left">
                                             <span className="block font-display text-caption-sm tracking-[0.18em] text-dark/70">
@@ -247,8 +247,16 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                                                 <span className="text-16 font-normal">{t('ceoTitle')}</span>
                                             </span>
                                         </p>
-                                        <span className="pb-1">
-                                            <Image src="/images/i-sig-02.png" alt="" width={126} height={25} unoptimized />
+                                        {/* 이름이 길어 PC 컬럼(263px)에서는 옆에 126px 까지만 들어간다. 모바일은 아래로 내려 크게 */}
+                                        <span className="lg:shrink-0 lg:pb-1">
+                                            <Image
+                                                src="/images/i-sig-02.png"
+                                                alt=""
+                                                width={180}
+                                                height={36}
+                                                unoptimized
+                                                className="h-auto w-[140px] lg:w-[126px]"
+                                            />
                                         </span>
                                     </Reveal>
 
