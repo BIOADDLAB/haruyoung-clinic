@@ -1,15 +1,36 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
-import { Link, usePathname } from '@/i18n/navigation';
+import { Suspense, useEffect, useState } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
+import { useSearchParams } from 'next/navigation';
+import NextLink from 'next/link';
+import { useRouter } from 'next/navigation';
+import { usePathname } from '@/i18n/navigation';
+import { routing, type Locale } from '@/i18n/routing';
 import { PROMOTION_SUB_NAV, TREATMENT_SUB_NAV } from '@/data/site';
+import { getPromotionCategories } from '@/lib/promotionCategories';
+import { localizedCategory, type PromotionCategory } from '@/types/promotion';
 
-export default function SubNav() {
-    const pathname = usePathname();
-    /** 헤더와 같은 영문 대문자 표기를 쓴다 */
+type NavHref = string | { pathname: '/promotion'; query?: { c: string } };
+
+type NavItem = { key: string; href: NavHref; label: string };
+
+function hrefKey(href: NavHref) {
+    if (typeof href === 'string') return href;
+    return href.query?.c ? `/promotion?c=${href.query.c}` : '/promotion';
+}
+
+/** 한국어는 prefix 가 없고, 영·중은 /en /zh 가 붙는다 */
+function localizedHref(href: NavHref, locale: string) {
+    const path = hrefKey(href);
+    return locale === routing.defaultLocale ? path : `/${locale}${path}`;
+}
+
+function NavLists({ items, currentHref }: { items: NavItem[]; currentHref: string }) {
     const t = useTranslations('nav');
-    /** 프로모션 페이지에서는 프로모션만, 시술 페이지에서는 시술만 보여준다 */
-    const items = pathname === '/promotion' ? PROMOTION_SUB_NAV : TREATMENT_SUB_NAV;
+    const locale = useLocale() as Locale;
+    const router = useRouter();
+    const go = (href: NavHref) => router.push(localizedHref(href, locale));
 
     return (
         <>
@@ -19,23 +40,27 @@ export default function SubNav() {
             >
                 <ul className="flex flex-col gap-[13px] pl-14 pt-[91px]">
                     {items.map((item) => {
-                        const current = pathname === item.href;
+                        const current = currentHref === hrefKey(item.href);
                         return (
-                            <li key={item.href}>
-                                <Link
-                                    href={item.href}
+                            <li key={hrefKey(item.href)}>
+                                <NextLink
+                                    href={localizedHref(item.href, locale)}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        go(item.href);
+                                    }}
                                     aria-current={current ? 'page' : undefined}
                                     className={`group relative inline-block pb-1.5 text-small transition-colors duration-500 ease-brand hover:text-dark ${
                                         current ? 'font-semibold text-dark' : 'text-dark/70'
                                     }`}
                                 >
-                                    {t(item.key)}
+                                    {item.label}
                                     <span
                                         className={`absolute inset-x-0 bottom-0 h-px origin-left bg-dark transition-transform duration-500 ease-brand group-hover:scale-x-100 ${
                                             current ? 'scale-x-100' : 'scale-x-0'
                                         }`}
                                     />
-                                </Link>
+                                </NextLink>
                             </li>
                         );
                     })}
@@ -48,18 +73,22 @@ export default function SubNav() {
             >
                 <ul className="flex h-full items-center gap-5 overflow-x-auto px-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                     {items.map((item) => {
-                        const current = pathname === item.href;
+                        const current = currentHref === hrefKey(item.href);
                         return (
-                            <li key={item.href} className="shrink-0">
-                                <Link
-                                    href={item.href}
+                            <li key={hrefKey(item.href)} className="shrink-0">
+                                <NextLink
+                                    href={localizedHref(item.href, locale)}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        go(item.href);
+                                    }}
                                     aria-current={current ? 'page' : undefined}
                                     className={`whitespace-nowrap text-caption ${
                                         current ? 'border-b border-dark pb-1 font-semibold text-dark' : 'text-dark/60'
                                     }`}
                                 >
-                                    {t(item.key)}
-                                </Link>
+                                    {item.label}
+                                </NextLink>
                             </li>
                         );
                     })}
@@ -67,4 +96,72 @@ export default function SubNav() {
             </nav>
         </>
     );
+}
+
+function TreatmentNav() {
+    const t = useTranslations('nav');
+    const pathname = usePathname();
+    const items = TREATMENT_SUB_NAV.map((item) => ({
+        key: item.key,
+        href: item.href,
+        label: t(item.key),
+    }));
+
+    return <NavLists items={items} currentHref={pathname} />;
+}
+
+function PromotionNav() {
+    const t = useTranslations('nav');
+    const locale = useLocale();
+    const searchParams = useSearchParams();
+    const selected = searchParams.get('c');
+    const [categories, setCategories] = useState<PromotionCategory[]>([]);
+
+    useEffect(() => {
+        let alive = true;
+        getPromotionCategories().then((cats) => {
+            if (alive) setCategories(cats);
+        });
+        return () => {
+            alive = false;
+        };
+    }, []);
+
+    const items: NavItem[] = [
+        { key: 'subPromotion', href: '/promotion', label: t('subPromotion') },
+        ...categories.map((c) => ({
+            key: c.id,
+            href: { pathname: '/promotion' as const, query: { c: c.id } },
+            label: localizedCategory(c, locale),
+        })),
+    ];
+    const currentHref = selected ? `/promotion?c=${selected}` : '/promotion';
+
+    return <NavLists items={items} currentHref={currentHref} />;
+}
+
+export default function SubNav() {
+    const pathname = usePathname();
+    const t = useTranslations('nav');
+
+    if (pathname === '/promotion') {
+        return (
+            <Suspense
+                fallback={
+                    <NavLists
+                        items={PROMOTION_SUB_NAV.map((item) => ({
+                            key: item.key,
+                            href: item.href,
+                            label: t(item.key),
+                        }))}
+                        currentHref="/promotion"
+                    />
+                }
+            >
+                <PromotionNav />
+            </Suspense>
+        );
+    }
+
+    return <TreatmentNav />;
 }

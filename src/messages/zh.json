@@ -100,7 +100,9 @@
         "today": "今日截止",
         "closed": "已结束",
         "ongoing": "长期进行",
-        "from": "起"
+        "from": "起",
+        "all": "全部",
+        "uncategorized": "未分类"
     },
     "cart": {
         "title": "购物车",

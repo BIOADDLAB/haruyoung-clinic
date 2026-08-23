@@ -1,32 +1,47 @@
 'use client';
 
+import { Suspense, useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
 import Banner from '@/components/ui/Banner';
 import { useCart } from '@/components/cart/CartProvider';
 import { PROMOTION_BANNER } from '@/data/site';
 import { RevealGroup, RevealItem } from '@/components/ui/RevealGroup';
 import { fadeUp } from '@/lib/motion';
+import { getPromotionCategories } from '@/lib/promotionCategories';
 import { getPromotions } from '@/lib/promotions';
 import { getPromotionBannerSetting } from '@/lib/settings';
 import { localizedSetting, type PromotionBannerSetting } from '@/types/settings';
 import {
     daysLeft,
     discountRate,
+    localizedCategory,
     localizedOriginPrice,
     localizedPromo,
     localizedPromoPrice,
     type Promotion,
+    type PromotionCategory,
 } from '@/types/promotion';
 
 export default function PromotionList() {
+    return (
+        <Suspense fallback={null}>
+            <PromotionListInner />
+        </Suspense>
+    );
+}
+
+function PromotionListInner() {
     const t = useTranslations('promotion');
+    const tn = useTranslations('nav');
     const tt = useTranslations('treatments');
     const ta = useTranslations('a11y');
     const [list, setList] = useState<Promotion[] | null>(null);
+    const [categories, setCategories] = useState<PromotionCategory[]>([]);
     const [banner, setBanner] = useState<PromotionBannerSetting | null>(null);
-    const month = new Date().getMonth() + 1;
     const locale = useLocale() as 'ko' | 'en' | 'zh';
+    const searchParams = useSearchParams();
+    const menu = searchParams.get('c') ?? '';
 
     // 배너 문구는 관리자 > 프로모션 배너 설정 값이 있으면 그걸 쓰고, 없으면 site.ts 기본값이다
     useEffect(() => {
@@ -41,23 +56,33 @@ export default function PromotionList() {
 
     useEffect(() => {
         let alive = true;
-        getPromotions().then((all) => {
+        Promise.all([getPromotions(), getPromotionCategories()]).then(([all, cats]) => {
             // 마감일이 지난 항목은 감춘다. 관리자가 지우지 않아도 알아서 내려간다
-            if (alive)
-                setList(
-                    all.filter(
-                        (p) =>
-                            (p.isOngoing || daysLeft(p.until) >= 0) &&
-                            (!p.locales?.length || p.locales.includes(locale)),
-                    ),
-                );
+            if (!alive) return;
+            setList(
+                all.filter(
+                    (p) =>
+                        (p.isOngoing || daysLeft(p.until) >= 0) &&
+                        (!p.locales?.length || p.locales.includes(locale)),
+                ),
+            );
+            setCategories(cats);
         });
         return () => {
             alive = false;
         };
     }, [locale]);
 
-    const from = list && list.length > 0 ? Math.min(...list.map((p) => localizedPromoPrice(p, locale))) : 0;
+    const selected = categories.find((c) => c.id === menu);
+    const visible = useMemo(() => {
+        if (!list) return [];
+        if (!menu) return list;
+        return list.filter((p) => p.categoryId === menu);
+    }, [list, menu]);
+
+    const from = visible.length > 0 ? Math.min(...visible.map((p) => localizedPromoPrice(p, locale))) : 0;
+    const categoryById = useMemo(() => new Map(categories.map((c) => [c.id, c])), [categories]);
+    const heading = selected ? localizedCategory(selected, locale) : tn('subPromotion');
 
     return (
         <div className="pb-28 lg:pb-24">
@@ -72,7 +97,7 @@ export default function PromotionList() {
 
             <div className="px-6 lg:pl-12 lg:pr-0">
                 <div className="w-full max-w-[800px]">
-                    <h2 className="pt-12 text-20 font-bold lg:pt-16 lg:text-22">{month}월 promotion</h2>
+                    <h2 className="pt-12 text-20 font-bold lg:pt-16 lg:text-22">{heading}</h2>
 
                     {/* 최저가는 저장하지 않고 목록에서 계산한다 */}
                     <p className="pt-10 text-right lg:pt-20">
@@ -85,20 +110,27 @@ export default function PromotionList() {
 
             {list === null ? (
                 <p className="px-6 pt-16 text-caption text-dark/50 lg:pl-12">{tt('loading')}</p>
-            ) : list.length === 0 ? (
+            ) : visible.length === 0 ? (
                 <p className="px-6 pt-16 text-caption text-dark/50 lg:pl-12">{t('empty')}</p>
             ) : (
                 <RevealGroup as="ul" className="flex flex-col gap-4 px-6 pt-9 lg:pl-12 lg:pr-0">
-                    {list.map((p) => (
-                        <PromotionCard key={p.id} p={p} />
-                    ))}
+                    {visible.map((p) => {
+                        const category = p.categoryId ? categoryById.get(p.categoryId) : undefined;
+                        return (
+                            <PromotionCard
+                                key={p.id}
+                                p={p}
+                                categoryName={category ? localizedCategory(category, locale) : t('uncategorized')}
+                            />
+                        );
+                    })}
                 </RevealGroup>
             )}
         </div>
     );
 }
 
-function PromotionCard({ p }: { p: Promotion }) {
+function PromotionCard({ p, categoryName }: { p: Promotion; categoryName: string }) {
     const locale = useLocale() as 'ko' | 'en' | 'zh';
     const { has, toggle } = useCart();
     const t = useTranslations('promotion');
@@ -143,7 +175,7 @@ function PromotionCard({ p }: { p: Promotion }) {
                             key,
                             name: localizedPromo(p, 'name', locale),
                             price: localizedPromoPrice(p, locale),
-                            category: '프로모션',
+                            category: categoryName,
                             originPrice: localizedOriginPrice(p, locale),
                             description: localizedPromo(p, 'description', locale),
                         })

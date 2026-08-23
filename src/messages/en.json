@@ -100,7 +100,9 @@
         "today": "Ends today",
         "closed": "Ended",
         "ongoing": "Always available",
-        "from": "and up"
+        "from": "and up",
+        "all": "All",
+        "uncategorized": "Uncategorized"
     },
     "cart": {
         "title": "Cart",

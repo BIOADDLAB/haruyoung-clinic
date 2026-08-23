@@ -31,8 +31,21 @@ export type Promotion = {
      * 기존 데이터에 이 필드가 없어도 그대로 보이므로 재입력이 필요 없다.
      */
     locales?: ('ko' | 'en' | 'zh')[];
+    /** 관리자가 만든 프로모션 카테고리 id. 없으면 미분류 */
+    categoryId?: string;
     order: number;
 };
+
+/** 프로모션 페이지 탭. 관리자 > 프로모션 관리에서 추가한다 */
+export type PromotionCategory = {
+    id: string;
+    name: string;
+    nameEn?: string;
+    nameZh?: string;
+    order: number;
+};
+
+export type PromotionCategorySeed = Omit<PromotionCategory, 'id'>;
 
 export type PromotionSeed = Omit<Promotion, 'id'>;
 
@@ -77,4 +90,11 @@ export function localizedOriginPrice(p: Promotion, locale: string) {
     if (locale === 'en' && p.originPriceEn != null) return p.originPriceEn;
     if (locale === 'zh' && p.originPriceZh != null) return p.originPriceZh;
     return p.originPrice;
+}
+
+/** 카테고리명. 해당 언어가 비어 있으면 한국어로 떨어진다 */
+export function localizedCategory(c: PromotionCategory, locale: string) {
+    if (locale === 'en') return c.nameEn || c.name;
+    if (locale === 'zh') return c.nameZh || c.name;
+    return c.name;
 }

@@ -100,7 +100,9 @@
         "today": "오늘 마감",
         "closed": "마감됨",
         "ongoing": "상시 진행",
-        "from": "부터~"
+        "from": "부터~",
+        "all": "전체",
+        "uncategorized": "미분류"
     },
     "cart": {
         "title": "장바구니",

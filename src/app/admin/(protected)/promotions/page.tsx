@@ -4,9 +4,13 @@ import { closestCenter, DndContext, PointerSensor, useSensor, useSensors, type D
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useEffect, useRef, useState } from 'react';
+import CategoryManager from './CategoryManager';
 import PromotionForm from './PromotionForm';
+import { getPromotionCategories } from '@/lib/promotionCategories';
 import { deletePromotion, getPromotions, reorderPromotions } from '@/lib/promotions';
-import { daysLeft, discountRate, type Promotion } from '@/types/promotion';
+import { daysLeft, discountRate, type Promotion, type PromotionCategory } from '@/types/promotion';
+
+const UNCATEGORIZED = '__uncategorized';
 
 function SortableCard({
     p,
@@ -74,6 +78,8 @@ function SortableCard({
 
 export default function PromotionsPage() {
     const [all, setAll] = useState<Promotion[]>([]);
+    const [categories, setCategories] = useState<PromotionCategory[]>([]);
+    const [menu, setMenu] = useState<string>(UNCATEGORIZED);
     const [loading, setLoading] = useState(true);
     const [editing, setEditing] = useState<Promotion | null>(null);
     const [formVersion, setFormVersion] = useState(0);
@@ -83,20 +89,32 @@ export default function PromotionsPage() {
     /** 수정을 누르면 폼이 화면 밖에 있을 수 있다. 폼으로 데려간다 */
     const edit = (item: typeof editing) => {
         setEditing(item);
+        if (item) {
+            const inCategory = item.categoryId && categories.some((c) => c.id === item.categoryId);
+            setMenu(inCategory ? item.categoryId! : UNCATEGORIZED);
+        }
         formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
 
     const load = async () => {
-        setAll(await getPromotions());
+        const [promos, cats] = await Promise.all([getPromotions(), getPromotionCategories()]);
+        setAll(promos);
+        setCategories(cats);
+        setMenu((prev) => {
+            if (prev === UNCATEGORIZED) return prev;
+            return cats.some((c) => c.id === prev) ? prev : (cats[0]?.id ?? UNCATEGORIZED);
+        });
         setLoading(false);
     };
 
     // effect 안에서 동기 setState 를 부르면 lint 가 잡는다. then 안에서 바꾼다
     useEffect(() => {
         let alive = true;
-        getPromotions().then((data) => {
+        Promise.all([getPromotions(), getPromotionCategories()]).then(([promos, cats]) => {
             if (!alive) return;
-            setAll(data);
+            setAll(promos);
+            setCategories(cats);
+            setMenu(cats[0]?.id ?? UNCATEGORIZED);
             setLoading(false);
         });
         return () => {
@@ -104,13 +122,19 @@ export default function PromotionsPage() {
         };
     }, []);
 
+    const list =
+        menu === UNCATEGORIZED
+            ? all.filter((p) => !p.categoryId || !categories.some((c) => c.id === p.categoryId))
+            : all.filter((p) => p.categoryId === menu);
+
     const onDragEnd = async (e: DragEndEvent) => {
         const { active, over } = e;
         if (!over || active.id === over.id) return;
-        const oldIdx = all.findIndex((p) => p.id === active.id);
-        const newIdx = all.findIndex((p) => p.id === over.id);
-        const reordered = arrayMove(all, oldIdx, newIdx);
-        setAll(reordered);
+        const oldIdx = list.findIndex((p) => p.id === active.id);
+        const newIdx = list.findIndex((p) => p.id === over.id);
+        const reordered = arrayMove(list, oldIdx, newIdx);
+        const others = all.filter((p) => !list.some((item) => item.id === p.id));
+        setAll([...others, ...reordered]);
         await reorderPromotions(reordered);
     };
 
@@ -133,20 +157,50 @@ export default function PromotionsPage() {
         <div>
             <h1 className="text-2xl font-bold text-[#3a322c] lg:text-3xl">프로모션 관리</h1>
 
-            <div ref={formRef} className="mt-6">
+            <div className="mt-6">
+                <CategoryManager categories={categories} onChanged={load} />
+            </div>
+
+            <div ref={formRef} className="mt-8">
                 <PromotionForm
                     key={editing?.id ?? `new-${formVersion}`}
                     initial={editing ?? undefined}
+                    categories={categories}
+                    defaultCategoryId={menu === UNCATEGORIZED ? '' : menu}
                     onSaved={onSaved}
                     onCancel={() => setEditing(null)}
                 />
             </div>
 
-            <div className="mt-8">
+            <div className="-mx-5 mt-8 flex gap-2 overflow-x-auto px-5 [scrollbar-width:none] lg:mx-0 lg:flex-wrap lg:px-0 [&::-webkit-scrollbar]:hidden">
+                {categories.map((c) => (
+                    <button
+                        key={c.id}
+                        type="button"
+                        onClick={() => setMenu(c.id)}
+                        className={`shrink-0 whitespace-nowrap rounded-full px-4 py-1.5 text-sm ${
+                            menu === c.id ? 'bg-[#3a322c] text-white' : 'border border-black/10 bg-white'
+                        }`}
+                    >
+                        {c.name}
+                    </button>
+                ))}
+                <button
+                    type="button"
+                    onClick={() => setMenu(UNCATEGORIZED)}
+                    className={`shrink-0 whitespace-nowrap rounded-full px-4 py-1.5 text-sm ${
+                        menu === UNCATEGORIZED ? 'bg-[#3a322c] text-white' : 'border border-black/10 bg-white'
+                    }`}
+                >
+                    미분류
+                </button>
+            </div>
+
+            <div className="mt-6">
                 <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
-                    <SortableContext items={all.map((p) => p.id)} strategy={verticalListSortingStrategy}>
+                    <SortableContext items={list.map((p) => p.id)} strategy={verticalListSortingStrategy}>
                         <div className="flex flex-col gap-2">
-                            {all.map((p) => (
+                            {list.map((p) => (
                                 <SortableCard
                                     key={p.id}
                                     p={p}
@@ -158,7 +212,7 @@ export default function PromotionsPage() {
                         </div>
                     </SortableContext>
                 </DndContext>
-                {all.length === 0 && <p className="text-neutral-400">등록된 프로모션이 없습니다.</p>}
+                {list.length === 0 && <p className="text-neutral-400">이 카테고리에 프로모션이 없습니다.</p>}
             </div>
         </div>
     );

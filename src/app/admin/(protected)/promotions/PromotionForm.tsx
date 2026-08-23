@@ -1,19 +1,24 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { formatPriceInput, parsePriceInput } from '@/lib/price';
 import { addPromotion, updatePromotion } from '@/lib/promotions';
-import { discountRate, type Promotion } from '@/types/promotion';
+import { discountRate, type Promotion, type PromotionCategory } from '@/types/promotion';
 
 const inputBase =
     'w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-[15px] text-[#3a322c] placeholder:text-neutral-400 outline-none transition focus:border-[#3a322c]/30 focus:ring-2 focus:ring-[#3a322c]/10';
 
 export default function PromotionForm({
     initial,
+    categories,
+    defaultCategoryId,
     onSaved,
     onCancel,
 }: {
     initial?: Promotion;
+    categories: PromotionCategory[];
+    /** 목록 탭에서 고른 카테고리. 새 상품을 그 탭에 바로 넣는다 */
+    defaultCategoryId?: string;
     onSaved?: () => void;
     onCancel?: () => void;
 }) {
@@ -63,6 +68,12 @@ export default function PromotionForm({
     const [busy, setBusy] = useState(false);
     /** 노출 언어. 비어 있으면 모든 언어에 노출한다 */
     const [locales, setLocales] = useState<('ko' | 'en' | 'zh')[]>(initial?.locales ?? []);
+    const [categoryId, setCategoryId] = useState(initial?.categoryId || defaultCategoryId || '');
+
+    // 목록 탭을 바꾸면 새 상품의 카테고리를 따라간다. 수정 중에는 건드리지 않는다
+    useEffect(() => {
+        if (!initial) setCategoryId(defaultCategoryId || '');
+    }, [defaultCategoryId, initial]);
 
     const toggleLocale = (l: 'ko' | 'en' | 'zh') =>
         setLocales((prev) => (prev.includes(l) ? prev.filter((x) => x !== l) : [...prev, l]));
@@ -105,6 +116,7 @@ export default function PromotionForm({
                 until: isOngoing ? '' : until,
                 isOngoing,
                 locales,
+                categoryId,
                 order: initial?.order ?? Date.now(),
             };
             if (initial) await updatePromotion(initial.id, data);
@@ -157,6 +169,25 @@ export default function PromotionForm({
                             <span className="ml-2 text-xs text-neutral-400">비우면 한국어로 표시됩니다</span>
                         )}
                     </div>
+
+                    <label className="flex flex-col gap-1.5">
+                        <span className="text-[13px] font-medium text-neutral-600">카테고리</span>
+                        <select
+                            value={categoryId}
+                            onChange={(e) => setCategoryId(e.target.value)}
+                            className={inputBase}
+                        >
+                            <option value="">미분류</option>
+                            {categories.map((c) => (
+                                <option key={c.id} value={c.id}>
+                                    {c.name}
+                                </option>
+                            ))}
+                        </select>
+                        {categories.length === 0 && (
+                            <span className="text-xs text-neutral-400">위에서 카테고리를 먼저 추가하면 선택할 수 있습니다.</span>
+                        )}
+                    </label>
 
                     <label className="flex flex-col gap-1.5">
                         <span className="text-[13px] font-medium text-neutral-600">

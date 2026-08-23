@@ -30,6 +30,12 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // 프로모션 카테고리
+    match /promotionCategories/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     // 예약은 쓰기만 열고 읽기는 관리자만
     match /reservations/{id} {
       allow create: if request.resource.data.status == 'pending'
