@@ -43,6 +43,11 @@ export default function TreatmentList({ slug, categoryName }: { slug: string; ca
 
     const bannerEn = TREATMENT_BANNER[slug]?.en ?? categoryName;
     const bannerKo = tb(slug);
+    const jumps = groups.filter((g) => g.sub);
+
+    const goTo = (id: string) => {
+        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
 
     return (
         <div className="pb-28 lg:pb-24">
@@ -59,8 +64,38 @@ export default function TreatmentList({ slug, categoryName }: { slug: string; ca
                 <p className="px-6 pt-16 text-caption text-dark/50 lg:pl-12">{t('empty')}</p>
             ) : (
                 <div className="px-6 lg:pl-12 lg:pr-0">
-                    {groups.map((g) => (
-                        <section key={g.sub || 'none'} className="pt-14">
+                    {jumps.length > 1 && (
+                        <nav
+                            aria-label={t('sections')}
+                            className="-mx-6 mt-8 flex gap-x-0 overflow-x-auto px-6 [scrollbar-width:none] lg:mx-0 lg:mt-10 lg:flex-wrap lg:px-0 [&::-webkit-scrollbar]:hidden"
+                        >
+                            {jumps.map((g, i) => (
+                                <span key={g.sub} className="flex shrink-0 items-center">
+                                    {i > 0 && (
+                                        <span aria-hidden="true" className="px-2.5 text-caption text-dark/25">
+                                            |
+                                        </span>
+                                    )}
+                                    <button
+                                        type="button"
+                                        onClick={() => goTo(`section-${i}`)}
+                                        className="whitespace-nowrap text-caption text-dark/70 transition-colors duration-500 ease-brand hover:text-dark"
+                                    >
+                                        {g.sub}
+                                    </button>
+                                </span>
+                            ))}
+                        </nav>
+                    )}
+
+                    {groups.map((g) => {
+                        const jumpIndex = jumps.findIndex((j) => j.sub === g.sub);
+                        return (
+                        <section
+                            key={g.sub || 'none'}
+                            id={jumpIndex >= 0 ? `section-${jumpIndex}` : undefined}
+                            className="scroll-mt-32 pt-14 lg:scroll-mt-10"
+                        >
                             {g.sub && (
                                 <h2 className="w-full max-w-[800px] border-b border-dark/15 pb-3 text-20 font-bold lg:text-22">
                                     {g.sub}
@@ -110,7 +145,8 @@ export default function TreatmentList({ slug, categoryName }: { slug: string; ca
                                 ))}
                             </RevealGroup>
                         </section>
-                    ))}
+                        );
+                    })}
                 </div>
             )}
         </div>

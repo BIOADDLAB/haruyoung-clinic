@@ -91,7 +91,8 @@
         "loading": "불러오는 중…",
         "empty": "준비 중인 시술입니다.",
         "askPrice": "가격 문의",
-        "vat": "VAT 별도"
+        "vat": "VAT 별도",
+        "sections": "시술 분류"
     },
     "promotion": {
         "empty": "진행 중인 프로모션이 없습니다.",
