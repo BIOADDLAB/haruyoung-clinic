@@ -152,14 +152,9 @@ function PromotionCard({ p, categoryName }: { p: Promotion; categoryName: string
         >
             <h3 className="text-18 font-bold lg:text-20">{localizedPromo(p, 'name', locale)}</h3>
 
-            <div className="mt-4 flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
-                <p className="text-small font-medium text-brown">{localizedPromo(p, 'highlight', locale)}</p>
-                <p className="text-caption text-dark/60 sm:shrink-0">
-                    {left === null
-                        ? t('ongoing')
-                        : `~${p.until} (${left === 0 ? t('today') : t('daysLeft', { days: left })})`}
-                </p>
-            </div>
+            {p.highlight && (
+                <p className="mt-4 text-small font-medium text-brown">{localizedPromo(p, 'highlight', locale)}</p>
+            )}
 
             {p.description && (
                 <p className="mt-6 whitespace-pre-line text-caption leading-[1.7] text-dark/85">
@@ -167,7 +162,12 @@ function PromotionCard({ p, categoryName }: { p: Promotion; categoryName: string
                 </p>
             )}
 
-            <div className="mt-4 flex justify-end lg:mt-3">
+            <div className="mt-4 flex flex-col items-end lg:mt-3">
+                <p className="mb-1.5 text-caption text-dark/60">
+                    {left === null
+                        ? t('ongoing')
+                        : `~${p.until} (${left === 0 ? t('today') : t('daysLeft', { days: left })})`}
+                </p>
                 <button
                     type="button"
                     onClick={() =>
