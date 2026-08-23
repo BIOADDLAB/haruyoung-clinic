@@ -8,7 +8,7 @@ import { RevealGroup, RevealItem } from '@/components/ui/RevealGroup';
 import TreatmentPrice from '@/components/treatments/TreatmentPrice';
 import { fadeUp } from '@/lib/motion';
 import { getProducts } from '@/lib/products';
-import { hasPriceTiers, localized, type Locale, type Product } from '@/types/product';
+import { localized, type Locale, type Product } from '@/types/product';
 
 export default function TreatmentList({ slug, categoryName }: { slug: string; categoryName: string }) {
     const t = useTranslations('treatments');
@@ -110,38 +110,24 @@ export default function TreatmentList({ slug, categoryName }: { slug: string; ca
                                         variants={fadeUp}
                                         className="w-full max-w-[800px] rounded-lg border border-beige p-5 lg:p-6"
                                     >
-                                        <div
-                                            className={
-                                                hasPriceTiers(p)
-                                                    ? 'flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between'
-                                                    : ''
-                                            }
-                                        >
-                                            <div className="min-w-0">
-                                                <h4 className="whitespace-pre-line text-18 font-bold lg:text-20">
-                                                    {localized(p, 'name', locale)}
-                                                </h4>
+                                        <h4 className="whitespace-pre-line text-18 font-bold lg:text-20">
+                                            {localized(p, 'name', locale)}
+                                        </h4>
 
-                                                {p.highlight && (
-                                                    <p className="mt-2 text-small font-medium text-brown">
-                                                        {localized(p, 'highlight', locale)}
-                                                    </p>
-                                                )}
+                                        {p.highlight && (
+                                            <p className="mt-2 text-small font-medium text-brown">
+                                                {localized(p, 'highlight', locale)}
+                                            </p>
+                                        )}
 
-                                                {p.description && (
-                                                    <p className="mt-6 whitespace-pre-line text-caption leading-[1.7] text-dark/85">
-                                                        {localized(p, 'description', locale)}
-                                                    </p>
-                                                )}
-                                            </div>
+                                        {p.description && (
+                                            <p className="mt-6 whitespace-pre-line text-caption leading-[1.7] text-dark/85">
+                                                {localized(p, 'description', locale)}
+                                            </p>
+                                        )}
 
-                                            <div
-                                                className={
-                                                    hasPriceTiers(p) ? 'shrink-0 sm:pt-0.5' : 'mt-3 flex justify-end'
-                                                }
-                                            >
-                                                <TreatmentPrice product={p} locale={locale} />
-                                            </div>
+                                        <div className="mt-3 flex justify-end">
+                                            <TreatmentPrice product={p} locale={locale} />
                                         </div>
                                     </RevealItem>
                                 ))}

@@ -12,7 +12,7 @@ export default function CartToggle({
 }: {
     item: CartItem;
     origin?: number;
-    /** 회차처럼 가격 위에 올릴 짧은 라벨 */
+    /** 회차처럼 가격 앞에 붙일 짧은 라벨. 예: 1회 50,000원 */
     caption?: string;
 }) {
     const t = useTranslations('cart');
@@ -26,34 +26,34 @@ export default function CartToggle({
             onClick={() => toggle(item)}
             aria-pressed={on}
             aria-label={`${item.name} ${on ? t('remove') : t('add')}`}
-            className="flex flex-col items-end gap-1.5 transition-opacity duration-500 ease-brand hover:opacity-70"
+            className="flex flex-wrap items-center justify-end gap-x-2 gap-y-1 transition-opacity duration-500 ease-brand hover:opacity-70"
         >
-            {caption && <span className="text-caption text-dark/70">{caption}</span>}
-            <span className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1">
-                <span
-                    aria-hidden="true"
-                    className={`flex h-3.5 w-3.5 shrink-0 items-center justify-center border transition-colors duration-500 ease-brand ${
-                        on ? 'border-dark bg-dark' : 'border-dark/40'
-                    }`}
-                >
-                    {on && (
-                        <svg
-                            viewBox="0 0 12 12"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            className="h-2 w-2 text-cream"
-                        >
-                            <path d="M1 6l3.5 3.5L11 2" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                    )}
-                </span>
-
-                {rate > 0 && <span className="text-caption font-bold text-brown">{rate}%</span>}
-                {origin && origin > item.price && (
-                    <span className="text-caption text-dark/40 line-through">{origin.toLocaleString()}원</span>
+            <span
+                aria-hidden="true"
+                className={`flex h-3.5 w-3.5 shrink-0 items-center justify-center border transition-colors duration-500 ease-brand ${
+                    on ? 'border-dark bg-dark' : 'border-dark/40'
+                }`}
+            >
+                {on && (
+                    <svg
+                        viewBox="0 0 12 12"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        className="h-2 w-2 text-cream"
+                    >
+                        <path d="M1 6l3.5 3.5L11 2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
                 )}
-                <span className="text-lead font-bold">{item.price.toLocaleString()}원</span>
+            </span>
+
+            {rate > 0 && <span className="text-caption font-bold text-brown">{rate}%</span>}
+            {origin && origin > item.price && (
+                <span className="text-caption text-dark/40 line-through">{origin.toLocaleString()}원</span>
+            )}
+            <span className="text-lead font-bold">
+                {caption ? `${caption} ` : ''}
+                {item.price.toLocaleString()}원
             </span>
         </button>
     );

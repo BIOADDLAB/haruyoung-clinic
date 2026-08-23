@@ -20,16 +20,15 @@ export default function TreatmentPrice({ product, locale }: { product: Product; 
 
     if (tiers.length > 0) {
         return (
-            <div className="flex flex-wrap items-end justify-end gap-x-7 gap-y-3">
+            <div className="flex flex-wrap items-center justify-end gap-x-6 gap-y-2">
                 {tiers.map((tier) => {
                     const price = localizedTierPrice(tier, locale);
                     const caption = t('sessions', { n: tier.sessions });
                     if (price == null) {
                         return (
-                            <div key={tier.sessions} className="flex flex-col items-end gap-1.5">
-                                <span className="text-caption text-dark/70">{caption}</span>
-                                <span className="text-caption text-dark/50">{t('askPrice')}</span>
-                            </div>
+                            <span key={tier.sessions} className="text-caption text-dark/50">
+                                {caption} {t('askPrice')}
+                            </span>
                         );
                     }
                     return (

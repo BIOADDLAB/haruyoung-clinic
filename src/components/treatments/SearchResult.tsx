@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { MENU_CATEGORIES } from '@/constants/categories';
 import TreatmentPrice from '@/components/treatments/TreatmentPrice';
 import { getProducts } from '@/lib/products';
-import { hasPriceTiers, localized, type Locale, type Product } from '@/types/product';
+import { localized, type Locale, type Product } from '@/types/product';
 import { Link } from '@/i18n/navigation';
 
 type SearchHit = {
@@ -106,32 +106,18 @@ export default function SearchResult({ keyword }: { keyword: string }) {
                                 {menuCategory}
                                 {subCategory && ` · ${subCategory}`}
                             </Link>
-                            <div
-                                className={
-                                    hasPriceTiers(product)
-                                        ? 'mt-2 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between'
-                                        : 'mt-2'
-                                }
-                            >
-                                <div className="min-w-0">
-                                    <h2 className="whitespace-pre-line text-18 font-bold lg:text-20">{name}</h2>
+                            <h2 className="mt-2 whitespace-pre-line text-18 font-bold lg:text-20">{name}</h2>
 
-                                    {highlight && <p className="mt-2 text-small font-medium text-brown">{highlight}</p>}
+                            {highlight && <p className="mt-2 text-small font-medium text-brown">{highlight}</p>}
 
-                                    {description && (
-                                        <p className="mt-6 whitespace-pre-line text-caption leading-[1.7] text-dark/85">
-                                            {description}
-                                        </p>
-                                    )}
-                                </div>
+                            {description && (
+                                <p className="mt-6 whitespace-pre-line text-caption leading-[1.7] text-dark/85">
+                                    {description}
+                                </p>
+                            )}
 
-                                <div
-                                    className={
-                                        hasPriceTiers(product) ? 'shrink-0 sm:pt-0.5' : 'mt-3 flex justify-end'
-                                    }
-                                >
-                                    <TreatmentPrice product={product} locale={locale} />
-                                </div>
+                            <div className="mt-3 flex justify-end">
+                                <TreatmentPrice product={product} locale={locale} />
                             </div>
                         </li>
                     ))}
