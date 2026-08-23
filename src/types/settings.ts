@@ -1,3 +1,5 @@
+import { RESERVATION_HOURS, RESERVATION_LUNCH, RESERVATION_MAX_DAYS } from '@/data/site';
+
 export type SettingLocale = 'ko' | 'en' | 'zh';
 
 /** 프로모션 배너 문구. 관리자 > 프로모션 배너 설정에서 언어별로 바꾼다 */
@@ -29,8 +31,43 @@ export type PopupSetting = {
 
 export const POPUP_MAX_TABS = 5;
 
-/** 팝업 이미지 권장 규격(정사각). 관리자 안내 문구와 화면 렌더에 같이 쓴다 */
-export const POPUP_IMAGE_SIZE = 520;
+/** 팝업 이미지 권장 규격. 인스타 피드 세로 게시물(4:5)과 같다 */
+export const POPUP_IMAGE_WIDTH = 1080;
+export const POPUP_IMAGE_HEIGHT = 1350;
+
+/** 요일 하나. 관리자 > 예약 시간 설정에서 바꾼다 */
+export type ReservationDayHours = {
+    open: boolean;
+    start: string;
+    end: string;
+    lunch: boolean;
+};
+
+/** 예약 가능 시간. settings/reservationHours 문서다 */
+export type ReservationHoursSetting = {
+    /** 키는 '0'(일) … '6'(토) */
+    days: Record<string, ReservationDayHours>;
+    lunchStart: string;
+    lunchEnd: string;
+    maxDays: number;
+};
+
+/** Firestore 에 값이 없을 때 쓰는 기본값. site.ts 진료시간과 같다 */
+export function defaultReservationHours(): ReservationHoursSetting {
+    const days: ReservationHoursSetting['days'] = {};
+    for (let i = 0; i <= 6; i++) {
+        const rule = RESERVATION_HOURS[i];
+        days[String(i)] = rule
+            ? { open: true, start: rule.start, end: rule.end, lunch: rule.lunch }
+            : { open: false, start: '10:00', end: '19:00', lunch: true };
+    }
+    return {
+        days,
+        lunchStart: RESERVATION_LUNCH.start,
+        lunchEnd: RESERVATION_LUNCH.end,
+        maxDays: RESERVATION_MAX_DAYS,
+    };
+}
 
 /** 해당 언어가 비어 있으면 한국어로 떨어진다. 시술·프로모션 데이터와 같은 규칙이다 */
 export function localizedSetting<T extends Record<string, unknown>>(

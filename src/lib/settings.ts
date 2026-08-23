@@ -1,11 +1,12 @@
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { db, storage } from './firebase';
-import type { PopupSetting, PromotionBannerSetting } from '@/types/settings';
+import { defaultReservationHours, type PopupSetting, type PromotionBannerSetting, type ReservationHoursSetting } from '@/types/settings';
 
 /** 사이트 전역 설정은 settings 컬렉션에 문서 하나씩 둔다 */
 const PROMOTION_BANNER_DOC = doc(db, 'settings', 'promotionBanner');
 const POPUP_DOC = doc(db, 'settings', 'popup');
+const RESERVATION_HOURS_DOC = doc(db, 'settings', 'reservationHours');
 
 /**
  * 문서가 없거나 Firestore 규칙이 막혀 있어도 null 을 돌려준다.
@@ -35,6 +36,14 @@ export function getPopupSetting() {
 
 export async function savePopupSetting(data: PopupSetting) {
     await setDoc(POPUP_DOC, data);
+}
+
+export async function getReservationHoursSetting() {
+    return (await readDoc<ReservationHoursSetting>(RESERVATION_HOURS_DOC)) ?? defaultReservationHours();
+}
+
+export async function saveReservationHoursSetting(data: ReservationHoursSetting) {
+    await setDoc(RESERVATION_HOURS_DOC, data);
 }
 
 /** 팝업 이미지 업로드. 같은 파일명이 겹치지 않도록 시각을 붙인다 */

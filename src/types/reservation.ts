@@ -8,6 +8,8 @@ export type CartItem = {
     originPrice?: number;
     /** 카드에서 보던 설명. 장바구니에서도 무엇을 담았는지 알 수 있어야 한다 */
     description?: string;
+    /** 회차별 가격을 고른 시술만 채운다. 예: 5 */
+    sessions?: number;
 };
 
 /** 대기 → 확정 → 완료. 취소는 어느 단계에서든 가능 */

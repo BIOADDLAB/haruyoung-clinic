@@ -2,10 +2,10 @@
 
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
-import CartToggle from '@/components/cart/CartToggle';
 import { MENU_CATEGORIES } from '@/constants/categories';
+import TreatmentPrice from '@/components/treatments/TreatmentPrice';
 import { getProducts } from '@/lib/products';
-import { localized, localizedPrice, type Locale, type Product } from '@/types/product';
+import { hasPriceTiers, localized, type Locale, type Product } from '@/types/product';
 import { Link } from '@/i18n/navigation';
 
 type SearchHit = {
@@ -15,7 +15,6 @@ type SearchHit = {
     description: string;
     menuCategory: string;
     subCategory: string;
-    price: number | null;
 };
 
 type MenuCategorySlug = (typeof MENU_CATEGORIES)[number]['slug'];
@@ -27,7 +26,6 @@ const normalizeSearchText = (value: string) => value.normalize('NFKC').toLocaleL
 /** 헤더 바로검색이 /treatments?q= 로 보낸 결과를 보여준다 */
 export default function SearchResult({ keyword }: { keyword: string }) {
     const t = useTranslations('search');
-    const tt = useTranslations('treatments');
     const tb = useTranslations('banner');
     const locale = useLocale() as Locale;
     const [all, setAll] = useState<Product[] | null>(null);
@@ -69,7 +67,6 @@ export default function SearchResult({ keyword }: { keyword: string }) {
                     description,
                     menuCategory,
                     subCategory: product.subCategory,
-                    price: localizedPrice(product, locale),
                 },
             ];
         });
@@ -100,7 +97,7 @@ export default function SearchResult({ keyword }: { keyword: string }) {
                 <p className="pt-16 text-caption text-dark/50">{t('empty')}</p>
             ) : (
                 <ul className="flex flex-col gap-4 pt-9">
-                    {hits.map(({ product, name, highlight, description, menuCategory, subCategory, price }) => (
+                    {hits.map(({ product, name, highlight, description, menuCategory, subCategory }) => (
                         <li key={product.id} className="w-full max-w-[800px] rounded-lg border border-beige p-5 lg:p-6">
                             <Link
                                 href={`/treatments/${product.menuSlug}`}
@@ -109,30 +106,32 @@ export default function SearchResult({ keyword }: { keyword: string }) {
                                 {menuCategory}
                                 {subCategory && ` · ${subCategory}`}
                             </Link>
-                            <h2 className="mt-2 whitespace-pre-line text-18 font-bold lg:text-20">{name}</h2>
+                            <div
+                                className={
+                                    hasPriceTiers(product)
+                                        ? 'mt-2 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between'
+                                        : 'mt-2'
+                                }
+                            >
+                                <div className="min-w-0">
+                                    <h2 className="whitespace-pre-line text-18 font-bold lg:text-20">{name}</h2>
 
-                            {highlight && <p className="mt-2 text-small font-medium text-brown">{highlight}</p>}
+                                    {highlight && <p className="mt-2 text-small font-medium text-brown">{highlight}</p>}
 
-                            {description && (
-                                <p className="mt-6 whitespace-pre-line text-caption leading-[1.7] text-dark/85">
-                                    {description}
-                                </p>
-                            )}
+                                    {description && (
+                                        <p className="mt-6 whitespace-pre-line text-caption leading-[1.7] text-dark/85">
+                                            {description}
+                                        </p>
+                                    )}
+                                </div>
 
-                            <div className="mt-3 flex justify-end">
-                                {price === null ? (
-                                    <span className="text-caption text-dark/50">{tt('askPrice')}</span>
-                                ) : (
-                                    <CartToggle
-                                        item={{
-                                            key: `product:${product.id}`,
-                                            name,
-                                            price,
-                                            category: menuCategory,
-                                            description,
-                                        }}
-                                    />
-                                )}
+                                <div
+                                    className={
+                                        hasPriceTiers(product) ? 'shrink-0 sm:pt-0.5' : 'mt-3 flex justify-end'
+                                    }
+                                >
+                                    <TreatmentPrice product={product} locale={locale} />
+                                </div>
                             </div>
                         </li>
                     ))}

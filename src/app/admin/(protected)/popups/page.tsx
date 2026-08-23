@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { deletePopupImage, getPopupSetting, savePopupSetting, uploadPopupImage } from '@/lib/settings';
-import { POPUP_IMAGE_SIZE, POPUP_MAX_TABS, type PopupTab } from '@/types/settings';
+import { POPUP_IMAGE_HEIGHT, POPUP_IMAGE_WIDTH, POPUP_MAX_TABS, type PopupTab } from '@/types/settings';
 
 const inputBase =
     'w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-[15px] text-[#3a322c] placeholder:text-neutral-400 outline-none transition focus:border-[#3a322c]/30 focus:ring-2 focus:ring-[#3a322c]/10';
@@ -84,9 +84,9 @@ export default function PopupsPage() {
                 저장할 때 자동으로 빠집니다. 탭이 둘 이상이면 5초마다 자동으로 넘어갑니다.
                 <br />
                 이미지는 <b>
-                    {POPUP_IMAGE_SIZE}×{POPUP_IMAGE_SIZE}px 정사각
+                    {POPUP_IMAGE_WIDTH}×{POPUP_IMAGE_HEIGHT}px (4:5, 인스타 세로 게시물)
                 </b>
-                을 권장합니다. 다른 비율은 가운데를 기준으로 잘려 보입니다.
+                을 권장합니다. 다른 비율도 잘리지 않고 통째로 보입니다.
             </p>
 
             <label className="mt-6 flex w-fit items-center gap-2.5 rounded-xl border border-neutral-200 bg-white px-4 py-3">
@@ -109,15 +109,15 @@ export default function PopupsPage() {
 
                         <div className="space-y-5 p-6">
                             <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
-                                <div className="flex aspect-square w-[140px] shrink-0 items-center justify-center overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50">
+                                <div className="flex aspect-[4/5] w-[112px] shrink-0 items-center justify-center overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50">
                                     {tab.imageUrl ? (
                                         <Image
                                             src={tab.imageUrl}
                                             alt=""
-                                            width={POPUP_IMAGE_SIZE}
-                                            height={POPUP_IMAGE_SIZE}
+                                            width={POPUP_IMAGE_WIDTH}
+                                            height={POPUP_IMAGE_HEIGHT}
                                             unoptimized
-                                            className="h-full w-full object-cover"
+                                            className="h-full w-full object-contain"
                                         />
                                     ) : (
                                         <span className="text-xs text-neutral-400">이미지 없음</span>
@@ -134,7 +134,9 @@ export default function PopupsPage() {
                                         className="mt-1.5 block w-full text-sm text-neutral-600 file:mr-3 file:rounded-lg file:border-0 file:bg-[#3a322c] file:px-4 file:py-2 file:text-sm file:text-white"
                                     />
                                     <p className="mt-2 text-xs text-neutral-400">
-                                        {uploading === i ? '업로드 중…' : `${POPUP_IMAGE_SIZE}×${POPUP_IMAGE_SIZE}px 정사각 이미지를 올려주세요.`}
+                                        {uploading === i
+                                            ? '업로드 중…'
+                                            : `${POPUP_IMAGE_WIDTH}×${POPUP_IMAGE_HEIGHT}px (4:5) 이미지를 올려주세요.`}
                                     </p>
                                 </div>
                             </div>

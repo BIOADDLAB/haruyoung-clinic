@@ -3,16 +3,25 @@
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { toKey } from './slots';
-import { RESERVATION_HOURS, RESERVATION_MAX_DAYS } from '@/data/site';
+import { defaultReservationHours, type ReservationHoursSetting } from '@/types/settings';
 
 const WEEK = ['일', '월', '화', '수', '목', '금', '토'];
 
-export default function Calendar({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+export default function Calendar({
+    value,
+    onChange,
+    hours,
+}: {
+    value: string;
+    onChange: (v: string) => void;
+    hours?: ReservationHoursSetting | null;
+}) {
     const t = useTranslations('reservation');
+    const cfg = hours ?? defaultReservationHours();
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const last = new Date(today);
-    last.setDate(last.getDate() + RESERVATION_MAX_DAYS);
+    last.setDate(last.getDate() + cfg.maxDays);
 
     const [cursor, setCursor] = useState(() => new Date(today.getFullYear(), today.getMonth(), 1));
 
@@ -67,7 +76,7 @@ export default function Calendar({ value, onChange }: { value: string; onChange:
                     const date = new Date(cursor.getFullYear(), cursor.getMonth(), day);
                     const key = toKey(date);
                     // 휴진일(일요일)·지난 날짜·예약 한계 밖은 못 고른다
-                    const closed = !RESERVATION_HOURS[date.getDay()];
+                    const closed = !cfg.days[String(date.getDay())]?.open;
                     const disabled = closed || date < today || date > last;
                     const on = value === key;
 

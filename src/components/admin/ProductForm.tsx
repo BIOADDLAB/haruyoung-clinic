@@ -5,7 +5,22 @@ import { useState } from 'react';
 import { MENU_CATEGORIES, SECTION_PRESETS } from '@/constants/categories';
 import { formatPriceInput, parsePriceInput } from '@/lib/price';
 import { addProduct, updateProduct } from '@/lib/products';
-import type { Product } from '@/types/product';
+import type { PriceTier, Product } from '@/types/product';
+
+type TierDraft = {
+    sessions: string;
+    price: { ko: string; en: string; zh: string };
+};
+
+const emptyTierPrice = () => ({ ko: '', en: '', zh: '' });
+
+function nextSessions(rows: TierDraft[]) {
+    const used = new Set(rows.map((row) => Number(row.sessions.replace(/\D/g, ''))).filter((n) => n > 0));
+    for (const n of [1, 5, 10, 20, 30]) {
+        if (!used.has(n)) return String(n);
+    }
+    return String((used.size ? Math.max(...used) : 0) + 1);
+}
 
 export default function ProductForm({
     initial,
@@ -65,6 +80,21 @@ export default function ProductForm({
         en: formatPriceInput(initial?.priceEn),
         zh: formatPriceInput(initial?.priceZh),
     });
+    /** 제모처럼 1회/5회/10회로 나눠 팔 때 켠다 */
+    const [useTiers, setUseTiers] = useState((initial?.priceTiers?.length ?? 0) > 0);
+    const [tiers, setTiers] = useState<TierDraft[]>(() => {
+        if (initial?.priceTiers?.length) {
+            return initial.priceTiers.map((tier) => ({
+                sessions: String(tier.sessions),
+                price: {
+                    ko: formatPriceInput(tier.price),
+                    en: formatPriceInput(tier.priceEn),
+                    zh: formatPriceInput(tier.priceZh),
+                },
+            }));
+        }
+        return [{ sessions: '1', price: emptyTierPrice() }];
+    });
     const [busy, setBusy] = useState(false);
 
     /** 기본 섹션 목록을 먼저 깔고, 이미 등록된 값을 뒤에 붙인다 */
@@ -83,8 +113,39 @@ export default function ProductForm({
             setLang('ko');
             return;
         }
+        const parsedTiers = useTiers
+            ? tiers
+                  .map((row) => ({
+                      sessions: Number(row.sessions.replace(/\D/g, '')),
+                      price: parsePriceInput(row.price.ko),
+                      priceEn: parsePriceInput(row.price.en),
+                      priceZh: parsePriceInput(row.price.zh),
+                  }))
+                  .filter((tier) => tier.sessions > 0)
+                  .sort((a, b) => a.sessions - b.sessions)
+            : [];
+
+        if (useTiers) {
+            if (parsedTiers.length === 0) {
+                alert('회차와 가격을 하나 이상 입력하세요.');
+                return;
+            }
+            const counts = parsedTiers.map((tier) => tier.sessions);
+            if (new Set(counts).size !== counts.length) {
+                alert('같은 회차가 두 번 들어가 있습니다.');
+                return;
+            }
+        }
+
         setBusy(true);
         try {
+            const first = parsedTiers[0];
+            const priceTiers: PriceTier[] = parsedTiers.map((tier) => {
+                const row: PriceTier = { sessions: tier.sessions, price: tier.price };
+                if (tier.priceEn != null) row.priceEn = tier.priceEn;
+                if (tier.priceZh != null) row.priceZh = tier.priceZh;
+                return row;
+            });
             const data = {
                 menuSlug,
                 menuCategory: menuName,
@@ -98,9 +159,10 @@ export default function ProductForm({
                 description: text.ko.description,
                 descriptionEn: text.en.description,
                 descriptionZh: text.zh.description,
-                price: parsePriceInput(priceBy.ko),
-                priceEn: parsePriceInput(priceBy.en),
-                priceZh: parsePriceInput(priceBy.zh),
+                price: useTiers ? (first?.price ?? null) : parsePriceInput(priceBy.ko),
+                priceEn: useTiers ? (first?.priceEn ?? null) : parsePriceInput(priceBy.en),
+                priceZh: useTiers ? (first?.priceZh ?? null) : parsePriceInput(priceBy.zh),
+                priceTiers,
                 locales,
                 order: initial?.order ?? Date.now(),
             };
@@ -295,33 +357,139 @@ export default function ProductForm({
                         />
                     </label>
 
-                    {/* 정가 */}
-                    <label className="flex w-full max-w-xs flex-col gap-1.5">
-                        <span className="text-[13px] font-medium text-neutral-600">
-                            정가{' '}
-                            <span className="font-normal text-neutral-400">
-                                {lang === 'ko' ? '(원, 미정이면 비움)' : '(비우면 한국어 가격으로 표시)'}
-                            </span>
-                        </span>
-                        <div className="relative">
-                            <input
-                                type="text"
-                                inputMode="numeric"
-                                value={priceBy[lang]}
-                                onChange={(e) =>
-                                    setPriceBy((prev) => ({
-                                        ...prev,
-                                        [lang]: formatPriceInput(e.target.value),
-                                    }))
-                                }
-                                placeholder="0"
-                                className={`${inputBase} pr-10`}
-                            />
-                            <span className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-sm text-neutral-400">
-                                {lang === 'ko' ? '원' : lang === 'en' ? 'KRW' : '韩元'}
-                            </span>
+                    {/* 정가. 회차로 나누면 아래 표가 대신한다 */}
+                    <div className="space-y-3">
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                            <span className="text-[13px] font-medium text-neutral-600">가격</span>
+                            <label className="flex cursor-pointer items-center gap-2 text-[13px] text-neutral-600">
+                                <input
+                                    type="checkbox"
+                                    checked={useTiers}
+                                    onChange={(e) => {
+                                        const on = e.target.checked;
+                                        setUseTiers(on);
+                                        if (on && tiers.length === 1 && !tiers[0].price.ko) {
+                                            setTiers([
+                                                {
+                                                    sessions: '1',
+                                                    price: { ...priceBy },
+                                                },
+                                            ]);
+                                        }
+                                    }}
+                                    className="h-3.5 w-3.5 accent-[#3a322c]"
+                                />
+                                회차별 가격 (1회 / 5회 / 10회)
+                            </label>
                         </div>
-                    </label>
+
+                        {useTiers ? (
+                            <div className="space-y-2.5">
+                                <p className="text-xs text-neutral-400">
+                                    {lang === 'ko'
+                                        ? '횟수와 그 회차의 정가를 적습니다. 미정이면 가격을 비워 두세요.'
+                                        : '비우면 한국어 가격으로 표시됩니다.'}
+                                </p>
+                                {tiers.map((row, i) => (
+                                    <div key={i} className="flex flex-wrap items-center gap-2">
+                                        <div className="relative w-24">
+                                            <input
+                                                type="text"
+                                                inputMode="numeric"
+                                                value={row.sessions}
+                                                onChange={(e) => {
+                                                    const sessions = e.target.value.replace(/\D/g, '');
+                                                    setTiers((prev) =>
+                                                        prev.map((item, idx) =>
+                                                            idx === i ? { ...item, sessions } : item,
+                                                        ),
+                                                    );
+                                                }}
+                                                placeholder="1"
+                                                className={`${inputBase} pr-8`}
+                                            />
+                                            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-neutral-400">
+                                                회
+                                            </span>
+                                        </div>
+                                        <div className="relative min-w-[10rem] flex-1 max-w-xs">
+                                            <input
+                                                type="text"
+                                                inputMode="numeric"
+                                                value={row.price[lang]}
+                                                onChange={(e) => {
+                                                    const value = formatPriceInput(e.target.value);
+                                                    setTiers((prev) =>
+                                                        prev.map((item, idx) =>
+                                                            idx === i
+                                                                ? {
+                                                                      ...item,
+                                                                      price: { ...item.price, [lang]: value },
+                                                                  }
+                                                                : item,
+                                                        ),
+                                                    );
+                                                }}
+                                                placeholder="0"
+                                                className={`${inputBase} pr-10`}
+                                            />
+                                            <span className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-sm text-neutral-400">
+                                                {lang === 'ko' ? '원' : lang === 'en' ? 'KRW' : '韩元'}
+                                            </span>
+                                        </div>
+                                        {tiers.length > 1 && (
+                                            <button
+                                                type="button"
+                                                onClick={() => setTiers((prev) => prev.filter((_, idx) => idx !== i))}
+                                                className="text-[13px] text-neutral-400 transition hover:text-rose-500"
+                                            >
+                                                삭제
+                                            </button>
+                                        )}
+                                    </div>
+                                ))}
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        setTiers((prev) => [
+                                            ...prev,
+                                            { sessions: nextSessions(prev), price: emptyTierPrice() },
+                                        ])
+                                    }
+                                    className="text-[13px] font-medium text-[#3a322c] transition hover:opacity-70"
+                                >
+                                    + 회차 추가
+                                </button>
+                            </div>
+                        ) : (
+                            <label className="flex w-full max-w-xs flex-col gap-1.5">
+                                <span className="text-[13px] font-medium text-neutral-600">
+                                    정가{' '}
+                                    <span className="font-normal text-neutral-400">
+                                        {lang === 'ko' ? '(원, 미정이면 비움)' : '(비우면 한국어 가격으로 표시)'}
+                                    </span>
+                                </span>
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        inputMode="numeric"
+                                        value={priceBy[lang]}
+                                        onChange={(e) =>
+                                            setPriceBy((prev) => ({
+                                                ...prev,
+                                                [lang]: formatPriceInput(e.target.value),
+                                            }))
+                                        }
+                                        placeholder="0"
+                                        className={`${inputBase} pr-10`}
+                                    />
+                                    <span className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-sm text-neutral-400">
+                                        {lang === 'ko' ? '원' : lang === 'en' ? 'KRW' : '韩元'}
+                                    </span>
+                                </div>
+                            </label>
+                        )}
+                    </div>
                 </div>
 
                 {/* 하단 버튼 */}

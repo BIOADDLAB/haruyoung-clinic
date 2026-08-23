@@ -1,4 +1,4 @@
-import { RESERVATION_HOURS, RESERVATION_LUNCH } from '@/data/site';
+import { defaultReservationHours, type ReservationHoursSetting } from '@/types/settings';
 
 const toMin = (hhmm: string) => {
     const [h, m] = hhmm.split(':').map(Number);
@@ -15,14 +15,15 @@ export function toKey(d: Date) {
 
 /**
  * 'YYYY-MM-DD' 의 예약 가능 시간을 30분 단위로 만든다.
- * 마지막 슬롯은 마감 30분 전. 점심시간이 있는 요일은 RESERVATION_LUNCH 구간을 뺀다.
+ * 마지막 슬롯은 마감 30분 전. 점심시간이 있는 요일은 lunch 구간을 뺀다.
  * 오늘이면 이미 지난 시간과 1시간 안쪽은 제외한다.
  */
-export function slotsOf(dateKey: string): string[] {
+export function slotsOf(dateKey: string, hours?: ReservationHoursSetting | null): string[] {
     if (!dateKey) return [];
+    const cfg = hours ?? defaultReservationHours();
     const date = new Date(`${dateKey}T00:00:00`);
-    const rule = RESERVATION_HOURS[date.getDay()];
-    if (!rule) return [];
+    const rule = cfg.days[String(date.getDay())];
+    if (!rule?.open) return [];
 
     const now = new Date();
     const isToday = dateKey === toKey(now);
@@ -31,7 +32,7 @@ export function slotsOf(dateKey: string): string[] {
 
     const out: string[] = [];
     for (let m = toMin(rule.start); m <= toMin(rule.end) - 30; m += 30) {
-        if (rule.lunch && m >= toMin(RESERVATION_LUNCH.start) && m < toMin(RESERVATION_LUNCH.end)) continue;
+        if (rule.lunch && m >= toMin(cfg.lunchStart) && m < toMin(cfg.lunchEnd)) continue;
         if (m < cutoff) continue;
         out.push(toLabel(m));
     }

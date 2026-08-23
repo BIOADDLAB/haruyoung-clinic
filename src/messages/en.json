@@ -92,7 +92,8 @@
         "empty": "This treatment is coming soon.",
         "askPrice": "Ask for price",
         "vat": "VAT not included",
-        "sections": "Treatment sections"
+        "sections": "Treatment sections",
+        "sessions": "{n, plural, one {# session} other {# sessions}}"
     },
     "promotion": {
         "empty": "No promotions are running at the moment.",

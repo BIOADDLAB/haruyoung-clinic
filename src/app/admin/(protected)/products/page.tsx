@@ -7,7 +7,19 @@ import { CSS } from '@dnd-kit/utilities';
 import { MENU_CATEGORIES } from '@/constants/categories';
 import { getProducts, deleteProduct, reorderProducts } from '@/lib/products';
 import ProductForm from '@/components/admin/ProductForm';
-import type { Product } from '@/types/product';
+import { usableTiers, type Product } from '@/types/product';
+
+function adminPriceLabel(p: Product) {
+    const tiers = usableTiers(p);
+    if (tiers.length > 0) {
+        return tiers
+            .map((tier) =>
+                tier.price == null ? `${tier.sessions}회 문의` : `${tier.sessions}회 ${tier.price.toLocaleString()}원`,
+            )
+            .join(' · ');
+    }
+    return p.price === null ? '가격 문의' : `${p.price.toLocaleString()}원`;
+}
 
 function SortableCard({
     p,
@@ -58,9 +70,7 @@ function SortableCard({
                 <button onClick={() => onDelete(p.id)} className="text-caption text-red-500">
                     삭제
                 </button>
-                <span className="text-20 font-bold text-dark lg:text-22">
-                    {p.price === null ? '가격 문의' : `${p.price.toLocaleString()}원`}
-                </span>
+                <span className="text-right text-20 font-bold text-dark lg:text-22">{adminPriceLabel(p)}</span>
             </div>
         </div>
     );

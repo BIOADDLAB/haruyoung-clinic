@@ -92,7 +92,8 @@
         "empty": "该项目正在筹备中。",
         "askPrice": "价格咨询",
         "vat": "不含增值税",
-        "sections": "项目分类"
+        "sections": "项目分类",
+        "sessions": "{n}次"
     },
     "promotion": {
         "empty": "目前没有进行中的活动。",

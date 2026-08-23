@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Calendar from './Calendar';
 import DoneModal from './DoneModal';
 import { slotsOf } from './slots';
@@ -10,7 +10,9 @@ import { useCart } from '@/components/cart/CartProvider';
 import { MENU_CATEGORIES } from '@/constants/categories';
 import { VISIT_TYPES } from '@/data/site';
 import { addReservation } from '@/lib/reservations';
+import { getReservationHoursSetting } from '@/lib/settings';
 import PrivacyModal from '@/components/ui/PrivacyModal';
+import type { ReservationHoursSetting } from '@/types/settings';
 
 const field =
     'w-full border-b border-dark/20 bg-transparent px-1 py-3.5 text-caption text-dark outline-none transition-colors duration-500 ease-brand placeholder:text-dark/35 focus:border-dark';
@@ -35,9 +37,20 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
     const [busy, setBusy] = useState(false);
     const [done, setDone] = useState(false);
 
-    const slots = slotsOf(date);
-
     const [privacy, setPrivacy] = useState(false);
+    const [hours, setHours] = useState<ReservationHoursSetting | null>(null);
+
+    useEffect(() => {
+        let alive = true;
+        getReservationHoursSetting().then((s) => {
+            if (alive) setHours(s);
+        });
+        return () => {
+            alive = false;
+        };
+    }, []);
+
+    const slots = slotsOf(date, hours);
 
     const submit = async () => {
         if (!name.trim()) return alert(t('errName'));
@@ -143,6 +156,7 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
                 <div className="mt-5 rounded-xl border border-beige bg-cream p-5 sm:p-6">
                     <Calendar
                         value={date}
+                        hours={hours}
                         onChange={(v) => {
                             setDate(v);
                             setTime('');
