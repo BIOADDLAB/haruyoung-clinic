@@ -21,7 +21,9 @@
         "precautionsDesc": "各项目的术后护理指南。",
         "promotionDesc": "查看进行中的优惠与活动价格。",
         "searchDesc": "搜索 HARUYOUNG 医院的项目。",
-        "treatmentDesc": "HARUYOUNG 医院 {name} 项目介绍与价格。"
+        "treatmentDesc": "HARUYOUNG 医院 {name} 项目介绍与价格。",
+        "beforeAfter": "前后对比",
+        "beforeAfterDesc": "按项目分类查看 HARUYOUNG 医院治疗前后照片。"
     },
     "nav": {
         "menu": "菜单",
@@ -44,6 +46,7 @@
         "philosophy": "哈鲁荣理念",
         "specialist": "院长介绍",
         "space": "空间介绍",
+        "beforeAfter": "前后对比",
         "promotion": "优惠活动",
         "precautions": "术后注意事项",
         "subPromotion": "PROMOTION",
@@ -344,6 +347,14 @@
         "hair": "平滑整洁的肌理，\n四季皆可\n自信的肌肤",
         "body": "如面部般细致，\n连线条也一并\n完成的身体护理",
         "booster": "唤醒肌肤本源力量，\n由内充盈的\n护理"
+    },
+    "beforeAfter": {
+        "all": "全部",
+        "loading": "加载中…",
+        "empty": "前后对比照片即将公开。",
+        "before": "Before",
+        "after": "After",
+        "bannerEn": "Before & After"
     },
     "promoBoard": {
         "event1": "Welcome Event",

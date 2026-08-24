@@ -3,7 +3,7 @@ import { MENU_CATEGORIES } from '@/constants/categories';
 import { routing } from '@/i18n/routing';
 import { getLanguageAlternates, getLocalizedUrl } from '@/lib/seo';
 
-const STATIC_PATHS = ['/', '/about', '/promotion', '/reservation', '/precautions', '/privacy', '/terms'];
+const STATIC_PATHS = ['/', '/about', '/before-after', '/promotion', '/reservation', '/precautions', '/privacy', '/terms'];
 const TREATMENT_PATHS = MENU_CATEGORIES.map(({ slug }) => `/treatments/${slug}`);
 
 export default function sitemap(): MetadataRoute.Sitemap {

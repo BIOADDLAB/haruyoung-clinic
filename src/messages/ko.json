@@ -21,7 +21,9 @@
         "precautionsDesc": "하루영의원 시술 후 관리 방법과 주의사항을 안내합니다.",
         "promotionDesc": "하루영의원에서 진행 중인 프로모션과 이벤트 가격을 확인하세요.",
         "searchDesc": "하루영의원 시술을 검색해 보세요.",
-        "treatmentDesc": "하루영의원 {name} 시술 안내와 가격입니다."
+        "treatmentDesc": "하루영의원 {name} 시술 안내와 가격입니다.",
+        "beforeAfter": "전후사진",
+        "beforeAfterDesc": "하루영의원 시술 전후 사진을 카테고리별로 확인하세요."
     },
     "nav": {
         "menu": "MENU",
@@ -44,6 +46,7 @@
         "philosophy": "하루영 철학",
         "specialist": "의료진 소개",
         "space": "공간 소개",
+        "beforeAfter": "전후사진",
         "promotion": "프로모션",
         "precautions": "시술 후 주의사항",
         "subPromotion": "PROMOTION",
@@ -344,6 +347,14 @@
         "hair": "매끄럽게 정돈된\n결, 사계절 언제나\n자신 있는 피부",
         "body": "얼굴만큼 섬세하게\n라인까지 완성하는\n바디 케어",
         "booster": "피부 본연의 힘을\n되살리는\n속부터 채우는 케어"
+    },
+    "beforeAfter": {
+        "all": "전체",
+        "loading": "불러오는 중…",
+        "empty": "준비 중인 전후사진입니다.",
+        "before": "Before",
+        "after": "After",
+        "bannerEn": "Before & After"
     },
     "promoBoard": {
         "event1": "Welcome Event",

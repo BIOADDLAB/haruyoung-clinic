@@ -140,6 +140,25 @@ function PromotionNav() {
     return <NavLists items={items} currentHref={currentHref} />;
 }
 
+function BeforeAfterNav() {
+    const t = useTranslations('nav');
+    const tb = useTranslations('beforeAfter');
+    const searchParams = useSearchParams();
+    const selected = searchParams.get('c');
+
+    const items: NavItem[] = [
+        { key: 'all', href: '/before-after', label: tb('all') },
+        ...TREATMENT_SUB_NAV.map((item) => ({
+            key: item.key,
+            href: `/before-after?c=${item.key}`,
+            label: t(item.key),
+        })),
+    ];
+    const currentHref = selected ? `/before-after?c=${selected}` : '/before-after';
+
+    return <NavLists items={items} currentHref={currentHref} />;
+}
+
 export default function SubNav() {
     const pathname = usePathname();
     const t = useTranslations('nav');
@@ -159,6 +178,21 @@ export default function SubNav() {
                 }
             >
                 <PromotionNav />
+            </Suspense>
+        );
+    }
+
+    if (pathname === '/before-after') {
+        return (
+            <Suspense
+                fallback={
+                    <NavLists
+                        items={[{ key: 'all', href: '/before-after', label: t('beforeAfter') }]}
+                        currentHref="/before-after"
+                    />
+                }
+            >
+                <BeforeAfterNav />
             </Suspense>
         );
     }

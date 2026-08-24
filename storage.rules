@@ -1,0 +1,17 @@
+rules_version = '2';
+
+// Firebase 콘솔 > Storage > 규칙 에 통째로 붙여넣고 게시한다.
+// 이 파일은 콘솔 내용과 항상 같게 유지한다.
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isAdmin() {
+      return request.auth != null && request.auth.uid == '3zaErqhP1rNXzG9V9MCQc2jSTLw1';
+    }
+
+    // 팝업·전후사진 등 관리자가 올리는 이미지
+    match /popups/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

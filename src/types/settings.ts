@@ -48,6 +48,19 @@ export const POPUP_MAX_TABS = 5;
 export const POPUP_IMAGE_WIDTH = 1080;
 export const POPUP_IMAGE_HEIGHT = 1350;
 
+/** 전후사진 한 세트. 갤러리에 나란히 보여 준다 */
+export type BeforeAfterItem = {
+    /** MENU_CATEGORIES slug. 시술 메뉴와 같은 분류다 */
+    menuSlug: string;
+    beforeUrl: string;
+    afterUrl: string;
+};
+
+/** 전후사진 갤러리. settings/beforeAfter 문서다 */
+export type BeforeAfterSetting = {
+    items: BeforeAfterItem[];
+};
+
 /** 요일 하나. 관리자 > 예약 시간 설정에서 바꾼다 */
 export type ReservationDayHours = {
     open: boolean;

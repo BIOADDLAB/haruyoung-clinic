@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Marcellus, Cormorant_Garamond } from 'next/font/google';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -31,6 +31,11 @@ const cormorantGaramond = Cormorant_Garamond({
 const astaSansVariable = {
     '--font-asta-sans': "'Asta Sans Variable'",
 } as React.CSSProperties;
+
+export const viewport: Viewport = {
+    colorScheme: 'light',
+    themeColor: '#ffffff',
+};
 
 export function generateStaticParams() {
     return routing.locales.map((locale) => ({ locale }));
@@ -104,6 +109,8 @@ export default async function LocaleLayout({
             suppressHydrationWarning
         >
             <head>
+                <meta name="color-scheme" content="only light" />
+                <meta name="supported-color-schemes" content="light" />
                 <IntroSessionScript />
             </head>
             <body>

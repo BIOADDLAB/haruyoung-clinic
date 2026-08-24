@@ -12,7 +12,7 @@ service cloud.firestore {
       return request.auth != null && request.auth.uid == '3zaErqhP1rNXzG9V9MCQc2jSTLw1';
     }
 
-    // 사이트 설정 (메인 배너, 프로모션 배너, 팝업, 예약 시간)
+    // 사이트 설정 (메인 배너, 프로모션 배너, 팝업, 전후사진, 예약 시간)
     match /settings/{docId} {
       allow read: if true;
       allow write: if isAdmin();

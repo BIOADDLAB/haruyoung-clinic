@@ -26,6 +26,7 @@ export const MENU_GROUPS = [
             { key: 'philosophy', href: '/about#philosophy' },
             { key: 'specialist', href: '/about#specialist' },
             { key: 'space', href: '/about#space' },
+            { key: 'beforeAfter', href: '/before-after' },
         ],
     },
     { title: 'TREATMENTS', items: treatments },

@@ -21,7 +21,9 @@
         "precautionsDesc": "Aftercare guidance for each treatment.",
         "promotionDesc": "Current promotions and event prices.",
         "searchDesc": "Search treatments at HARUYOUNG CLINIC.",
-        "treatmentDesc": "{name} treatments and pricing at HARUYOUNG CLINIC."
+        "treatmentDesc": "{name} treatments and pricing at HARUYOUNG CLINIC.",
+        "beforeAfter": "Before & After",
+        "beforeAfterDesc": "See HARUYOUNG CLINIC treatment results by category."
     },
     "nav": {
         "menu": "MENU",
@@ -44,6 +46,7 @@
         "philosophy": "Our Philosophy",
         "specialist": "Our Specialist",
         "space": "Our Space",
+        "beforeAfter": "Before & After",
         "promotion": "Promotion",
         "precautions": "Aftercare",
         "subPromotion": "PROMOTION",
@@ -344,6 +347,14 @@
         "hair": "Smoothly groomed\ntexture, confident skin\nin every season",
         "body": "Body care that shapes\nyour line as delicately\nas your face",
         "booster": "Care that fills from\nwithin and revives\nyour skin's own power"
+    },
+    "beforeAfter": {
+        "all": "All",
+        "loading": "Loading…",
+        "empty": "Before & after photos coming soon.",
+        "before": "Before",
+        "after": "After",
+        "bannerEn": "Before & After"
     },
     "promoBoard": {
         "event1": "Welcome Event",

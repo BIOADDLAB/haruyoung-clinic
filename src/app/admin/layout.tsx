@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 import '../globals.css';
 
@@ -14,9 +14,18 @@ export const metadata: Metadata = {
     robots: { index: false, follow: false },
 };
 
+export const viewport: Viewport = {
+    colorScheme: 'light',
+    themeColor: '#ffffff',
+};
+
 export default function AdminRootLayout({ children }: { children: ReactNode }) {
     return (
         <html lang="ko">
+            <head>
+                <meta name="color-scheme" content="only light" />
+                <meta name="supported-color-schemes" content="light" />
+            </head>
             <body>{children}</body>
         </html>
     );
