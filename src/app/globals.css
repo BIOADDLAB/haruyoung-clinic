@@ -291,3 +291,9 @@ html {
 *::-webkit-scrollbar {
     display: none;
 }
+
+/* Tailwind 기본 img max-width:100% 가 네이버 지도 타일을 찌그러뜨린다 */
+.footer-map img,
+.footer-map canvas {
+    max-width: none;
+}

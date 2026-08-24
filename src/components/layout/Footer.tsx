@@ -4,7 +4,8 @@ import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useState } from 'react';
 import { Link } from '@/i18n/navigation';
-import { CLINIC, MAP_LINKS, NOTICE_LINKS, POLICY_LINKS } from '@/data/site';
+import { CLINIC, NOTICE_LINKS, POLICY_LINKS } from '@/data/site';
+import FooterMap from '@/components/layout/FooterMap';
 import NoticeImageModal from '@/components/ui/NoticeImageModal';
 
 export default function Footer() {
@@ -177,63 +178,5 @@ export default function Footer() {
                 onClose={() => setNotice(null)}
             />
         </footer>
-    );
-}
-
-const MAP_LINK_CLASS =
-    'inline-flex flex-1 items-center justify-center rounded-full px-3 py-2 text-center text-caption-sm font-semibold tracking-wide transition-opacity duration-500 ease-brand hover:opacity-80';
-
-/**
- * Google Maps iframe 은 카카오톡 안드로이드 웹뷰에서 BLOCKED 된다.
- * 같은 사이트 iframe 대신 카카오·네이버를 바깥으로 연다. 아이폰은 구글 iframe 이 되는 경우가 많다.
- */
-function FooterMap() {
-    const t = useTranslations('footer');
-    const ta = useTranslations('a11y');
-
-    return (
-        <div
-            role="group"
-            aria-label={ta('mapAlt')}
-            className="footer-map flex aspect-[5/3] w-full max-w-[520px] flex-col justify-between self-start bg-[#ddd4c8] p-4 text-dark lg:w-[320px] lg:max-w-none lg:shrink-0"
-        >
-            <div>
-                <p className="flex items-center gap-2 text-small font-semibold">
-                    <MapPin />
-                    {CLINIC.name}
-                </p>
-                <p className="mt-2 pl-7 text-caption leading-snug text-dark/70">{t('address')}</p>
-            </div>
-
-            <div className="flex gap-2">
-                <a
-                    href={MAP_LINKS.kakao}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`${MAP_LINK_CLASS} bg-dark text-cream`}
-                >
-                    {t('mapKakao')}
-                </a>
-                <a
-                    href={MAP_LINKS.naver}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`${MAP_LINK_CLASS} border border-dark/20 bg-cream/70 text-dark`}
-                >
-                    {t('mapNaver')}
-                </a>
-            </div>
-        </div>
-    );
-}
-
-function MapPin() {
-    return (
-        <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 shrink-0 text-dark">
-            <path
-                fill="currentColor"
-                d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"
-            />
-        </svg>
     );
 }

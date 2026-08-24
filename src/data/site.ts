@@ -61,12 +61,7 @@ export const CLINIC = {
 
 const mapQuery = encodeURIComponent(CLINIC.mapQuery);
 
-/**
- * 카카오톡 인앱(특히 안드로이드)은 Google Maps iframe 을 막는다.
- * 지도는 iframe 없이 카카오·네이버를 바깥 링크로 연다.
- */
 export const MAP_LINKS = {
-    kakao: `https://map.kakao.com/link/search/${mapQuery}`,
     naver: `https://map.naver.com/p/search/${mapQuery}`,
 } as const;
 
