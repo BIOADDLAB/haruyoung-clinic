@@ -135,7 +135,8 @@ function PromotionNav() {
             label: localizedCategory(c, locale),
         })),
     ];
-    const currentHref = selected ? `/promotion?c=${selected}` : '/promotion';
+    const known = selected ? categories.some((c) => c.id === selected) : false;
+    const currentHref = known ? `/promotion?c=${selected}` : '/promotion';
 
     return <NavLists items={items} currentHref={currentHref} />;
 }

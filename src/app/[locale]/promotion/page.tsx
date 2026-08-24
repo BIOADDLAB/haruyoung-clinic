@@ -19,8 +19,15 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     });
 }
 
-export default async function PromotionPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function PromotionPage({
+    params,
+    searchParams,
+}: {
+    params: Promise<{ locale: string }>;
+    searchParams: Promise<{ c?: string }>;
+}) {
     const { locale } = await params;
+    const { c } = await searchParams;
     const t = await getTranslations({ locale, namespace: 'meta' });
 
     return (
@@ -30,7 +37,7 @@ export default async function PromotionPage({ params }: { params: Promise<{ loca
 
             <main className="site-sub min-h-dvh bg-cream">
                 <h1 className="sr-only">{t('promotion')}</h1>
-                <PromotionList />
+                <PromotionList categoryId={typeof c === 'string' ? c : ''} />
             </main>
         </>
     );

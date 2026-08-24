@@ -177,14 +177,20 @@ export default function PopupsPage() {
 
                             <label className="flex flex-col gap-1.5">
                                 <span className="text-[13px] font-medium text-neutral-600">
-                                    이미지 클릭 시 이동 주소 <span className="font-normal text-neutral-400">(선택)</span>
+                                    이미지 클릭 시 이동 주소{' '}
+                                    <span className="font-normal text-neutral-400">(선택)</span>
                                 </span>
                                 <input
                                     value={tab.linkUrl ?? ''}
                                     onChange={(e) => setTab(i, { linkUrl: e.target.value })}
-                                    placeholder="https://"
+                                    placeholder="/promotion 또는 /promotion?c=카테고리ID"
                                     className={inputBase}
                                 />
+                                <span className="text-xs text-neutral-400">
+                                    사이트 안 페이지는 /promotion 처럼 경로만 적으세요. 프로모션 탭을 열려면 관리자
+                                    프로모션 관리에 있는 카테고리 주소를 그대로 붙입니다. 외부 사이트만 https:// 로
+                                    시작합니다.
+                                </span>
                             </label>
                         </div>
                     </div>

@@ -53,10 +53,21 @@ export const CLINIC = {
     bizNo: '203-49-64257',
     tel: '031-215-0424',
 
-    /** 푸터 구글 지도. 주소로 검색해야 광교스타천(광교중앙로 319)에 핀이 맞는다 */
+    /** 지도 검색용 주소. 좌표보다 주소가 광교스타천(광교중앙로 319)에 맞다 */
     mapQuery: '경기도 용인시 수지구 광교중앙로 319',
     lat: 37.29853,
     lng: 127.06913,
+} as const;
+
+const mapQuery = encodeURIComponent(CLINIC.mapQuery);
+
+/**
+ * 카카오톡 인앱(특히 안드로이드)은 Google Maps iframe 을 막는다.
+ * 지도는 iframe 없이 카카오·네이버를 바깥 링크로 연다.
+ */
+export const MAP_LINKS = {
+    kakao: `https://map.kakao.com/link/search/${mapQuery}`,
+    naver: `https://map.naver.com/p/search/${mapQuery}`,
 } as const;
 
 /** TODO: 실제 카카오 채널 주소로 교체 */

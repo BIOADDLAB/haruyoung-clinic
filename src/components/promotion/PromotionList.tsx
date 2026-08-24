@@ -1,13 +1,10 @@
 'use client';
 
-import { Suspense, useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import Banner from '@/components/ui/Banner';
 import { useCart } from '@/components/cart/CartProvider';
 import { PROMOTION_BANNER } from '@/data/site';
-import { RevealGroup, RevealItem } from '@/components/ui/RevealGroup';
-import { fadeUp } from '@/lib/motion';
 import { getPromotionCategories } from '@/lib/promotionCategories';
 import { getPromotions } from '@/lib/promotions';
 import { getPromotionBannerSetting } from '@/lib/settings';
@@ -23,15 +20,7 @@ import {
     type PromotionCategory,
 } from '@/types/promotion';
 
-export default function PromotionList() {
-    return (
-        <Suspense fallback={null}>
-            <PromotionListInner />
-        </Suspense>
-    );
-}
-
-function PromotionListInner() {
+export default function PromotionList({ categoryId = '' }: { categoryId?: string }) {
     const t = useTranslations('promotion');
     const tn = useTranslations('nav');
     const tt = useTranslations('treatments');
@@ -40,8 +29,7 @@ function PromotionListInner() {
     const [categories, setCategories] = useState<PromotionCategory[]>([]);
     const [banner, setBanner] = useState<PromotionBannerSetting | null>(null);
     const locale = useLocale() as 'ko' | 'en' | 'zh';
-    const searchParams = useSearchParams();
-    const menu = searchParams.get('c') ?? '';
+    const menu = categoryId;
 
     // 배너 문구는 관리자 > 프로모션 배너 설정 값이 있으면 그걸 쓰고, 없으면 site.ts 기본값이다
     useEffect(() => {
@@ -73,12 +61,22 @@ function PromotionListInner() {
         };
     }, [locale]);
 
+    // 홈 가로 스크롤 페이지에서 넘어오면 스크롤 위치가 페이지보다 아래로 남아 빈 화면처럼 보인다
+    useEffect(() => {
+        const max = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+        if (window.scrollY > max) {
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        }
+    }, [menu, list]);
+
     const selected = categories.find((c) => c.id === menu);
     const visible = useMemo(() => {
         if (!list) return [];
         if (!menu) return list;
+        // 팝업 링크의 ?c= 가 없는 카테고리면 빈 목록 대신 전체를 보여준다
+        if (categories.length > 0 && !selected) return list;
         return list.filter((p) => p.categoryId === menu);
-    }, [list, menu]);
+    }, [list, menu, categories.length, selected]);
 
     const from = visible.length > 0 ? Math.min(...visible.map((p) => localizedPromoPrice(p, locale))) : 0;
     const categoryById = useMemo(() => new Map(categories.map((c) => [c.id, c])), [categories]);
@@ -113,7 +111,7 @@ function PromotionListInner() {
             ) : visible.length === 0 ? (
                 <p className="px-6 pt-16 text-caption text-dark/50 lg:pl-12">{t('empty')}</p>
             ) : (
-                <RevealGroup as="ul" className="flex flex-col gap-4 px-6 pt-9 lg:pl-12 lg:pr-0">
+                <ul className="flex flex-col gap-4 px-6 pt-9 lg:pl-12 lg:pr-0">
                     {visible.map((p) => {
                         const category = p.categoryId ? categoryById.get(p.categoryId) : undefined;
                         return (
@@ -124,7 +122,7 @@ function PromotionListInner() {
                             />
                         );
                     })}
-                </RevealGroup>
+                </ul>
             )}
         </div>
     );
@@ -145,11 +143,7 @@ function PromotionCard({ p, categoryName }: { p: Promotion; categoryName: string
     const left = p.isOngoing ? null : daysLeft(p.until);
 
     return (
-        <RevealItem
-            as="li"
-            variants={fadeUp}
-            className="w-full max-w-[800px] rounded-lg border border-beige p-5 lg:p-6"
-        >
+        <li className="w-full max-w-[800px] rounded-lg border border-beige p-5 lg:p-6">
             <h3 className="text-18 font-bold lg:text-20">{localizedPromo(p, 'name', locale)}</h3>
 
             {p.highlight && (
@@ -220,6 +214,6 @@ function PromotionCard({ p, categoryName }: { p: Promotion; categoryName: string
                     </span>
                 </button>
             </div>
-        </RevealItem>
+        </li>
     );
 }

@@ -11,10 +11,15 @@ interface Props {
     id?: string;
     role?: string;
     'aria-label'?: string;
+    /**
+     * true 면 화면에 들어온 뒤가 아니라 바로 등장한다.
+     * 팝업처럼 새 탭·가려진 탭에서 열리면 whileInView 가 한 번도 안 떠서 카드가 투명으로 남는다.
+     */
+    immediate?: boolean;
 }
 
 // 자식 카드들을 0.12s 간격으로 순차 등장시키는 그룹
-export function RevealGroup({ children, className, as = 'div', ...rest }: Props) {
+export function RevealGroup({ children, className, as = 'div', immediate = false, ...rest }: Props) {
     const reduced = useReducedMotion();
 
     if (reduced) {
@@ -28,7 +33,13 @@ export function RevealGroup({ children, className, as = 'div', ...rest }: Props)
 
     const Tag = motion[as as 'div'] ?? motion.div;
     return (
-        <Tag variants={stagger} initial="hidden" whileInView="show" viewport={VIEWPORT} className={className} {...rest}>
+        <Tag
+            variants={stagger}
+            initial="hidden"
+            {...(immediate ? { animate: 'show' as const } : { whileInView: 'show' as const, viewport: VIEWPORT })}
+            className={className}
+            {...rest}
+        >
             {children}
         </Tag>
     );

@@ -3,9 +3,12 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState, type MouseEvent } from 'react';
 import { INTRO_CLOSED_EVENT, INTRO_ELEMENT_ID } from '@/lib/intro';
+import { routing } from '@/i18n/routing';
 import { DUR, EASE } from '@/lib/motion';
+import { SITE_URL } from '@/lib/seo';
 import { getPopupSetting } from '@/lib/settings';
 import {
     localizedSetting,
@@ -120,7 +123,7 @@ export default function PopupModal() {
                             {/* 인스타 4:5. 옆 목록이 라벨을 세로로 받으니 좌우가 잘리지 않는다 */}
                             <div className="relative aspect-[4/5] overflow-hidden bg-cream">
                                 {/* key 를 주소로 잡아 탭이 바뀌면 스켈레톤부터 다시 시작한다 */}
-                                <PopupImage key={current.imageUrl} tab={current} />
+                                <PopupImage key={current.imageUrl} tab={current} onInternalNavigate={close} />
                             </div>
 
                             {/* 탭은 하나여도 그린다. 긴 이름도 줄바꿈해서 통째로 보여준다 */}
@@ -176,8 +179,11 @@ export default function PopupModal() {
  * 4:5 박스 안에 통째로 넣는다. 비율이 달라도 자르지 않는다.
  * 받아오는 동안에는 스켈레톤을 덮어둔다. 다 받으면 스켈레톤은 아예 사라진다.
  */
-function PopupImage({ tab }: { tab: PopupTab }) {
+function PopupImage({ tab, onInternalNavigate }: { tab: PopupTab; onInternalNavigate: () => void }) {
     const [loaded, setLoaded] = useState(false);
+    const locale = useLocale();
+    const router = useRouter();
+    const internalHref = tab.linkUrl ? internalSiteHref(tab.linkUrl, locale) : null;
 
     const img = (
         <Image
@@ -192,12 +198,26 @@ function PopupImage({ tab }: { tab: PopupTab }) {
         />
     );
 
+    const goInternal = (e: MouseEvent<HTMLAnchorElement>) => {
+        if (!internalHref || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+        e.preventDefault();
+        onInternalNavigate();
+        router.push(internalHref);
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    };
+
     return (
         <>
             {tab.linkUrl ? (
-                <a href={tab.linkUrl} target="_blank" rel="noopener noreferrer" className="block h-full w-full">
-                    {img}
-                </a>
+                internalHref ? (
+                    <a href={internalHref} onClick={goInternal} className="block h-full w-full">
+                        {img}
+                    </a>
+                ) : (
+                    <a href={tab.linkUrl} target="_blank" rel="noopener noreferrer" className="block h-full w-full">
+                        {img}
+                    </a>
+                )
             ) : (
                 img
             )}
@@ -205,4 +225,44 @@ function PopupImage({ tab }: { tab: PopupTab }) {
             {!loaded && <span aria-hidden="true" className="absolute inset-0 bg-sand motion-safe:animate-pulse" />}
         </>
     );
+}
+
+/**
+ * 같은 사이트 주소면 언어 prefix 를 붙인 경로를 돌려준다.
+ * 새 탭(target=_blank)으로 열면 프로모션 카드가 whileInView 에 안 잡혀 안 보이는 경우가 있다.
+ */
+function internalSiteHref(linkUrl: string, locale: string) {
+    const raw = linkUrl.trim();
+    if (!raw) return null;
+
+    let url: URL;
+    try {
+        if (/^https?:\/\//i.test(raw)) {
+            url = new URL(raw);
+            const own = new Set<string>([new URL(SITE_URL).origin]);
+            if (typeof window !== 'undefined') own.add(window.location.origin);
+            if (!own.has(url.origin)) return null;
+        } else if (raw.startsWith('/')) {
+            url = new URL(raw, 'http://local.invalid');
+        } else {
+            return null;
+        }
+    } catch {
+        return null;
+    }
+
+    let pathname = url.pathname;
+    for (const loc of routing.locales) {
+        if (pathname === `/${loc}`) {
+            pathname = '/';
+            break;
+        }
+        if (pathname.startsWith(`/${loc}/`)) {
+            pathname = pathname.slice(loc.length + 1);
+            break;
+        }
+    }
+
+    const path = `${pathname}${url.search}${url.hash}`;
+    return locale === routing.defaultLocale ? path : `/${locale}${path}`;
 }
