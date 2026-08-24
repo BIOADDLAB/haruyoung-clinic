@@ -51,6 +51,11 @@ export const CLINIC = {
 
     bizNo: '203-49-64257',
     tel: '031-215-0424',
+
+    /** 푸터 구글 지도. 주소로 검색해야 광교스타천(광교중앙로 319)에 핀이 맞는다 */
+    mapQuery: '경기도 용인시 수지구 광교중앙로 319',
+    lat: 37.29853,
+    lng: 127.06913,
 } as const;
 
 /** TODO: 실제 카카오 채널 주소로 교체 */
@@ -70,6 +75,11 @@ export const LANGS = [
 ] as const;
 
 export type LangCode = (typeof LANGS)[number]['code'];
+
+export const NOTICE_LINKS = [
+    { key: 'cert', src: '/images/cert.jpeg' },
+    { key: 'rights', src: '/images/rights.jpeg' },
+] as const;
 
 export const POLICY_LINKS = [
     { key: 'priceList', href: '/treatments' },
@@ -136,4 +146,20 @@ export const PROMOTION_BANNER = {
     logo: '/images/l-haru-w.png',
     title: '2026 Autumn Event',
     subtitle: '2026년 9월 가을맞이 이벤트',
+};
+
+/**
+ * 홈 히어로 배너 기본값.
+ * 문구는 관리자 > 메인 배너 설정에서 덮어쓴다. Firestore 에 값이 없을 때만 이 값이 보인다.
+ */
+export const HERO_BANNER = {
+    slogan: 'A LITTLE YOUNGER, EVERY DAY.',
+    sloganEn: 'A LITTLE YOUNGER, EVERY DAY.',
+    sloganZh: 'A LITTLE YOUNGER, EVERY DAY.',
+    sub: '오늘보다, 하루 더 젊게.',
+    subEn: 'One day younger than today.',
+    subZh: '比今天，更年轻一天。',
+    cta: 'VISIT HARUYOUNG',
+    ctaEn: 'VISIT HARUYOUNG',
+    ctaZh: 'VISIT HARUYOUNG',
 };

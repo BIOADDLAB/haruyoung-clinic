@@ -1,10 +1,11 @@
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { db, storage } from './firebase';
-import { defaultReservationHours, type PopupSetting, type PromotionBannerSetting, type ReservationHoursSetting } from '@/types/settings';
+import { defaultReservationHours, type HeroBannerSetting, type PopupSetting, type PromotionBannerSetting, type ReservationHoursSetting } from '@/types/settings';
 
 /** 사이트 전역 설정은 settings 컬렉션에 문서 하나씩 둔다 */
 const PROMOTION_BANNER_DOC = doc(db, 'settings', 'promotionBanner');
+const HERO_BANNER_DOC = doc(db, 'settings', 'heroBanner');
 const POPUP_DOC = doc(db, 'settings', 'popup');
 const RESERVATION_HOURS_DOC = doc(db, 'settings', 'reservationHours');
 
@@ -28,6 +29,14 @@ export function getPromotionBannerSetting() {
 
 export async function savePromotionBannerSetting(data: PromotionBannerSetting) {
     await setDoc(PROMOTION_BANNER_DOC, data);
+}
+
+export function getHeroBannerSetting() {
+    return readDoc<HeroBannerSetting>(HERO_BANNER_DOC);
+}
+
+export async function saveHeroBannerSetting(data: HeroBannerSetting) {
+    await setDoc(HERO_BANNER_DOC, data);
 }
 
 export function getPopupSetting() {

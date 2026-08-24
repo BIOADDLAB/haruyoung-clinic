@@ -103,7 +103,7 @@ export default function PopupModal() {
                     role="dialog"
                     aria-modal="true"
                     aria-label={t('label')}
-                    className="fixed inset-0 z-90 flex items-center justify-center bg-dark/55 px-5 py-10 backdrop-blur-[2px]"
+                    className="fixed inset-0 z-90 flex items-center justify-center overflow-y-auto bg-dark/55 px-5 py-10 backdrop-blur-[2px]"
                 >
                     <button type="button" tabIndex={-1} aria-hidden onClick={close} className="absolute inset-0" />
 
@@ -114,38 +114,37 @@ export default function PopupModal() {
                         transition={{ duration: DUR.base, ease: EASE }}
                         // 부모에 배경을 깔면 둥근 모서리 안티에일리어싱 틈으로 그 색이 비친다.
                         // 배경은 아래 크림 영역들이 각자 갖는다
-                        className="relative flex max-h-full w-full max-w-[432px] flex-col overflow-hidden rounded-[18px] shadow-[0_28px_70px_rgba(59,43,30,0.4)]"
+                        className="relative flex max-h-[calc(100dvh-5rem)] w-full max-w-[720px] flex-col overflow-hidden rounded-[18px] shadow-[0_28px_70px_rgba(59,43,30,0.4)]"
                     >
-                        {/* 인스타 4:5. 폭 432면 높이는 540이라 탭·버튼까지 화면에 들어온다 */}
-                        <div className="relative aspect-[4/5] w-full shrink-0 overflow-hidden bg-cream">
-                            {/* key 를 주소로 잡아 탭이 바뀌면 스켈레톤부터 다시 시작한다 */}
-                            <PopupImage key={current.imageUrl} tab={current} />
-                        </div>
+                        <div className="grid min-h-0 grid-cols-[minmax(0,1.55fr)_minmax(8rem,0.7fr)] items-stretch">
+                            {/* 인스타 4:5. 옆 목록이 라벨을 세로로 받으니 좌우가 잘리지 않는다 */}
+                            <div className="relative aspect-[4/5] overflow-hidden bg-cream">
+                                {/* key 를 주소로 잡아 탭이 바뀌면 스켈레톤부터 다시 시작한다 */}
+                                <PopupImage key={current.imageUrl} tab={current} />
+                            </div>
 
-                        {/* 탭은 하나여도 그린다. 가로로 넘치면 밀어서 본다 */}
-                        <nav
-                            aria-label={t('label')}
-                            className="flex shrink-0 gap-6 overflow-x-auto border-t border-dark/10 bg-cream px-6 pt-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-                        >
-                            {tabs.map((tab, i) => (
-                                <button
-                                    key={`${tab.imageUrl}-${i}`}
-                                    type="button"
-                                    onClick={() => setIndex(i)}
-                                    aria-current={i === index ? 'true' : undefined}
-                                    className={`group relative shrink-0 whitespace-nowrap pb-3 text-caption transition-colors duration-500 ease-brand ${
-                                        i === index ? 'font-semibold text-dark' : 'text-dark/45 hover:text-dark/70'
-                                    }`}
-                                >
-                                    {labels[i]}
-                                    <span
-                                        className={`absolute inset-x-0 bottom-0 h-px origin-left bg-dark transition-transform duration-500 ease-brand group-hover:scale-x-100 ${
-                                            i === index ? 'scale-x-100' : 'scale-x-0'
-                                        }`}
-                                    />
-                                </button>
-                            ))}
-                        </nav>
+                            {/* 탭은 하나여도 그린다. 긴 이름도 줄바꿈해서 통째로 보여준다 */}
+                            <nav
+                                aria-label={t('label')}
+                                className="flex min-h-0 flex-col overflow-y-auto border-l border-dark/10 bg-cream [scrollbar-width:thin]"
+                            >
+                                {tabs.map((tab, i) => (
+                                    <button
+                                        key={`${tab.imageUrl}-${i}`}
+                                        type="button"
+                                        onClick={() => setIndex(i)}
+                                        aria-current={i === index ? 'true' : undefined}
+                                        className={`w-full px-3 py-3.5 text-center text-caption leading-snug break-keep transition-colors duration-500 ease-brand sm:px-5 ${
+                                            i === index
+                                                ? 'bg-sand/45 font-semibold text-dark'
+                                                : 'text-dark/45 hover:bg-sand/25 hover:text-dark/70'
+                                        } ${i < tabs.length - 1 ? 'border-b border-dark/10' : ''}`}
+                                    >
+                                        {labels[i]}
+                                    </button>
+                                ))}
+                            </nav>
+                        </div>
 
                         <div className="flex shrink-0 border-t border-dark/10 bg-cream">
                             <button

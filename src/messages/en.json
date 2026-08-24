@@ -218,6 +218,8 @@
         "privacy": "Privacy Policy",
         "terms": "Terms of Service",
         "priceList": "Price List",
+        "cert": "Certificate issuance fees",
+        "rights": "Patient rights and duties",
         "effective": "Effective {date}"
     },
     "notFound": {
@@ -269,7 +271,7 @@
         "silk": "Hands wrapped in silk, symbolising our care",
         "doctor": "Portrait of the medical director",
         "lounge": "First-floor reception lounge",
-        "mapAlt": "Clinic location map (available after opening)",
+        "mapAlt": "Clinic location map",
         "enlarge": "View larger",
         "logo": "HARUYOUNG CLINIC",
         "card_lifting": "Cream texture symbolising our lifting treatments",

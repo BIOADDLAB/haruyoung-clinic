@@ -2,14 +2,17 @@
 
 import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
+import { useState } from 'react';
 import { Link } from '@/i18n/navigation';
-import { CLINIC, POLICY_LINKS } from '@/data/site';
+import { CLINIC, NOTICE_LINKS, POLICY_LINKS } from '@/data/site';
+import NoticeImageModal from '@/components/ui/NoticeImageModal';
 
 export default function Footer() {
     const t = useTranslations('policy');
     const tf = useTranslations('footer');
     const ta = useTranslations('a11y');
     const locale = useLocale();
+    const [notice, setNotice] = useState<(typeof NOTICE_LINKS)[number] | null>(null);
     return (
         <footer className="flex flex-col bg-dark text-cream lg:h-dvh">
             <div className="relative h-[32vh] w-full shrink-0 sm:h-[40vh] lg:h-auto lg:min-h-0 lg:flex-1">
@@ -26,21 +29,13 @@ export default function Footer() {
             <div className="footer-info px-6 pb-24 pt-14 lg:px-14 lg:py-10">
                 <div className="footer-row mx-auto flex w-full max-w-[1440px] flex-col gap-12 lg:gap-10">
                     <div className="footer-left flex flex-col gap-8 lg:flex-row lg:gap-5">
-                        {/* #TODO: 개원 후 주소 확정되면 아래 iframe 으로 교체
                         <iframe
-                            src={`https://www.google.com/maps?q=${encodeURIComponent(tf('address'))}&hl=ko&z=17&output=embed`}
-                            title={`하루영의원 위치 지도 - ${tf('address')}`}
+                            src={`https://www.google.com/maps?q=${encodeURIComponent(CLINIC.mapQuery)}&hl=${locale === 'zh' ? 'zh-CN' : locale}&z=17&output=embed`}
+                            title={ta('mapAlt')}
                             loading="lazy"
                             referrerPolicy="no-referrer-when-downgrade"
                             className="footer-map aspect-[5/3] w-full max-w-[520px] self-start border-0 bg-[#d9d9d9] lg:w-[320px] lg:max-w-none lg:shrink-0"
-                        /> */}
-                        <div
-                            role="img"
-                            aria-label={ta('mapAlt')}
-                            className="footer-map flex aspect-[5/3] w-full max-w-[520px] shrink-0 items-center justify-center self-start bg-[#d9d9d9] text-caption text-dark/50 lg:w-[320px] lg:max-w-none"
-                        >
-                            {tf('map')}
-                        </div>
+                        />
 
                         <ul className="footer-list flex w-full flex-col gap-2.5 lg:min-w-0 lg:flex-1">
                             <li className="flex items-center gap-7 border-b border-cream/40 pb-3.5 pl-3">
@@ -119,6 +114,22 @@ export default function Footer() {
 
                         <div className="lg:text-right">
                             <ul className="flex flex-wrap items-center text-caption font-bold lg:justify-end">
+                                {NOTICE_LINKS.map((l) => (
+                                    <li
+                                        key={l.key}
+                                        className="before:mx-3 before:text-cream/50 before:content-['|'] first:before:hidden"
+                                    >
+                                        <button
+                                            type="button"
+                                            onClick={() => setNotice(l)}
+                                            className="transition-colors duration-500 ease-brand hover:text-beige"
+                                        >
+                                            {t(l.key)}
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                            <ul className="mt-2.5 flex flex-wrap items-center text-caption font-bold lg:justify-end">
                                 {POLICY_LINKS.map((l) => (
                                     <li
                                         key={l.href}
@@ -164,6 +175,13 @@ export default function Footer() {
                     </div>
                 </div>
             </div>
+
+            <NoticeImageModal
+                open={notice !== null}
+                src={notice?.src ?? ''}
+                alt={notice ? t(notice.key) : ''}
+                onClose={() => setNotice(null)}
+            />
         </footer>
     );
 }

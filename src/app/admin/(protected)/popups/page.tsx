@@ -144,29 +144,33 @@ export default function PopupsPage() {
                             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                                 <label className="flex flex-col gap-1.5">
                                     <span className="text-[13px] font-medium text-neutral-600">탭 이름 (한국어)</span>
-                                    <input
+                                    <textarea
                                         value={tab.label}
                                         onChange={(e) => setTab(i, { label: e.target.value })}
-                                        placeholder="예: 8월 진료일정"
-                                        className={inputBase}
+                                        placeholder={'예: 8월\n진료일정'}
+                                        rows={3}
+                                        className={`${inputBase} min-h-[4.75rem] resize-y`}
                                     />
+                                    <span className="text-xs text-neutral-400">엔터로 줄바꿈하면 팝업 목록에도 그대로 보입니다.</span>
                                 </label>
                                 <label className="flex flex-col gap-1.5">
                                     <span className="text-[13px] font-medium text-neutral-600">English</span>
-                                    <input
+                                    <textarea
                                         value={tab.labelEn ?? ''}
                                         onChange={(e) => setTab(i, { labelEn: e.target.value })}
-                                        placeholder="e.g. August schedule"
-                                        className={inputBase}
+                                        placeholder={'e.g. August\nschedule'}
+                                        rows={3}
+                                        className={`${inputBase} min-h-[4.75rem] resize-y`}
                                     />
                                 </label>
                                 <label className="flex flex-col gap-1.5">
                                     <span className="text-[13px] font-medium text-neutral-600">中文</span>
-                                    <input
+                                    <textarea
                                         value={tab.labelZh ?? ''}
                                         onChange={(e) => setTab(i, { labelZh: e.target.value })}
-                                        placeholder="例: 8月门诊安排"
-                                        className={inputBase}
+                                        placeholder={'例: 8月\n门诊安排'}
+                                        rows={3}
+                                        className={`${inputBase} min-h-[4.75rem] resize-y`}
                                     />
                                 </label>
                             </div>

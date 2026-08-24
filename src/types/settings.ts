@@ -12,6 +12,19 @@ export type PromotionBannerSetting = {
     subtitleZh?: string;
 };
 
+/** 홈 히어로 배너 문구. 관리자 > 메인 배너 설정에서 언어별로 바꾼다 */
+export type HeroBannerSetting = {
+    slogan: string;
+    sloganEn?: string;
+    sloganZh?: string;
+    sub: string;
+    subEn?: string;
+    subZh?: string;
+    cta: string;
+    ctaEn?: string;
+    ctaZh?: string;
+};
+
 /** 팝업 탭 하나. imageUrl 은 Firebase Storage 다운로드 주소다 */
 export type PopupTab = {
     /** 탭 버튼에 보이는 짧은 라벨. 예: 8월 진료일정 */

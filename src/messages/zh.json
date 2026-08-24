@@ -218,6 +218,8 @@
         "privacy": "隐私政策",
         "terms": "服务条款",
         "priceList": "非医保价目表",
+        "cert": "证明文件开具费用案内",
+        "rights": "患者的权利与义务",
         "effective": "施行日 {date}"
     },
     "notFound": {
@@ -269,7 +271,7 @@
         "silk": "象征护理的丝绸包裹的手",
         "doctor": "院长个人照片",
         "lounge": "一楼前台休息区全景",
-        "mapAlt": "医院位置地图（开业后公开）",
+        "mapAlt": "医院位置地图",
         "enlarge": "查看大图",
         "logo": "HARUYOUNG 医院",
         "card_lifting": "象征提升项目的乳霜质感",

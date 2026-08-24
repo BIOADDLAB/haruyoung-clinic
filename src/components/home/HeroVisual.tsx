@@ -1,12 +1,14 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { motion, useAnimationControls, useReducedMotion } from 'framer-motion';
 import Image from 'next/image';
-import { useEffect, useLayoutEffect } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { Link } from '@/i18n/navigation';
 import { INTRO_CLOSED_EVENT, INTRO_ELEMENT_ID } from '@/lib/intro';
 import { DUR, EASE } from '@/lib/motion';
+import { getHeroBannerSetting } from '@/lib/settings';
+import { localizedSetting, type HeroBannerSetting, type SettingLocale } from '@/types/settings';
 
 /** 히어로 유지 구간. 상위 스크롤 컨테이너의 가로 전환 시작점 계산에 쓴다. */
 export const HERO_HOLD = 300;
@@ -14,8 +16,25 @@ export const HERO_HOLD = 300;
 export default function HeroVisual() {
     const t = useTranslations('a11y');
     const th = useTranslations('home');
+    const locale = useLocale() as SettingLocale;
     const reduced = useReducedMotion();
     const backgroundControls = useAnimationControls();
+    const [banner, setBanner] = useState<HeroBannerSetting | null>(null);
+
+    // 배너 문구는 관리자 > 메인 배너 설정 값이 있으면 그걸 쓰고, 없으면 번역 파일 기본값이다
+    useEffect(() => {
+        let alive = true;
+        getHeroBannerSetting().then((s) => {
+            if (alive) setBanner(s);
+        });
+        return () => {
+            alive = false;
+        };
+    }, []);
+
+    const slogan = (banner && localizedSetting(banner, 'slogan', locale)) || th('heroSlogan');
+    const sub = (banner && localizedSetting(banner, 'sub', locale)) || th('heroSub');
+    const cta = (banner && localizedSetting(banner, 'cta', locale)) || 'VISIT HARUYOUNG';
 
     // 다른 페이지에서 넘어올 때 스크롤 위치가 이어지지 않도록 진입 시 초기화한다.
     useLayoutEffect(() => {
@@ -87,12 +106,12 @@ export default function HeroVisual() {
                         />
                     </span>
 
-                    <h1 className="font-display text-40 font-normal leading-13 [text-shadow:2px_0_10.6px_rgba(59,37,9,0.64)]">
-                        {th('heroSlogan')}
+                    <h1 className="font-display text-40 font-normal leading-13 whitespace-pre-line [text-shadow:2px_0_10.6px_rgba(59,37,9,0.64)]">
+                        {slogan}
                     </h1>
 
                     <p className="mt-5 text-30 font-normal whitespace-pre-line [text-shadow:2px_0_10.6px_rgba(59,37,9,0.64)] ">
-                        {th('heroSub')}
+                        {sub}
                     </p>
 
                     <div className="mt-14 lg:mt-18">
@@ -100,7 +119,7 @@ export default function HeroVisual() {
                             href="/about"
                             className="inline-flex items-center border border-cream/80 px-8.25 py-2 font-display text-lead transition-colors duration-500 [text-shadow:2px_0_10.6px_rgba(59,37,9,0.64)] hover:border-dark hover:bg-dark hover:text-cream"
                         >
-                            VISIT HARUYOUNG
+                            {cta}
                         </Link>
                     </div>
                 </motion.div>
