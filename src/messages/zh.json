@@ -355,7 +355,8 @@
         "empty": "前后对比照片即将公开。",
         "before": "Before",
         "after": "After",
-        "bannerEn": "Before & After"
+        "bannerEn": "Before & After",
+        "loginToView": "登录后即可查看"
     },
     "promoBoard": {
         "event1": "Welcome Event",

@@ -355,7 +355,8 @@
         "empty": "Before & after photos coming soon.",
         "before": "Before",
         "after": "After",
-        "bannerEn": "Before & After"
+        "bannerEn": "Before & After",
+        "loginToView": "Sign in to view"
     },
     "promoBoard": {
         "event1": "Welcome Event",

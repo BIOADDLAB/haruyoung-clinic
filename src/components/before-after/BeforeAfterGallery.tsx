@@ -7,6 +7,8 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Banner from '@/components/ui/Banner';
+import AuthModal from '@/components/auth/AuthModal';
+import { useAuthMember } from '@/components/auth/useAuthMember';
 import { MENU_CATEGORIES } from '@/constants/categories';
 import { TREATMENT_BANNER } from '@/data/site';
 import { DUR, EASE } from '@/lib/motion';
@@ -24,6 +26,10 @@ export default function BeforeAfterGallery() {
     const mounted = useMounted();
     const [items, setItems] = useState<BeforeAfterItem[] | null>(null);
     const [open, setOpen] = useState<BeforeAfterItem | null>(null);
+    const [auth, setAuth] = useState(false);
+    const { member, ready } = useAuthMember();
+    // 로그인 판정 전에는 가려 둔다. 원본이 잠깐 보이면 안 된다
+    const locked = !ready || !member;
 
     useEffect(() => {
         let alive = true;
@@ -89,11 +95,11 @@ export default function BeforeAfterGallery() {
                                     <li key={`${item.menuSlug}-${item.beforeUrl}`}>
                                         <button
                                             type="button"
-                                            onClick={() => setOpen(item)}
+                                            onClick={() => (locked ? setAuth(true) : setOpen(item))}
                                             className="group w-full text-left"
                                         >
                                             <div className="grid grid-cols-2 gap-1.5 overflow-hidden">
-                                                <PairShot src={item.beforeUrl} label={t('before')} />
+                                                <PairShot src={item.beforeUrl} label={t('before')} locked={locked} />
                                                 <PairShot src={item.afterUrl} label={t('after')} />
                                             </div>
                                         </button>
@@ -124,7 +130,7 @@ export default function BeforeAfterGallery() {
                                     onClick={(e) => e.stopPropagation()}
                                     className="grid w-full max-w-[960px] grid-cols-1 gap-3 sm:grid-cols-2"
                                 >
-                                    <PairShot src={open.beforeUrl} label={t('before')} />
+                                    <PairShot src={open.beforeUrl} label={t('before')} locked={locked} />
                                     <PairShot src={open.afterUrl} label={t('after')} />
                                 </div>
                             </motion.div>
@@ -132,16 +138,32 @@ export default function BeforeAfterGallery() {
                     </AnimatePresence>,
                     document.body,
                 )}
+
+            <AuthModal open={auth} onClose={() => setAuth(false)} />
         </div>
     );
 }
 
-function PairShot({ src, label }: { src: string; label: string }) {
+function PairShot({ src, label, locked = false }: { src: string; label: string; locked?: boolean }) {
+    const t = useTranslations('beforeAfter');
+
     return (
         <span className="relative block overflow-hidden bg-sand">
             <span className="relative block aspect-square">
-                <Image src={src} alt="" fill unoptimized sizes="(min-width:1024px) 400px, 50vw" className="object-cover" />
+                <Image
+                    src={src}
+                    alt=""
+                    fill
+                    unoptimized
+                    sizes="(min-width:1024px) 400px, 50vw"
+                    className={`object-cover ${locked ? 'pointer-events-none scale-110 blur-2xl' : ''}`}
+                />
             </span>
+            {locked && (
+                <span className="absolute inset-0 flex items-center justify-center bg-dark/35 px-3 text-center text-caption-sm font-medium leading-snug text-cream [text-shadow:0_1px_8px_rgba(59,43,30,0.55)]">
+                    {t('loginToView')}
+                </span>
+            )}
             <span className="absolute bottom-2 left-2 font-display text-caption-sm tracking-[0.08em] text-cream [text-shadow:0_1px_8px_rgba(59,43,30,0.55)]">
                 {label}
             </span>

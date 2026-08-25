@@ -355,7 +355,8 @@
         "empty": "준비 중인 전후사진입니다.",
         "before": "Before",
         "after": "After",
-        "bannerEn": "Before & After"
+        "bannerEn": "Before & After",
+        "loginToView": "로그인 후 확인하실 수 있습니다"
     },
     "promoBoard": {
         "event1": "Welcome Event",
