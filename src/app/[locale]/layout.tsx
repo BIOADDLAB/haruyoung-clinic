@@ -7,6 +7,7 @@ import '@fontsource-variable/asta-sans';
 import '../globals.css';
 import CartProvider from '@/components/cart/CartProvider';
 import IntroSessionScript from '@/components/home/IntroSessionScript';
+import PwaRegister from '@/components/pwa/PwaRegister';
 import JsonLd from '@/components/seo/JsonLd';
 import { SITE_CONFIG } from '@/data/site';
 import { routing } from '@/i18n/routing';
@@ -34,7 +35,7 @@ const astaSansVariable = {
 
 export const viewport: Viewport = {
     colorScheme: 'light',
-    themeColor: '#ffffff',
+    themeColor: '#fffbf6',
 };
 
 export function generateStaticParams() {
@@ -74,6 +75,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
             images: [absoluteUrl('/images/og-image.jpg')],
         },
         ...(googleVerification && { verification: { google: googleVerification } }),
+        applicationName: t('clinic'),
+        appleWebApp: {
+            capable: true,
+            title: t('clinic'),
+            statusBarStyle: 'default',
+        },
     };
 }
 
@@ -116,6 +123,7 @@ export default async function LocaleLayout({
             <body>
                 <JsonLd data={schema} />
                 <NextIntlClientProvider>
+                    <PwaRegister />
                     <CartProvider>{children}</CartProvider>
                 </NextIntlClientProvider>
             </body>
