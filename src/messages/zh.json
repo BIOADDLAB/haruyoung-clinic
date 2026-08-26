@@ -94,7 +94,7 @@
         "loading": "加载中…",
         "empty": "该项目正在筹备中。",
         "askPrice": "价格咨询",
-        "vat": "不含增值税",
+        "vat": "增值税另计",
         "sections": "项目分类",
         "sessions": "{n}次"
     },

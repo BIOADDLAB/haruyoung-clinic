@@ -18,34 +18,40 @@ export default function TreatmentPrice({ product, locale }: { product: Product; 
     const description = localized(product, 'description', locale);
     const tiers = usableTiers(product);
 
+    const vat = <p className="mt-1.5 text-right text-caption font-medium text-dark/65">{t('vat')}</p>;
+
     if (tiers.length > 0) {
+        const priced = tiers.some((tier) => localizedTierPrice(tier, locale) != null);
         return (
-            <div className="flex flex-wrap items-center justify-end gap-x-6 gap-y-2">
-                {tiers.map((tier) => {
-                    const price = localizedTierPrice(tier, locale);
-                    const caption = t('sessions', { n: tier.sessions });
-                    if (price == null) {
+            <div>
+                <div className="flex flex-wrap items-center justify-end gap-x-6 gap-y-2">
+                    {tiers.map((tier) => {
+                        const price = localizedTierPrice(tier, locale);
+                        const caption = t('sessions', { n: tier.sessions });
+                        if (price == null) {
+                            return (
+                                <span key={tier.sessions} className="text-caption text-dark/50">
+                                    {caption} {t('askPrice')}
+                                </span>
+                            );
+                        }
                         return (
-                            <span key={tier.sessions} className="text-caption text-dark/50">
-                                {caption} {t('askPrice')}
-                            </span>
+                            <CartToggle
+                                key={tier.sessions}
+                                caption={caption}
+                                item={{
+                                    key: `product:${product.id}:${tier.sessions}`,
+                                    name: `${name} (${caption})`,
+                                    price,
+                                    category: product.menuCategory,
+                                    description,
+                                    sessions: tier.sessions,
+                                }}
+                            />
                         );
-                    }
-                    return (
-                        <CartToggle
-                            key={tier.sessions}
-                            caption={caption}
-                            item={{
-                                key: `product:${product.id}:${tier.sessions}`,
-                                name: `${name} (${caption})`,
-                                price,
-                                category: product.menuCategory,
-                                description,
-                                sessions: tier.sessions,
-                            }}
-                        />
-                    );
-                })}
+                    })}
+                </div>
+                {priced && vat}
             </div>
         );
     }
@@ -56,14 +62,17 @@ export default function TreatmentPrice({ product, locale }: { product: Product; 
     }
 
     return (
-        <CartToggle
-            item={{
-                key: `product:${product.id}`,
-                name,
-                price,
-                category: product.menuCategory,
-                description,
-            }}
-        />
+        <div>
+            <CartToggle
+                item={{
+                    key: `product:${product.id}`,
+                    name,
+                    price,
+                    category: product.menuCategory,
+                    description,
+                }}
+            />
+            {vat}
+        </div>
     );
 }
