@@ -60,9 +60,13 @@ export const CLINIC = {
 } as const;
 
 const mapQuery = encodeURIComponent(CLINIC.mapQuery);
+const mapName = encodeURIComponent(CLINIC.name);
 
 export const MAP_LINKS = {
     naver: `https://map.naver.com/p/search/${mapQuery}`,
+    kakao: `https://map.kakao.com/?q=${mapName}`,
+    google: `https://www.google.com/maps/search/?api=1&query=${mapName}`,
+    tmap: `https://www.tmap.co.kr/tmap2/mobile/route.jsp?name=${mapName}&lon=${CLINIC.lng}&lat=${CLINIC.lat}`,
 } as const;
 
 /** TODO: 실제 카카오 채널 주소로 교체 */
