@@ -29,7 +29,7 @@ export default function TreatmentList({ slug, categoryName }: { slug: string; ca
         };
     }, [slug, locale]);
 
-    /** 섹션 제목(subCategory) 하나로만 묶는다. 등장 순서를 그대로 따른다 */
+    /** 섹션 제목(subCategory) 한국어 값으로만 묶는다. 번역은 표시에만 쓴다 */
     const groups = useMemo(() => {
         if (!list) return [];
         const bySub = new Map<string, Product[]>();
@@ -38,8 +38,12 @@ export default function TreatmentList({ slug, categoryName }: { slug: string; ca
             if (!bySub.has(sub)) bySub.set(sub, []);
             bySub.get(sub)!.push(p);
         });
-        return Array.from(bySub, ([sub, items]) => ({ sub, items }));
-    }, [list]);
+        return Array.from(bySub, ([sub, items]) => ({
+            sub,
+            label: items.map((p) => localized(p, 'subCategory', locale)).find(Boolean) || sub,
+            items,
+        }));
+    }, [list, locale]);
 
     const bannerEn = TREATMENT_BANNER[slug]?.en ?? categoryName;
     const bannerKo = tb(slug);
@@ -81,7 +85,7 @@ export default function TreatmentList({ slug, categoryName }: { slug: string; ca
                                         onClick={() => goTo(`section-${i}`)}
                                         className="whitespace-nowrap text-caption text-dark/70 transition-colors duration-500 ease-brand hover:text-dark"
                                     >
-                                        {g.sub}
+                                        {g.label}
                                     </button>
                                 </span>
                             ))}
@@ -98,7 +102,7 @@ export default function TreatmentList({ slug, categoryName }: { slug: string; ca
                         >
                             {g.sub && (
                                 <h2 className="w-full max-w-[800px] border-b border-dark/15 pb-3 text-20 font-bold lg:text-22">
-                                    {g.sub}
+                                    {g.label}
                                 </h2>
                             )}
 
@@ -114,13 +118,13 @@ export default function TreatmentList({ slug, categoryName }: { slug: string; ca
                                             {localized(p, 'name', locale)}
                                         </h4>
 
-                                        {p.highlight && (
+                                        {localized(p, 'highlight', locale) && (
                                             <p className="mt-2 text-small font-medium text-brown">
                                                 {localized(p, 'highlight', locale)}
                                             </p>
                                         )}
 
-                                        {p.description && (
+                                        {localized(p, 'description', locale) && (
                                             <p className="mt-6 whitespace-pre-line text-caption leading-[1.7] text-dark/85">
                                                 {localized(p, 'description', locale)}
                                             </p>

@@ -47,28 +47,36 @@ export default function ProductForm({
             name: initial?.name ?? '',
             highlight: initial?.highlight ?? '',
             description: initial?.description ?? '',
+            subCategory: initial?.subCategory ?? '',
         },
         en: {
             name: initial?.nameEn ?? '',
             highlight: initial?.highlightEn ?? '',
             description: initial?.descriptionEn ?? '',
+            subCategory: initial?.subCategoryEn ?? '',
         },
         zh: {
             name: initial?.nameZh ?? '',
             highlight: initial?.highlightZh ?? '',
             description: initial?.descriptionZh ?? '',
+            subCategory: initial?.subCategoryZh ?? '',
         },
     });
 
     /** 언어 탭. 한 화면에 3배로 늘어놓으면 못 쓴다 */
     const [lang, setLang] = useState<'ko' | 'en' | 'zh'>('ko');
 
-    const setField = (field: 'name' | 'highlight' | 'description', v: string) =>
+    const setField = (field: 'name' | 'highlight' | 'description' | 'subCategory', v: string) =>
         setText((prev) => ({ ...prev, [lang]: { ...prev[lang], [field]: v } }));
 
     /** 각 언어에 입력된 게 하나라도 있는지. 탭에 점으로 표시한다 */
     const filled = (l: 'ko' | 'en' | 'zh') =>
-        Boolean(text[l].name.trim() || text[l].highlight.trim() || text[l].description.trim());
+        Boolean(
+            text[l].name.trim() ||
+                text[l].highlight.trim() ||
+                text[l].description.trim() ||
+                (l !== 'ko' && text[l].subCategory.trim()),
+        );
     /** 노출 언어. 비어 있으면 모든 언어에 노출한다 */
     const [locales, setLocales] = useState<('ko' | 'en' | 'zh')[]>(initial?.locales ?? []);
 
@@ -106,6 +114,19 @@ export default function ProductForm({
     );
 
     const menuName = MENU_CATEGORIES.find((c) => c.slug === menuSlug)!.name;
+
+    const pickSubCategory = (next: string) => {
+        setSubCategory(next);
+        const peer = allProducts.find(
+            (p) => p.menuSlug === menuSlug && p.subCategory === next && (p.subCategoryEn || p.subCategoryZh),
+        );
+        if (!peer || !next) return;
+        setText((prev) => ({
+            ...prev,
+            en: { ...prev.en, subCategory: prev.en.subCategory.trim() || peer.subCategoryEn || '' },
+            zh: { ...prev.zh, subCategory: prev.zh.subCategory.trim() || peer.subCategoryZh || '' },
+        }));
+    };
 
     const submit = async () => {
         if (!text.ko.name.trim()) {
@@ -150,6 +171,8 @@ export default function ProductForm({
                 menuSlug,
                 menuCategory: menuName,
                 subCategory,
+                subCategoryEn: text.en.subCategory,
+                subCategoryZh: text.zh.subCategory,
                 name: text.ko.name,
                 nameEn: text.en.name,
                 nameZh: text.zh.name,
@@ -236,7 +259,7 @@ export default function ProductForm({
                                             setCustomSub(true);
                                             setSubCategory('');
                                         } else {
-                                            setSubCategory(e.target.value);
+                                            pickSubCategory(e.target.value);
                                         }
                                     }}
                                     className={inputBase}
@@ -298,6 +321,29 @@ export default function ProductForm({
                             <span className="ml-2 text-xs text-neutral-400">비우면 한국어로 표시됩니다</span>
                         )}
                     </div>
+
+                    {/* 영문·중문 섹션 제목. 묶는 키는 한국어 섹션명이라 여기가 비어도 구성이 안 깨진다 */}
+                    {lang !== 'ko' && (
+                        <label className="flex flex-col gap-1.5">
+                            <span className="text-[13px] font-medium text-neutral-600">
+                                섹션 제목 <span className="font-normal text-neutral-400">(선택)</span>
+                            </span>
+                            <input
+                                value={text[lang].subCategory}
+                                onChange={(e) => setField('subCategory', e.target.value)}
+                                placeholder={
+                                    subCategory
+                                        ? lang === 'en'
+                                            ? `한국어: ${subCategory}`
+                                            : `韩语: ${subCategory}`
+                                        : lang === 'en'
+                                          ? 'Leave empty to use the Korean section title'
+                                          : '留空则显示韩语分区名'
+                                }
+                                className={inputBase}
+                            />
+                        </label>
+                    )}
 
                     {/* 시술명 */}
                     <label className="flex flex-col gap-1.5">

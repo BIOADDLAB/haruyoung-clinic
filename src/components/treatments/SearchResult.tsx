@@ -53,8 +53,21 @@ export default function SearchResult({ keyword }: { keyword: string }) {
             const menuCategory = MENU_CATEGORY_SLUGS.has(product.menuSlug)
                 ? tb(product.menuSlug as MenuCategorySlug)
                 : product.menuCategory;
+            const subCategory = localized(product, 'subCategory', locale);
             const searchText = normalizeSearchText(
-                [menuCategory, product.subCategory, name, highlight, description].filter(Boolean).join(' '),
+                [
+                    menuCategory,
+                    product.subCategory,
+                    subCategory,
+                    product.name,
+                    name,
+                    product.highlight,
+                    highlight,
+                    product.description,
+                    description,
+                ]
+                    .filter(Boolean)
+                    .join(' '),
             );
 
             if (!searchText.includes(query)) return [];
@@ -66,7 +79,7 @@ export default function SearchResult({ keyword }: { keyword: string }) {
                     highlight,
                     description,
                     menuCategory,
-                    subCategory: product.subCategory,
+                    subCategory,
                 },
             ];
         });

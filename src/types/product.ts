@@ -12,6 +12,9 @@ export type Product = {
     menuSlug: string;
     /** 페이지 안 섹션 제목. 예: 주름 보톡스 / 여성 제모 - 얼굴 */
     subCategory: string;
+    /** 영문·중문 섹션 제목. 비어 있으면 한국어 섹션명을 그대로 보여 준다 */
+    subCategoryEn?: string;
+    subCategoryZh?: string;
     name: string;
     /** 영문·중문 시술명. 비어 있으면 화면에서 한국어로 떨어진다 */
     nameEn?: string;
@@ -48,7 +51,11 @@ export type Locale = 'ko' | 'en' | 'zh';
  * 해당 언어가 비어 있으면 한국어로 떨어진다.
  * 269건을 다 번역하기 전에도 화면이 안 깨진다.
  */
-export function localized(p: Product, field: 'name' | 'highlight' | 'description', locale: Locale) {
+export function localized(
+    p: Product,
+    field: 'name' | 'highlight' | 'description' | 'subCategory',
+    locale: Locale,
+) {
     if (locale === 'en') return p[`${field}En`] || p[field];
     if (locale === 'zh') return p[`${field}Zh`] || p[field];
     return p[field];
