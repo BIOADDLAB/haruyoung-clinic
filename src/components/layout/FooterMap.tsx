@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef } from 'react';
-import { CLINIC } from '@/data/site';
+import { CLINIC, MAP_LINKS } from '@/data/site';
 
 const MAP_BOX =
     'footer-map relative aspect-[5/3] w-full max-w-[520px] self-start overflow-hidden bg-[#d9d9d9] lg:w-[320px] lg:max-w-none lg:shrink-0';
@@ -33,6 +33,7 @@ function loadNaverMaps(clientId: string) {
 }
 
 export default function FooterMap() {
+    const t = useTranslations('footer');
     const ta = useTranslations('a11y');
     const mapRef = useRef<HTMLDivElement>(null);
 
@@ -77,6 +78,13 @@ export default function FooterMap() {
         <div className={MAP_BOX} role="region" aria-label={ta('mapAlt')}>
             {/* 네이버 지도가 이 칸을 채운다. React 자식을 넣으면 타일이 지워진다 */}
             <div ref={mapRef} className="absolute inset-0 h-full w-full" />
+            <a
+                href={MAP_LINKS.naver}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="absolute inset-0 z-10 cursor-pointer"
+                aria-label={t('mapNaver')}
+            />
         </div>
     );
 }

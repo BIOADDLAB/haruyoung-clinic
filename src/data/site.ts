@@ -59,11 +59,10 @@ export const CLINIC = {
     lng: 127.06913,
 } as const;
 
-const mapQuery = encodeURIComponent(CLINIC.mapQuery);
 const mapName = encodeURIComponent(CLINIC.name);
 
 export const MAP_LINKS = {
-    naver: `https://map.naver.com/p/search/${mapQuery}`,
+    naver: 'https://map.naver.com/p/entry/place/2027265731',
     kakao: `https://map.kakao.com/?q=${mapName}`,
     google: `https://www.google.com/maps/search/?api=1&query=${mapName}`,
     tmap: 'https://tmap.life/464b068f',
