@@ -70,13 +70,44 @@ export type ReservationDayHours = {
 };
 
 /** 예약 가능 시간. settings/reservationHours 문서다 */
+export type ReservationClosedDate = {
+    /** 'YYYY-MM-DD' */
+    date: string;
+    /** 관리자용. 예: 추석 */
+    note: string;
+};
+
 export type ReservationHoursSetting = {
     /** 키는 '0'(일) … '6'(토) */
     days: Record<string, ReservationDayHours>;
     lunchStart: string;
     lunchEnd: string;
     maxDays: number;
+    /** 요일과 무관하게 막는 날짜. 추석·임시휴진 */
+    closedDates: ReservationClosedDate[];
 };
+
+const DATE_KEY = /^\d{4}-\d{2}-\d{2}$/;
+
+export function normalizeClosedDates(raw: unknown): ReservationClosedDate[] {
+    if (!Array.isArray(raw)) return [];
+    const seen = new Set<string>();
+    const out: ReservationClosedDate[] = [];
+    for (const item of raw) {
+        const date = typeof item === 'string' ? item : item && typeof item === 'object' ? String((item as { date?: string }).date ?? '') : '';
+        if (!DATE_KEY.test(date) || seen.has(date)) continue;
+        seen.add(date);
+        const note = item && typeof item === 'object' ? String((item as { note?: string }).note ?? '').trim() : '';
+        out.push({ date, note });
+    }
+    out.sort((a, b) => a.date.localeCompare(b.date));
+    return out;
+}
+
+export function isReservationClosed(dateKey: string, hours?: ReservationHoursSetting | null) {
+    if (!dateKey) return false;
+    return (hours?.closedDates ?? []).some((d) => d.date === dateKey);
+}
 
 /** Firestore 에 값이 없을 때 쓰는 기본값. site.ts 진료시간과 같다 */
 export function defaultReservationHours(): ReservationHoursSetting {
@@ -92,6 +123,7 @@ export function defaultReservationHours(): ReservationHoursSetting {
         lunchStart: RESERVATION_LUNCH.start,
         lunchEnd: RESERVATION_LUNCH.end,
         maxDays: RESERVATION_MAX_DAYS,
+        closedDates: [],
     };
 }
 

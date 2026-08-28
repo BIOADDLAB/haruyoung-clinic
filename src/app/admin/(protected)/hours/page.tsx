@@ -2,7 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { getReservationHoursSetting, saveReservationHoursSetting } from '@/lib/settings';
-import { defaultReservationHours, type ReservationDayHours, type ReservationHoursSetting } from '@/types/settings';
+import {
+    defaultReservationHours,
+    normalizeClosedDates,
+    type ReservationDayHours,
+    type ReservationHoursSetting,
+} from '@/types/settings';
+import { toKey } from '@/components/reservation/slots';
 
 const inputBase =
     'w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-[15px] text-[#3a322c] outline-none transition focus:border-[#3a322c]/30 focus:ring-2 focus:ring-[#3a322c]/10 disabled:bg-neutral-50 disabled:text-neutral-400';
@@ -18,6 +24,7 @@ const DAYS = [
 ] as const;
 
 const TIME_OK = /^\d{2}:\d{2}$/;
+const DATE_OK = /^\d{4}-\d{2}-\d{2}$/;
 
 const toMin = (hhmm: string) => {
     const [h, m] = hhmm.split(':').map(Number);
@@ -28,12 +35,20 @@ export default function HoursPage() {
     const [hours, setHours] = useState<ReservationHoursSetting>(defaultReservationHours);
     const [loading, setLoading] = useState(true);
     const [busy, setBusy] = useState(false);
+    const [closedFrom, setClosedFrom] = useState('');
+    const [closedTo, setClosedTo] = useState('');
+    const [closedNote, setClosedNote] = useState('');
 
     useEffect(() => {
         let alive = true;
         getReservationHoursSetting().then((s) => {
             if (!alive) return;
-            setHours({ ...defaultReservationHours(), ...s, days: { ...defaultReservationHours().days, ...s.days } });
+            setHours({
+                ...defaultReservationHours(),
+                ...s,
+                days: { ...defaultReservationHours().days, ...s.days },
+                closedDates: normalizeClosedDates(s.closedDates),
+            });
             setLoading(false);
         });
         return () => {
@@ -43,6 +58,37 @@ export default function HoursPage() {
 
     const setDay = (key: string, patch: Partial<ReservationDayHours>) =>
         setHours((prev) => ({ ...prev, days: { ...prev.days, [key]: { ...prev.days[key], ...patch } } }));
+
+    const addClosedRange = () => {
+        if (!DATE_OK.test(closedFrom)) return alert('시작 날짜를 선택하세요.');
+        const end = closedTo || closedFrom;
+        if (!DATE_OK.test(end)) return alert('종료 날짜를 선택하세요.');
+        if (end < closedFrom) return alert('종료일이 시작일보다 빠를 수 없습니다.');
+
+        const note = closedNote.trim();
+        setHours((prev) => {
+            const next = [...prev.closedDates];
+            const have = new Set(next.map((d) => d.date));
+            const cursor = new Date(`${closedFrom}T00:00:00`);
+            const last = new Date(`${end}T00:00:00`);
+            while (cursor <= last) {
+                const key = toKey(cursor);
+                if (!have.has(key)) {
+                    have.add(key);
+                    next.push({ date: key, note });
+                }
+                cursor.setDate(cursor.getDate() + 1);
+            }
+            next.sort((a, b) => a.date.localeCompare(b.date));
+            return { ...prev, closedDates: next };
+        });
+        setClosedFrom('');
+        setClosedTo('');
+        setClosedNote('');
+    };
+
+    const removeClosed = (date: string) =>
+        setHours((prev) => ({ ...prev, closedDates: prev.closedDates.filter((d) => d.date !== date) }));
 
     const submit = async () => {
         if (!TIME_OK.test(hours.lunchStart) || !TIME_OK.test(hours.lunchEnd)) {
@@ -70,7 +116,10 @@ export default function HoursPage() {
 
         setBusy(true);
         try {
-            await saveReservationHoursSetting(hours);
+            await saveReservationHoursSetting({
+                ...hours,
+                closedDates: normalizeClosedDates(hours.closedDates),
+            });
             alert('저장했습니다.');
         } catch {
             alert('저장에 실패했습니다. 잠시 후 다시 시도해주세요.');
@@ -85,7 +134,7 @@ export default function HoursPage() {
         <div className="w-full max-w-4xl">
             <h1 className="text-2xl font-bold text-[#3a322c] lg:text-3xl">예약 시간 설정</h1>
             <p className="mt-1 text-sm text-neutral-500">
-                요일별 진료시간과 점심시간을 바꿉니다. 바로예약 달력과 시간 슬롯에 바로 반영됩니다.
+                요일별 진료시간, 점심시간, 추석처럼 예약이 안 되는 날짜를 바꿉니다. 바로예약 달력에 바로 반영됩니다.
             </p>
 
             <div className="mt-6 overflow-hidden rounded-2xl border border-black/[0.04] bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
@@ -173,6 +222,84 @@ export default function HoursPage() {
                             className={inputBase}
                         />
                     </label>
+                </div>
+            </div>
+
+            <div className="mt-6 overflow-hidden rounded-2xl border border-black/[0.04] bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+                <div className="space-y-5 p-6 sm:p-8">
+                    <div>
+                        <h2 className="text-base font-semibold text-[#3a322c]">예약 불가 날짜</h2>
+                        <p className="mt-1 text-sm text-neutral-500">
+                            추석·임시휴진처럼 요일과 관계없이 막을 날짜입니다. 기간을 넣으면 그 사이 날짜가 모두
+                            추가됩니다.
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 items-end gap-3 sm:grid-cols-[1fr_1fr_1fr_auto]">
+                        <label className="flex flex-col gap-1.5">
+                            <span className="text-[13px] font-medium text-neutral-600">시작</span>
+                            <input
+                                type="date"
+                                value={closedFrom}
+                                onChange={(e) => {
+                                    setClosedFrom(e.target.value);
+                                    if (!closedTo) setClosedTo(e.target.value);
+                                }}
+                                className={inputBase}
+                            />
+                        </label>
+                        <label className="flex flex-col gap-1.5">
+                            <span className="text-[13px] font-medium text-neutral-600">종료</span>
+                            <input
+                                type="date"
+                                value={closedTo}
+                                onChange={(e) => setClosedTo(e.target.value)}
+                                className={inputBase}
+                            />
+                        </label>
+                        <label className="flex flex-col gap-1.5">
+                            <span className="text-[13px] font-medium text-neutral-600">메모</span>
+                            <input
+                                type="text"
+                                value={closedNote}
+                                onChange={(e) => setClosedNote(e.target.value)}
+                                placeholder="추석"
+                                className={inputBase}
+                            />
+                        </label>
+                        <button
+                            type="button"
+                            onClick={addClosedRange}
+                            className="rounded-xl border border-black/10 bg-white px-4 py-2.5 text-sm font-medium text-[#3a322c]"
+                        >
+                            추가
+                        </button>
+                    </div>
+
+                    {hours.closedDates.length === 0 ? (
+                        <p className="text-sm text-neutral-400">등록된 날짜가 없습니다.</p>
+                    ) : (
+                        <ul className="flex flex-col gap-2">
+                            {hours.closedDates.map((d) => (
+                                <li
+                                    key={d.date}
+                                    className="flex items-center justify-between gap-3 rounded-xl border border-black/[0.06] bg-neutral-50 px-3.5 py-2.5"
+                                >
+                                    <div className="min-w-0">
+                                        <p className="text-sm font-medium text-[#3a322c]">{d.date}</p>
+                                        {d.note && <p className="text-xs text-neutral-500">{d.note}</p>}
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => removeClosed(d.date)}
+                                        className="shrink-0 text-xs text-red-500"
+                                    >
+                                        삭제
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                 </div>
 
                 <div className="flex justify-end border-t border-black/[0.06] bg-neutral-50 px-6 py-4 sm:px-8">

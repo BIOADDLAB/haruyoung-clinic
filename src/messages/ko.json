@@ -165,6 +165,10 @@
         "errTime": "예약 시간을 선택해주세요.",
         "errAgree": "필수 항목에 동의해주세요.",
         "errSubmit": "예약 접수에 실패했습니다. 잠시 후 다시 시도해주세요.",
+        "errSlotTaken": "선택한 시간은 이미 예약이 있습니다. 다른 시간을 골라주세요.",
+        "slotFull": "마감",
+        "loadingSlots": "예약 가능한 시간을 확인하는 중…",
+        "errSlotsLoad": "예약 시간을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.",
         "visitFirst": "초진",
         "visitAgain": "재진",
         "week": {

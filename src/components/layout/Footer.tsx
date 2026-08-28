@@ -4,7 +4,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useState } from 'react';
 import { Link } from '@/i18n/navigation';
-import { CLINIC, NOTICE_LINKS, POLICY_LINKS } from '@/data/site';
+import { CLINIC, MAP_APP_LINKS, NOTICE_LINKS, POLICY_LINKS } from '@/data/site';
 import FooterMap from '@/components/layout/FooterMap';
 import NoticeImageModal from '@/components/ui/NoticeImageModal';
 
@@ -33,9 +33,31 @@ export default function Footer() {
                         <FooterMap />
 
                         <ul className="footer-list flex w-full flex-col gap-2.5 lg:min-w-0 lg:flex-1">
-                            <li className="flex items-center gap-7 border-b border-cream/40 pb-3.5 pl-3">
-                                <h4 className="shrink-0 text-caption w-[55px]  tracking-wide">{tf('labelLocation')}</h4>
-                                <p className="text-caption tracking-wide">{tf('address')}</p>
+                            <li className="flex items-start gap-7 border-b border-cream/40 pb-3.5 pl-3">
+                                <h4 className="shrink-0 text-caption w-[55px] tracking-wide">{tf('labelLocation')}</h4>
+                                <div className="flex min-w-0 flex-col gap-2.5">
+                                    <p className="text-caption tracking-wide">{tf('address')}</p>
+                                    <ul className="flex gap-1.5">
+                                        {MAP_APP_LINKS.map((app) => (
+                                            <li key={app.href}>
+                                                <a
+                                                    href={app.href}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="block h-9 w-9 overflow-hidden rounded-[9px] bg-white shadow-[0_2px_8px_rgba(59,43,30,0.22)]"
+                                                >
+                                                    <Image
+                                                        src={app.src}
+                                                        alt={tf(app.labelKey)}
+                                                        width={80}
+                                                        height={80}
+                                                        className="h-full w-full object-cover"
+                                                    />
+                                                </a>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
                             </li>
                             <li className="flex items-center gap-7 border-b border-cream/40 pb-3.5 pl-3">
                                 <h4 className="shrink-0 text-caption w-[55px]  tracking-wide">{tf('labelHours')}</h4>

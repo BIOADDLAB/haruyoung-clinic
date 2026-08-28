@@ -1,19 +1,13 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
 import { useEffect, useRef } from 'react';
-import { CLINIC, MAP_LINKS } from '@/data/site';
+import { CLINIC } from '@/data/site';
 
 const MAP_BOX =
     'footer-map relative aspect-[5/3] w-full max-w-[520px] self-start overflow-hidden bg-[#d9d9d9] lg:w-[320px] lg:max-w-none lg:shrink-0';
 
 const CLIENT_ID = 'txr62pe1k4';
-
-const APP_LINKS = [
-    { href: MAP_LINKS.kakao, src: '/images/kakaomap.png', labelKey: 'mapKakao' },
-    { href: MAP_LINKS.google, src: '/images/googlemap.png', labelKey: 'mapGoogle' },
-] as const;
 
 function loadNaverMaps(clientId: string) {
     if (window.naver?.maps) return Promise.resolve();
@@ -39,7 +33,6 @@ function loadNaverMaps(clientId: string) {
 }
 
 export default function FooterMap() {
-    const t = useTranslations('footer');
     const ta = useTranslations('a11y');
     const mapRef = useRef<HTMLDivElement>(null);
 
@@ -84,29 +77,6 @@ export default function FooterMap() {
         <div className={MAP_BOX} role="region" aria-label={ta('mapAlt')}>
             {/* 네이버 지도가 이 칸을 채운다. React 자식을 넣으면 타일이 지워진다 */}
             <div ref={mapRef} className="absolute inset-0 h-full w-full" />
-
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex justify-end p-2.5">
-                <ul className="pointer-events-auto flex gap-1.5">
-                    {APP_LINKS.map((app) => (
-                        <li key={app.href}>
-                            <a
-                                href={app.href}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="block h-9 w-9 overflow-hidden rounded-[9px] bg-white shadow-[0_2px_8px_rgba(59,43,30,0.22)] lg:h-10 lg:w-10"
-                            >
-                                <Image
-                                    src={app.src}
-                                    alt={t(app.labelKey)}
-                                    width={80}
-                                    height={80}
-                                    className="h-full w-full object-cover"
-                                />
-                            </a>
-                        </li>
-                    ))}
-                </ul>
-            </div>
         </div>
     );
 }

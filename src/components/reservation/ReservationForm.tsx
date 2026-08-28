@@ -9,7 +9,7 @@ import { slotsOf } from './slots';
 import { useCart } from '@/components/cart/CartProvider';
 import { MENU_CATEGORIES } from '@/constants/categories';
 import { VISIT_TYPES } from '@/data/site';
-import { addReservation } from '@/lib/reservations';
+import { addReservation, isTimeTaken, SlotTakenError, subscribeOccupiedTimes } from '@/lib/reservations';
 import { getReservationHoursSetting } from '@/lib/settings';
 import PrivacyModal from '@/components/ui/PrivacyModal';
 import type { ReservationHoursSetting } from '@/types/settings';
@@ -39,6 +39,9 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
 
     const [privacy, setPrivacy] = useState(false);
     const [hours, setHours] = useState<ReservationHoursSetting | null>(null);
+    const [occupied, setOccupied] = useState<string[]>([]);
+    const [slotsReady, setSlotsReady] = useState(false);
+    const [slotsError, setSlotsError] = useState(false);
 
     useEffect(() => {
         let alive = true;
@@ -51,6 +54,36 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
     }, []);
 
     const slots = slotsOf(date, hours);
+    const openSlots = slots.filter((s) => !occupied.includes(s));
+
+    useEffect(() => {
+        if (!date) {
+            setOccupied([]);
+            setSlotsReady(true);
+            setSlotsError(false);
+            return;
+        }
+        setSlotsReady(false);
+        setSlotsError(false);
+        setOccupied([]);
+        const candidates = slotsOf(date, hours);
+        return subscribeOccupiedTimes(
+            date,
+            candidates,
+            (times) => {
+                setOccupied(times);
+                setSlotsReady(true);
+            },
+            () => {
+                setSlotsError(true);
+                setSlotsReady(true);
+            },
+        );
+    }, [date, hours]);
+
+    useEffect(() => {
+        if (time && occupied.includes(time)) setTime('');
+    }, [occupied, time]);
 
     const submit = async () => {
         if (!name.trim()) return alert(t('errName'));
@@ -60,9 +93,11 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
         if (!date) return alert(t('errDate'));
         if (!time) return alert(t('errTime'));
         if (!agreePrivacy || !agreeAge) return alert(t('errAgree'));
+        if (!slotsReady || slotsError || occupied.includes(time)) return alert(t('errSlotTaken'));
 
         setBusy(true);
         try {
+            if (await isTimeTaken(date, time)) throw new SlotTakenError();
             await addReservation({
                 name: name.trim(),
                 phone,
@@ -78,8 +113,8 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
             });
             if (!withCategory) clear();
             setDone(true);
-        } catch {
-            alert(t('errSubmit'));
+        } catch (e) {
+            alert(e instanceof SlotTakenError ? t('errSlotTaken') : t('errSubmit'));
         } finally {
             setBusy(false);
         }
@@ -172,11 +207,17 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
                 <div className="mt-5 rounded-xl border border-beige bg-cream px-5 py-6 sm:px-6">
                     {date === '' ? (
                         <p className="text-caption text-dark/50">{t('pickDateFirst')}</p>
+                    ) : !slotsReady ? (
+                        <p className="text-caption text-dark/50">{t('loadingSlots')}</p>
+                    ) : slotsError ? (
+                        <p className="text-caption text-dark/50">{t('errSlotsLoad')}</p>
                     ) : slots.length === 0 ? (
                         <p className="text-caption text-dark/50">{t('closedDay')}</p>
+                    ) : openSlots.length === 0 ? (
+                        <p className="text-caption text-dark/50">{t('noSlot')}</p>
                     ) : (
                         <ul className="grid grid-cols-3 gap-2.5 sm:grid-cols-6">
-                            {slots.map((s) => {
+                            {openSlots.map((s) => {
                                 const active = time === s;
                                 return (
                                     <li key={s}>
@@ -229,7 +270,7 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
             <button
                 type="button"
                 onClick={submit}
-                disabled={busy}
+                disabled={busy || !time || !slotsReady || slotsError}
                 className="mt-12 w-full rounded-xl bg-dark py-4.5 text-caption font-semibold tracking-wide text-cream transition-colors duration-500 ease-brand hover:bg-brown disabled:opacity-50 hover:cursor-pointer"
             >
                 {busy ? t('submitting') : t('submit')}

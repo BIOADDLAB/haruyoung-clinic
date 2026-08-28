@@ -1,7 +1,7 @@
 rules_version = '2';
 
-// Firebase 콘솔 > Firestore Database > 규칙 에 통째로 붙여넣고 게시한다.
-// 이 파일은 콘솔 내용과 항상 같게 유지한다. 콘솔에서만 고치면 다음 사람이 알 수 없다.
+// firebase deploy --only firestore:rules --project haruyoungclinic
+// 콘솔에서만 고치면 이 파일과 어긋나니, 규칙은 여기서 고친 뒤 배포한다.
 service cloud.firestore {
   match /databases/{database}/documents {
 
@@ -41,6 +41,16 @@ service cloud.firestore {
       allow create: if request.resource.data.status == 'pending'
                  && request.resource.data.keys().hasAll(['name','phone','date','time','createdAt']);
       allow read, update, delete: if isAdmin();
+    }
+
+    // 30분 칸 점유. 시각만 공개하고 예약자 정보는 넣지 않는다.
+    // 같은 id 를 두 번 만들 수 없어서 겹치는 예약을 막는다.
+    match /reservationSlots/{id} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasAll(['date', 'time'])
+                 && request.resource.data.date is string
+                 && request.resource.data.time is string;
+      allow update, delete: if isAdmin();
     }
 
     // 회원. 문서 id 는 Firebase Auth uid 다

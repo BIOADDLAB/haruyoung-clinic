@@ -22,6 +22,11 @@ export const RESERVATION_STATUS = {
 
 export type ReservationStatus = keyof typeof RESERVATION_STATUS;
 
+/** 이 상태면 해당 30분 칸을 차지한다. 취소만 자리를 비운다 */
+export function holdsReservationSlot(status: ReservationStatus) {
+    return status === 'pending' || status === 'confirmed' || status === 'done';
+}
+
 export type Reservation = {
     id: string;
     name: string;

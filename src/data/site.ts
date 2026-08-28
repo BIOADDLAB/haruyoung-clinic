@@ -66,8 +66,14 @@ export const MAP_LINKS = {
     naver: `https://map.naver.com/p/search/${mapQuery}`,
     kakao: `https://map.kakao.com/?q=${mapName}`,
     google: `https://www.google.com/maps/search/?api=1&query=${mapName}`,
-    tmap: `https://www.tmap.co.kr/tmap2/mobile/route.jsp?name=${mapName}&lon=${CLINIC.lng}&lat=${CLINIC.lat}`,
+    tmap: 'https://tmap.life/464b068f',
 } as const;
+
+export const MAP_APP_LINKS = [
+    { href: MAP_LINKS.tmap, src: '/images/tmap.png', labelKey: 'mapTmap' },
+    { href: MAP_LINKS.kakao, src: '/images/kakaomap.png', labelKey: 'mapKakao' },
+    { href: MAP_LINKS.google, src: '/images/googlemap.png', labelKey: 'mapGoogle' },
+] as const;
 
 /** TODO: 실제 카카오 채널 주소로 교체 */
 export const KAKAO_CHANNEL = 'http://pf.kakao.com/_kbhSX';

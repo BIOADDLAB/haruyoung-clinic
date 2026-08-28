@@ -165,6 +165,10 @@
         "errTime": "请选择预约时间。",
         "errAgree": "请同意必填项目。",
         "errSubmit": "预约失败，请稍后再试。",
+        "errSlotTaken": "该时段已被预约，请选择其他时间。",
+        "slotFull": "已满",
+        "loadingSlots": "正在确认可预约时间…",
+        "errSlotsLoad": "无法加载预约时间，请稍后再试。",
         "visitFirst": "初诊",
         "visitAgain": "复诊",
         "week": {

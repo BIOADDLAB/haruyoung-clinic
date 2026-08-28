@@ -165,6 +165,10 @@
         "errTime": "Please choose a time.",
         "errAgree": "Please agree to the required items.",
         "errSubmit": "Booking failed. Please try again in a moment.",
+        "errSlotTaken": "That time is already booked. Please choose another slot.",
+        "slotFull": "Full",
+        "loadingSlots": "Checking available times…",
+        "errSlotsLoad": "Could not load times. Please try again in a moment.",
         "visitFirst": "First visit",
         "visitAgain": "Returning",
         "week": {
