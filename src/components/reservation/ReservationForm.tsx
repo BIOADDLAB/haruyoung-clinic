@@ -203,6 +203,7 @@ export default function ReservationForm({ withCategory }: { withCategory?: boole
             {/* 시간 */}
             <section className="mt-10">
                 <h2 className="text-small font-semibold tracking-wide">{t('secTime')}</h2>
+                <p className="mt-2 text-caption-sm text-dark/50">{t('availableTimesOnly')}</p>
 
                 <div className="mt-5 rounded-xl border border-beige bg-cream px-5 py-6 sm:px-6">
                     {date === '' ? (

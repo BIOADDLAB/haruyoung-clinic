@@ -44,14 +44,15 @@ export default function Footer() {
                                                     href={app.href}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="block h-9 w-9 overflow-hidden rounded-[9px] bg-white shadow-[0_2px_8px_rgba(59,43,30,0.22)]"
+                                                    className="block h-9 w-9 overflow-hidden"
                                                 >
                                                     <Image
                                                         src={app.src}
                                                         alt={tf(app.labelKey)}
                                                         width={80}
                                                         height={80}
-                                                        className="h-full w-full object-cover"
+                                                        unoptimized
+                                                        className="h-full w-full object-contain"
                                                     />
                                                 </a>
                                             </li>
