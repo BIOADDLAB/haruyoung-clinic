@@ -38,6 +38,21 @@ const CAREER_KEYS = [
     'career10',
 ] as const;
 
+function DirectorPortrait({ alt, className, sizes }: { alt: string; className: string; sizes: string }) {
+    return (
+        <div className={`relative overflow-hidden rounded-full ${className}`}>
+            <Image
+                src="/images/doc_photo.jpeg"
+                alt={alt}
+                fill
+                quality={90}
+                sizes={sizes}
+                className="object-cover object-[center_22%]"
+            />
+        </div>
+    );
+}
+
 const SPACE_PHOTOS: GalleryPhoto[] = [
     {
         src: '/images/img-tour-01.jpg',
@@ -222,10 +237,10 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 
                                     {/* 모바일 전용 프로필 이미지 (제목 바로 아래) */}
                                     <Reveal variants={slideLeft} delay={0.1} className="mt-9 lg:hidden">
-                                        <div
-                                            role="img"
-                                            aria-label={ta('doctor')}
-                                            className="h-[260px] w-[175px] rounded-full bg-[#d9d9d9]"
+                                        <DirectorPortrait
+                                            alt={ta('doctor')}
+                                            className="h-[260px] w-[175px]"
+                                            sizes="175px"
                                         />
                                     </Reveal>
 
@@ -310,10 +325,10 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                                     delay={0.15}
                                     className="hidden self-end lg:mb-[13px] lg:block"
                                 >
-                                    <div
-                                        role="img"
-                                        aria-label={ta('doctor')}
-                                        className="h-[357px] w-[239px] rounded-full bg-[#d9d9d9]"
+                                    <DirectorPortrait
+                                        alt={ta('doctor')}
+                                        className="h-[357px] w-[239px]"
+                                        sizes="239px"
                                     />
                                 </Reveal>
                             </div>
