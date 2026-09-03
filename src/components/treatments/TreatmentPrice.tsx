@@ -6,6 +6,7 @@ import {
     localized,
     localizedPrice,
     localizedTierPrice,
+    tierCaption,
     usableTiers,
     type Locale,
     type Product,
@@ -27,20 +28,23 @@ export default function TreatmentPrice({ product, locale }: { product: Product; 
                 <div className="flex flex-wrap items-center justify-end gap-x-6 gap-y-2">
                     {tiers.map((tier) => {
                         const price = localizedTierPrice(tier, locale);
-                        const caption = t('sessions', { n: tier.sessions });
+                        const caption = tier.label?.trim()
+                            ? tierCaption(tier)
+                            : t('sessions', { n: tier.sessions });
+                        const key = tier.label?.trim() || String(tier.sessions);
                         if (price == null) {
                             return (
-                                <span key={tier.sessions} className="text-caption text-dark/50">
+                                <span key={key} className="text-caption text-dark/50">
                                     {caption} {t('askPrice')}
                                 </span>
                             );
                         }
                         return (
                             <CartToggle
-                                key={tier.sessions}
+                                key={key}
                                 caption={caption}
                                 item={{
-                                    key: `product:${product.id}:${tier.sessions}`,
+                                    key: `product:${product.id}:${key}`,
                                     name: `${name} (${caption})`,
                                     price,
                                     category: product.menuCategory,

@@ -5,21 +5,29 @@ import { useState } from 'react';
 import { MENU_CATEGORIES, SECTION_PRESETS } from '@/constants/categories';
 import { formatPriceInput, parsePriceInput } from '@/lib/price';
 import { addProduct, updateProduct } from '@/lib/products';
-import type { PriceTier, Product } from '@/types/product';
+import { tierCaption, type PriceTier, type Product } from '@/types/product';
 
 type TierDraft = {
-    sessions: string;
+    label: string;
     price: { ko: string; en: string; zh: string };
 };
 
 const emptyTierPrice = () => ({ ko: '', en: '', zh: '' });
 
-function nextSessions(rows: TierDraft[]) {
-    const used = new Set(rows.map((row) => Number(row.sessions.replace(/\D/g, ''))).filter((n) => n > 0));
-    for (const n of [1, 5, 10, 20, 30]) {
-        if (!used.has(n)) return String(n);
+function nextLabel(rows: TierDraft[]) {
+    const last = rows[rows.length - 1]?.label.trim() ?? '';
+    const m = last.match(/^([\d.]+)(.*)$/);
+    if (m) {
+        const n = Number(m[1]);
+        if (Number.isFinite(n) && n > 0) return `${n + 1}${m[2]}`;
     }
-    return String((used.size ? Math.max(...used) : 0) + 1);
+    return '1회';
+}
+
+function parseAmount(raw: string) {
+    const m = raw.match(/[\d.]+/);
+    const n = m ? Number(m[0]) : 0;
+    return Number.isFinite(n) && n > 0 ? n : 0;
 }
 
 export default function ProductForm({
@@ -88,12 +96,12 @@ export default function ProductForm({
         en: formatPriceInput(initial?.priceEn),
         zh: formatPriceInput(initial?.priceZh),
     });
-    /** 제모처럼 1회/5회/10회로 나눠 팔 때 켠다 */
+    /** 제모처럼 1회/5회, 필러처럼 2cc/4cc 로 나눠 팔 때 켠다 */
     const [useTiers, setUseTiers] = useState((initial?.priceTiers?.length ?? 0) > 0);
     const [tiers, setTiers] = useState<TierDraft[]>(() => {
         if (initial?.priceTiers?.length) {
             return initial.priceTiers.map((tier) => ({
-                sessions: String(tier.sessions),
+                label: tierCaption(tier),
                 price: {
                     ko: formatPriceInput(tier.price),
                     en: formatPriceInput(tier.priceEn),
@@ -101,7 +109,7 @@ export default function ProductForm({
                 },
             }));
         }
-        return [{ sessions: '1', price: emptyTierPrice() }];
+        return [{ label: '1회', price: emptyTierPrice() }];
     });
     const [busy, setBusy] = useState(false);
 
@@ -136,24 +144,27 @@ export default function ProductForm({
         }
         const parsedTiers = useTiers
             ? tiers
-                  .map((row) => ({
-                      sessions: Number(row.sessions.replace(/\D/g, '')),
-                      price: parsePriceInput(row.price.ko),
-                      priceEn: parsePriceInput(row.price.en),
-                      priceZh: parsePriceInput(row.price.zh),
-                  }))
-                  .filter((tier) => tier.sessions > 0)
-                  .sort((a, b) => a.sessions - b.sessions)
+                  .map((row) => {
+                      const label = row.label.trim();
+                      return {
+                          label,
+                          sessions: parseAmount(label),
+                          price: parsePriceInput(row.price.ko),
+                          priceEn: parsePriceInput(row.price.en),
+                          priceZh: parsePriceInput(row.price.zh),
+                      };
+                  })
+                  .filter((tier) => tier.label.length > 0)
             : [];
 
         if (useTiers) {
             if (parsedTiers.length === 0) {
-                alert('회차와 가격을 하나 이상 입력하세요.');
+                alert('표기와 가격을 하나 이상 입력하세요. 예: 1회, 2cc');
                 return;
             }
-            const counts = parsedTiers.map((tier) => tier.sessions);
-            if (new Set(counts).size !== counts.length) {
-                alert('같은 회차가 두 번 들어가 있습니다.');
+            const labels = parsedTiers.map((tier) => tier.label);
+            if (new Set(labels).size !== labels.length) {
+                alert('같은 표기가 두 번 들어가 있습니다.');
                 return;
             }
         }
@@ -162,7 +173,7 @@ export default function ProductForm({
         try {
             const first = parsedTiers[0];
             const priceTiers: PriceTier[] = parsedTiers.map((tier) => {
-                const row: PriceTier = { sessions: tier.sessions, price: tier.price };
+                const row: PriceTier = { sessions: tier.sessions || 0, label: tier.label, price: tier.price };
                 if (tier.priceEn != null) row.priceEn = tier.priceEn;
                 if (tier.priceZh != null) row.priceZh = tier.priceZh;
                 return row;
@@ -403,7 +414,7 @@ export default function ProductForm({
                         />
                     </label>
 
-                    {/* 정가. 회차로 나누면 아래 표가 대신한다 */}
+                    {/* 정가. 구간으로 나누면 아래 표가 대신한다 */}
                     <div className="space-y-3">
                         <div className="flex flex-wrap items-center justify-between gap-3">
                             <span className="text-[13px] font-medium text-neutral-600">가격</span>
@@ -417,7 +428,7 @@ export default function ProductForm({
                                         if (on && tiers.length === 1 && !tiers[0].price.ko) {
                                             setTiers([
                                                 {
-                                                    sessions: '1',
+                                                    label: '1회',
                                                     price: { ...priceBy },
                                                 },
                                             ]);
@@ -425,7 +436,7 @@ export default function ProductForm({
                                     }}
                                     className="h-3.5 w-3.5 accent-[#3a322c]"
                                 />
-                                회차별 가격 (1회 / 5회 / 10회)
+                                회차별 가격
                             </label>
                         </div>
 
@@ -433,32 +444,24 @@ export default function ProductForm({
                             <div className="space-y-2.5">
                                 <p className="text-xs text-neutral-400">
                                     {lang === 'ko'
-                                        ? '횟수와 그 회차의 정가를 적습니다. 미정이면 가격을 비워 두세요.'
+                                        ? '1회, 2cc처럼 표기를 그대로 적습니다. 미정이면 가격을 비워 두세요.'
                                         : '비우면 한국어 가격으로 표시됩니다.'}
                                 </p>
                                 {tiers.map((row, i) => (
-                                    <div key={i} className="flex flex-wrap items-center gap-2">
-                                        <div className="relative w-24">
-                                            <input
-                                                type="text"
-                                                inputMode="numeric"
-                                                value={row.sessions}
-                                                onChange={(e) => {
-                                                    const sessions = e.target.value.replace(/\D/g, '');
-                                                    setTiers((prev) =>
-                                                        prev.map((item, idx) =>
-                                                            idx === i ? { ...item, sessions } : item,
-                                                        ),
-                                                    );
-                                                }}
-                                                placeholder="1"
-                                                className={`${inputBase} pr-8`}
-                                            />
-                                            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-neutral-400">
-                                                회
-                                            </span>
-                                        </div>
-                                        <div className="relative min-w-[10rem] flex-1 max-w-xs">
+                                    <div key={i} className="flex items-center gap-2">
+                                        <input
+                                            type="text"
+                                            value={row.label}
+                                            onChange={(e) => {
+                                                const label = e.target.value.slice(0, 16);
+                                                setTiers((prev) =>
+                                                    prev.map((item, idx) => (idx === i ? { ...item, label } : item)),
+                                                );
+                                            }}
+                                            placeholder="1회"
+                                            className="w-24 shrink-0 rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-[15px] text-[#3a322c] placeholder:text-neutral-400 outline-none transition focus:border-[#3a322c]/30 focus:ring-2 focus:ring-[#3a322c]/10"
+                                        />
+                                        <div className="relative min-w-0 max-w-xs flex-1">
                                             <input
                                                 type="text"
                                                 inputMode="numeric"
@@ -487,7 +490,7 @@ export default function ProductForm({
                                             <button
                                                 type="button"
                                                 onClick={() => setTiers((prev) => prev.filter((_, idx) => idx !== i))}
-                                                className="text-[13px] text-neutral-400 transition hover:text-rose-500"
+                                                className="shrink-0 text-[13px] text-neutral-400 transition hover:text-rose-500"
                                             >
                                                 삭제
                                             </button>
@@ -499,12 +502,12 @@ export default function ProductForm({
                                     onClick={() =>
                                         setTiers((prev) => [
                                             ...prev,
-                                            { sessions: nextSessions(prev), price: emptyTierPrice() },
+                                            { label: nextLabel(prev), price: emptyTierPrice() },
                                         ])
                                     }
                                     className="text-[13px] font-medium text-[#3a322c] transition hover:opacity-70"
                                 >
-                                    + 회차 추가
+                                    + 추가
                                 </button>
                             </div>
                         ) : (

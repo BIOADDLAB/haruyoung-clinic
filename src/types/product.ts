@@ -1,6 +1,8 @@
-/** 한 시술을 1회 / 5회 / 10회처럼 나눠 팔 때 쓰는 가격 */
+/** 한 시술을 1회 / 5회 / 2cc처럼 나눠 팔 때 쓰는 가격 */
 export type PriceTier = {
     sessions: number;
+    /** 화면에 그대로 쓰는 표기. 없으면 sessions + 회. 예: 2cc, 1회 */
+    label?: string;
     price: number | null;
     priceEn?: number | null;
     priceZh?: number | null;
@@ -32,7 +34,7 @@ export type Product = {
      */
     priceEn?: number | null;
     priceZh?: number | null;
-    /** 있으면 단일 가격 대신 회차별 가격을 보여준다. 없으면 예전처럼 price 하나만 쓴다 */
+    /** 있으면 단일 가격 대신 구간별 가격을 보여준다. 없으면 예전처럼 price 하나만 쓴다 */
     priceTiers?: PriceTier[];
     /**
      * 노출할 언어. 비어 있거나 없으면 모두 노출한다.
@@ -61,16 +63,32 @@ export function localized(
     return p[field];
 }
 
+/** 화면·장바구니에 쓰는 짧은 라벨. 예: 5회, 2cc */
+export function tierCaption(tier: PriceTier) {
+    const label = tier.label?.trim();
+    if (label) return label;
+    return `${tier.sessions}회`;
+}
+
+function amountOf(tier: PriceTier) {
+    const fromLabel = tier.label?.match(/[\d.]+/);
+    if (fromLabel) {
+        const n = Number(fromLabel[0]);
+        if (Number.isFinite(n) && n > 0) return n;
+    }
+    return Number.isFinite(tier.sessions) ? tier.sessions : 0;
+}
+
 /** 회차가 있는 시술인지. 공개 카드 레이아웃을 나눌 때 쓴다 */
 export function hasPriceTiers(p: Product) {
     return usableTiers(p).length > 0;
 }
 
-/** 횟수가 있는 회차만 오름차순으로 돌려준다 */
+/** 표기가 있는 구간만, 숫자 순으로 돌려준다 */
 export function usableTiers(p: Product): PriceTier[] {
     return [...(p.priceTiers ?? [])]
-        .filter((tier) => Number.isFinite(tier.sessions) && tier.sessions > 0)
-        .sort((a, b) => a.sessions - b.sessions);
+        .filter((tier) => Boolean(tier.label?.trim()) || (Number.isFinite(tier.sessions) && tier.sessions > 0))
+        .sort((a, b) => amountOf(a) - amountOf(b));
 }
 
 export function localizedTierPrice(tier: PriceTier, locale: Locale) {

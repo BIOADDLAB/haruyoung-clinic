@@ -7,15 +7,16 @@ import { CSS } from '@dnd-kit/utilities';
 import { MENU_CATEGORIES } from '@/constants/categories';
 import { getProducts, deleteProduct, reorderProducts } from '@/lib/products';
 import ProductForm from '@/components/admin/ProductForm';
-import { usableTiers, type Product } from '@/types/product';
+import { tierCaption, usableTiers, type Product } from '@/types/product';
 
 function adminPriceLabel(p: Product) {
     const tiers = usableTiers(p);
     if (tiers.length > 0) {
         return tiers
-            .map((tier) =>
-                tier.price == null ? `${tier.sessions}회 문의` : `${tier.sessions}회 ${tier.price.toLocaleString()}원`,
-            )
+            .map((tier) => {
+                const label = tierCaption(tier);
+                return tier.price == null ? `${label} 문의` : `${label} ${tier.price.toLocaleString()}원`;
+            })
             .join(' · ');
     }
     return p.price === null ? '가격 문의' : `${p.price.toLocaleString()}원`;
