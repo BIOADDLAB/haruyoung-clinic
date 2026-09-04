@@ -5,9 +5,9 @@ import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, type D
 import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { MENU_CATEGORIES } from '@/constants/categories';
-import { getProducts, deleteProduct, reorderProducts } from '@/lib/products';
+import { getProducts, deleteProduct, reorderProducts, updateProduct } from '@/lib/products';
 import ProductForm from '@/components/admin/ProductForm';
-import { tierCaption, usableTiers, type Product } from '@/types/product';
+import { isProductVisible, tierCaption, usableTiers, type Product } from '@/types/product';
 
 function adminPriceLabel(p: Product) {
     const tiers = usableTiers(p);
@@ -25,11 +25,13 @@ function adminPriceLabel(p: Product) {
 function SortableCard({
     p,
     onEdit,
+    onHide,
     onDelete,
     editing,
 }: {
     p: Product;
     onEdit: (p: Product) => void;
+    onHide: (p: Product) => void;
     onDelete: (id: string) => void;
     editing: boolean;
 }) {
@@ -44,7 +46,7 @@ function SortableCard({
             }}
             className={`w-full max-w-[800px] rounded-lg border bg-cream p-5 lg:p-6 ${
                 editing ? 'border-dark ring-1 ring-dark' : 'border-beige'
-            }`}
+            } ${p.hidden ? 'opacity-55' : ''}`}
         >
             {/* 홈 시술 카드와 같은 규격: 폭 800 · p-6 · 제목 20 · 부제 16 brown · 설명 14 · 가격 22 */}
             <div className="flex items-start gap-3">
@@ -53,7 +55,10 @@ function SortableCard({
                 </button>
 
                 <div className="min-w-0 flex-1">
-                    <p className="text-caption-sm text-dark/45">{p.subCategory || '(섹션 없음)'}</p>
+                    <p className="text-caption-sm text-dark/45">
+                        {p.subCategory || '(섹션 없음)'}
+                        {p.hidden && <span className="ml-2 text-dark/70">숨김</span>}
+                    </p>
                     <h3 className="mt-1 whitespace-pre-line text-18 font-bold text-dark lg:text-20">{p.name}</h3>
                     {p.highlight && <p className="mt-2 text-small font-medium text-brown">{p.highlight}</p>}
                     {p.description && (
@@ -67,6 +72,9 @@ function SortableCard({
             <div className="mt-3 flex flex-wrap items-center justify-end gap-x-5 gap-y-2">
                 <button onClick={() => onEdit(p)} className="text-caption text-dark/55 hover:text-dark">
                     수정
+                </button>
+                <button onClick={() => onHide(p)} className="text-caption text-dark/55 hover:text-dark">
+                    {isProductVisible(p) ? '숨김' : '노출'}
                 </button>
                 <button onClick={() => onDelete(p.id)} className="text-caption text-red-500">
                     삭제
@@ -125,6 +133,13 @@ export default function ProductsPage() {
         await reorderProducts(reordered);
     };
 
+    const onHide = async (p: Product) => {
+        const hidden = isProductVisible(p);
+        setAll((prev) => prev.map((item) => (item.id === p.id ? { ...item, hidden } : item)));
+        if (editing?.id === p.id) setEditing({ ...p, hidden });
+        await updateProduct(p.id, { hidden });
+    };
+
     const onDelete = async (id: string) => {
         if (!confirm('삭제할까요?')) return;
         await deleteProduct(id);
@@ -180,6 +195,7 @@ export default function ProductsPage() {
                                     key={p.id}
                                     p={p}
                                     onEdit={edit}
+                                    onHide={onHide}
                                     onDelete={onDelete}
                                     editing={editing?.id === p.id}
                                 />

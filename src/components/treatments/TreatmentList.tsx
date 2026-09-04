@@ -8,7 +8,7 @@ import { RevealGroup, RevealItem } from '@/components/ui/RevealGroup';
 import TreatmentPrice from '@/components/treatments/TreatmentPrice';
 import { fadeUp } from '@/lib/motion';
 import { getProducts } from '@/lib/products';
-import { localized, type Locale, type Product } from '@/types/product';
+import { isProductVisible, localized, type Locale, type Product } from '@/types/product';
 
 export default function TreatmentList({ slug, categoryName }: { slug: string; categoryName: string }) {
     const t = useTranslations('treatments');
@@ -21,7 +21,14 @@ export default function TreatmentList({ slug, categoryName }: { slug: string; ca
         getProducts().then((all) => {
             if (alive) {
                 // locales 가 비어 있으면 모든 언어에 노출한다
-                setList(all.filter((p) => p.menuSlug === slug && (!p.locales?.length || p.locales.includes(locale))));
+                setList(
+                    all.filter(
+                        (p) =>
+                            isProductVisible(p) &&
+                            p.menuSlug === slug &&
+                            (!p.locales?.length || p.locales.includes(locale)),
+                    ),
+                );
             }
         });
         return () => {

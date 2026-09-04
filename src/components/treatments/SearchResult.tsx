@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { MENU_CATEGORIES } from '@/constants/categories';
 import TreatmentPrice from '@/components/treatments/TreatmentPrice';
 import { getProducts } from '@/lib/products';
-import { localized, type Locale, type Product } from '@/types/product';
+import { isProductVisible, localized, type Locale, type Product } from '@/types/product';
 import { Link } from '@/i18n/navigation';
 
 type SearchHit = {
@@ -45,6 +45,7 @@ export default function SearchResult({ keyword }: { keyword: string }) {
         const query = normalizeSearchText(keyword);
 
         return all.flatMap((product) => {
+            if (!isProductVisible(product)) return [];
             if (product.locales?.length && !product.locales.includes(locale)) return [];
 
             const name = localized(product, 'name', locale);

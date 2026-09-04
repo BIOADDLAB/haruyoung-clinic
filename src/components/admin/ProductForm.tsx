@@ -87,6 +87,7 @@ export default function ProductForm({
         );
     /** 노출 언어. 비어 있으면 모든 언어에 노출한다 */
     const [locales, setLocales] = useState<('ko' | 'en' | 'zh')[]>(initial?.locales ?? []);
+    const [hidden, setHidden] = useState(initial?.hidden === true);
 
     const toggleLocale = (l: 'ko' | 'en' | 'zh') =>
         setLocales((prev) => (prev.includes(l) ? prev.filter((x) => x !== l) : [...prev, l]));
@@ -198,6 +199,7 @@ export default function ProductForm({
                 priceZh: useTiers ? (first?.priceZh ?? null) : parsePriceInput(priceBy.zh),
                 priceTiers,
                 locales,
+                hidden,
                 order: initial?.order ?? Date.now(),
             };
             if (initial) {
@@ -562,6 +564,16 @@ export default function ProductForm({
                         ))}
                     </div>
                     <p className="mt-2 text-xs text-neutral-400">하나도 고르지 않으면 모든 언어에 노출됩니다.</p>
+                    <label className="mt-5 flex w-fit cursor-pointer items-center gap-2 text-[13px] text-neutral-600">
+                        <input
+                            type="checkbox"
+                            checked={hidden}
+                            onChange={(e) => setHidden(e.target.checked)}
+                            className="h-3.5 w-3.5 accent-[#3a322c]"
+                        />
+                        사이트에서 숨기기
+                    </label>
+                    <p className="mt-1.5 text-xs text-neutral-400">켜면 수가표·검색에서 빠지고, 관리자 목록에만 남습니다.</p>
                 </div>
 
                 <div className="flex flex-col-reverse gap-2.5 border-t border-black/[0.04] bg-neutral-50/50 px-6 py-4 sm:flex-row sm:justify-end sm:px-8">

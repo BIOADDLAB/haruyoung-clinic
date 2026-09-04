@@ -41,8 +41,14 @@ export type Product = {
      * 기존 데이터에 이 필드가 없어도 그대로 보이므로 재입력이 필요 없다.
      */
     locales?: ('ko' | 'en' | 'zh')[];
+    /** true 면 관리자에만 남기고 사이트에서는 뺀다. 없으면 노출 */
+    hidden?: boolean;
     order: number;
 };
+
+export function isProductVisible(p: Product) {
+    return p.hidden !== true;
+}
 
 export type ProductSeed = Omit<Product, 'id'>;
 
