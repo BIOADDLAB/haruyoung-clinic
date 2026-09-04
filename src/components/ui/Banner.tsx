@@ -9,9 +9,9 @@ export default function Banner({
     tall,
 }: {
     file: string;
-    /** 영문. 양옆에 작은 점이 붙는다 */
-    en: string;
-    /** 영문 아래 한 줄. 영문과 같은 값이면 넘기지 않는다 */
+    /** 영문. 양옆에 작은 점이 붙는다. 비우면 이 줄을 그리지 않는다 */
+    en?: string;
+    /** 영문 아래 한 줄. 없거나 영문과 같은 값이면 넘기지 않는다 */
     ko?: string;
     /** 프로모션 배너 맨 위 로고 타이포 이미지 경로 */
     logo?: string;
@@ -49,15 +49,17 @@ export default function Banner({
                     </span>
                 )}
 
-                <p
-                    className={`flex items-center gap-3 font-display ${
-                        tall ? 'text-h3 text-cream' : 'text-20 text-dark'
-                    }`}
-                >
-                    <Dot tall={tall} />
-                    {en}
-                    <Dot tall={tall} />
-                </p>
+                {en ? (
+                    <p
+                        className={`flex items-center gap-3 font-display ${
+                            tall ? 'text-h3 text-cream' : 'text-20 text-dark'
+                        }`}
+                    >
+                        <Dot tall={tall} />
+                        {en}
+                        <Dot tall={tall} />
+                    </p>
+                ) : null}
 
                 {ko && (
                     <p className={`text-small font-semibold ${tall ? 'mt-1 text-cream/85' : 'mt-1.5 text-dark/85'}`}>

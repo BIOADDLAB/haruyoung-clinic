@@ -19,6 +19,8 @@ export default function SettingsPage() {
         en: { title: '', subtitle: '' },
         zh: { title: '', subtitle: '' },
     });
+    const [titleVisible, setTitleVisible] = useState(true);
+    const [subtitleVisible, setSubtitleVisible] = useState(true);
     const [loading, setLoading] = useState(true);
     const [busy, setBusy] = useState(false);
 
@@ -26,6 +28,8 @@ export default function SettingsPage() {
         let alive = true;
         getPromotionBannerSetting().then((s) => {
             if (!alive) return;
+            setTitleVisible(s?.titleVisible !== false);
+            setSubtitleVisible(s?.subtitleVisible !== false);
             setText({
                 ko: { title: s?.title ?? '', subtitle: s?.subtitle ?? '' },
                 en: { title: s?.titleEn ?? '', subtitle: s?.subtitleEn ?? '' },
@@ -44,13 +48,15 @@ export default function SettingsPage() {
     const filled = (l: Lang) => Boolean(text[l].title.trim() || text[l].subtitle.trim());
 
     const submit = async () => {
-        if (!text.ko.title.trim()) {
+        if (titleVisible && !text.ko.title.trim()) {
             setLang('ko');
             return alert('한국어 제목을 입력하세요.');
         }
         setBusy(true);
         try {
             await savePromotionBannerSetting({
+                titleVisible,
+                subtitleVisible,
                 title: text.ko.title,
                 titleEn: text.en.title,
                 titleZh: text.zh.title,
@@ -104,8 +110,19 @@ export default function SettingsPage() {
                     </div>
 
                     <label className="flex flex-col gap-1.5">
-                        <span className="text-[13px] font-medium text-neutral-600">
-                            배너 제목 {lang === 'ko' && <span className="text-rose-500">*</span>}
+                        <span className="flex items-center justify-between gap-3 text-[13px] font-medium text-neutral-600">
+                            <span>
+                                배너 제목 {lang === 'ko' && titleVisible && <span className="text-rose-500">*</span>}
+                            </span>
+                            <span className="flex items-center gap-1.5 font-normal">
+                                <input
+                                    type="checkbox"
+                                    checked={titleVisible}
+                                    onChange={(e) => setTitleVisible(e.target.checked)}
+                                    className="h-3.5 w-3.5 accent-[#3a322c]"
+                                />
+                                노출
+                            </span>
                         </span>
                         <input
                             value={text[lang].title}
@@ -116,7 +133,18 @@ export default function SettingsPage() {
                     </label>
 
                     <label className="flex flex-col gap-1.5">
-                        <span className="text-[13px] font-medium text-neutral-600">배너 부제</span>
+                        <span className="flex items-center justify-between gap-3 text-[13px] font-medium text-neutral-600">
+                            배너 부제
+                            <span className="flex items-center gap-1.5 font-normal">
+                                <input
+                                    type="checkbox"
+                                    checked={subtitleVisible}
+                                    onChange={(e) => setSubtitleVisible(e.target.checked)}
+                                    className="h-3.5 w-3.5 accent-[#3a322c]"
+                                />
+                                노출
+                            </span>
+                        </span>
                         <input
                             value={text[lang].subtitle}
                             onChange={(e) => setField('subtitle', e.target.value)}

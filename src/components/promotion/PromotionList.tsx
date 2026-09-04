@@ -88,8 +88,20 @@ export default function PromotionList({ categoryId = '' }: { categoryId?: string
                 file={PROMOTION_BANNER.file}
                 logo={PROMOTION_BANNER.logo}
                 logoAlt={ta('logo')}
-                en={banner ? localizedSetting(banner, 'title', locale) : PROMOTION_BANNER.title}
-                ko={banner ? localizedSetting(banner, 'subtitle', locale) : PROMOTION_BANNER.subtitle}
+                en={
+                    banner?.titleVisible === false
+                        ? undefined
+                        : banner
+                          ? localizedSetting(banner, 'title', locale)
+                          : PROMOTION_BANNER.title
+                }
+                ko={
+                    banner?.subtitleVisible === false
+                        ? undefined
+                        : banner
+                          ? localizedSetting(banner, 'subtitle', locale)
+                          : PROMOTION_BANNER.subtitle
+                }
                 tall
             />
 

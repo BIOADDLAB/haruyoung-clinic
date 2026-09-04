@@ -4,6 +4,9 @@ export type SettingLocale = 'ko' | 'en' | 'zh';
 
 /** 프로모션 배너 문구. 관리자 > 프로모션 배너 설정에서 언어별로 바꾼다 */
 export type PromotionBannerSetting = {
+    /** 없으면 노출 */
+    titleVisible?: boolean;
+    subtitleVisible?: boolean;
     title: string;
     titleEn?: string;
     titleZh?: string;
