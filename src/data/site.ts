@@ -12,7 +12,7 @@ const TREATMENT_ORDER = [
 ] as const;
 
 export const SITE_CONFIG = {
-    url: 'https://haruyoung-clinic.vercel.app',
+    url: 'https://design.bioaddlab.com',
     googleSiteVerification: '',
 };
 

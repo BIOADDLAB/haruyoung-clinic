@@ -1,7 +1,7 @@
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { db, storage } from './firebase';
-import { defaultReservationHours, normalizeClosedDates, type BeforeAfterSetting, type HeroBannerSetting, type PopupSetting, type PromotionBannerSetting, type ReservationHoursSetting } from '@/types/settings';
+import { defaultReservationHours, normalizeClosedDates, normalizeOpenDates, type BeforeAfterSetting, type HeroBannerSetting, type PopupSetting, type PromotionBannerSetting, type ReservationHoursSetting } from '@/types/settings';
 
 /** 사이트 전역 설정은 settings 컬렉션에 문서 하나씩 둔다 */
 const PROMOTION_BANNER_DOC = doc(db, 'settings', 'promotionBanner');
@@ -65,6 +65,7 @@ export async function getReservationHoursSetting() {
         ...saved,
         days: { ...base.days, ...saved.days },
         closedDates: normalizeClosedDates(saved.closedDates),
+        openDates: normalizeOpenDates(saved.openDates),
     };
 }
 

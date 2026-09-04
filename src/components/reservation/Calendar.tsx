@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { toKey } from './slots';
-import { defaultReservationHours, isReservationClosed, type ReservationHoursSetting } from '@/types/settings';
+import { defaultReservationHours, isReservationDayClosed, type ReservationHoursSetting } from '@/types/settings';
 
 const WEEK = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -76,7 +76,7 @@ export default function Calendar({
                     const date = new Date(cursor.getFullYear(), cursor.getMonth(), day);
                     const key = toKey(date);
                     // 휴진 요일·지정 휴진일·지난 날짜·예약 한계 밖은 못 고른다
-                    const closed = !cfg.days[String(date.getDay())]?.open || isReservationClosed(key, cfg);
+                    const closed = isReservationDayClosed(key, cfg);
                     const disabled = closed || date < today || date > last;
                     const on = value === key;
 

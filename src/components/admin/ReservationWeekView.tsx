@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { RESERVATION_TONE, WEEKDAYS } from '@/components/admin/reservationUi';
 import { toKey, toMin, weekAxisTimes } from '@/components/reservation/slots';
-import { defaultReservationHours, isReservationClosed, type ReservationHoursSetting } from '@/types/settings';
+import { defaultReservationHours, isReservationClosed, isReservationForcedOpen, reservationHoursForDate, type ReservationHoursSetting } from '@/types/settings';
 import { RESERVATION_STATUS, type Reservation } from '@/types/reservation';
 
 function startOfWeek(d: Date) {
@@ -102,13 +102,16 @@ export default function ReservationWeekView({
                             </div>
                             {days.map((d) => {
                                 const dateKey = toKey(d);
-                                const rule = cfg.days[String(d.getDay())];
+                                const rule = reservationHoursForDate(dateKey, cfg);
+                                const weekday = cfg.days[String(d.getDay())];
                                 const t = toMin(time);
-                                const closed = !rule?.open;
+                                const forced = isReservationForcedOpen(dateKey, cfg);
+                                const closed = !weekday?.open && !forced;
                                 const holiday = isReservationClosed(dateKey, cfg);
-                                const outside = !!rule?.open && (t < toMin(rule.start) || t >= toMin(rule.end));
+                                const bookable = !!rule;
+                                const outside = bookable && (t < toMin(rule.start) || t >= toMin(rule.end));
                                 const lunch =
-                                    !!rule?.open &&
+                                    bookable &&
                                     rule.lunch &&
                                     t >= toMin(cfg.lunchStart) &&
                                     t < toMin(cfg.lunchEnd);

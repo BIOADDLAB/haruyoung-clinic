@@ -5,8 +5,10 @@ import { getReservationHoursSetting, saveReservationHoursSetting } from '@/lib/s
 import {
     defaultReservationHours,
     normalizeClosedDates,
+    normalizeOpenDates,
     type ReservationDayHours,
     type ReservationHoursSetting,
+    type ReservationOpenDate,
 } from '@/types/settings';
 import { toKey } from '@/components/reservation/slots';
 
@@ -38,6 +40,12 @@ export default function HoursPage() {
     const [closedFrom, setClosedFrom] = useState('');
     const [closedTo, setClosedTo] = useState('');
     const [closedNote, setClosedNote] = useState('');
+    const [openFrom, setOpenFrom] = useState('');
+    const [openTo, setOpenTo] = useState('');
+    const [openNote, setOpenNote] = useState('');
+    const [openStart, setOpenStart] = useState('10:00');
+    const [openEnd, setOpenEnd] = useState('19:00');
+    const [openLunch, setOpenLunch] = useState(true);
 
     useEffect(() => {
         let alive = true;
@@ -48,6 +56,7 @@ export default function HoursPage() {
                 ...s,
                 days: { ...defaultReservationHours().days, ...s.days },
                 closedDates: normalizeClosedDates(s.closedDates),
+                openDates: normalizeOpenDates(s.openDates),
             });
             setLoading(false);
         });
@@ -59,36 +68,108 @@ export default function HoursPage() {
     const setDay = (key: string, patch: Partial<ReservationDayHours>) =>
         setHours((prev) => ({ ...prev, days: { ...prev.days, [key]: { ...prev.days[key], ...patch } } }));
 
-    const addClosedRange = () => {
-        if (!DATE_OK.test(closedFrom)) return alert('시작 날짜를 선택하세요.');
-        const end = closedTo || closedFrom;
-        if (!DATE_OK.test(end)) return alert('종료 날짜를 선택하세요.');
-        if (end < closedFrom) return alert('종료일이 시작일보다 빠를 수 없습니다.');
+    const addDateRange = (from: string, to: string, note: string) => {
+        if (!DATE_OK.test(from)) {
+            alert('시작 날짜를 선택하세요.');
+            return false;
+        }
+        const end = to || from;
+        if (!DATE_OK.test(end)) {
+            alert('종료 날짜를 선택하세요.');
+            return false;
+        }
+        if (end < from) {
+            alert('종료일이 시작일보다 빠를 수 없습니다.');
+            return false;
+        }
 
-        const note = closedNote.trim();
+        const memo = note.trim();
         setHours((prev) => {
             const next = [...prev.closedDates];
             const have = new Set(next.map((d) => d.date));
-            const cursor = new Date(`${closedFrom}T00:00:00`);
+            const added = new Set<string>();
+            const cursor = new Date(`${from}T00:00:00`);
             const last = new Date(`${end}T00:00:00`);
             while (cursor <= last) {
                 const key = toKey(cursor);
+                added.add(key);
                 if (!have.has(key)) {
                     have.add(key);
-                    next.push({ date: key, note });
+                    next.push({ date: key, note: memo });
                 }
                 cursor.setDate(cursor.getDate() + 1);
             }
             next.sort((a, b) => a.date.localeCompare(b.date));
-            return { ...prev, closedDates: next };
+            return {
+                ...prev,
+                closedDates: next,
+                openDates: prev.openDates.filter((d) => !added.has(d.date)),
+            };
         });
+        return true;
+    };
+
+    const addClosedRange = () => {
+        if (!addDateRange(closedFrom, closedTo, closedNote)) return;
         setClosedFrom('');
         setClosedTo('');
         setClosedNote('');
     };
 
+    const addOpenRange = () => {
+        if (!DATE_OK.test(openFrom)) return alert('시작 날짜를 선택하세요.');
+        const end = openTo || openFrom;
+        if (!DATE_OK.test(end)) return alert('종료 날짜를 선택하세요.');
+        if (end < openFrom) return alert('종료일이 시작일보다 빠를 수 없습니다.');
+        if (!TIME_OK.test(openStart) || !TIME_OK.test(openEnd)) {
+            return alert('임시 진료 시간을 HH:MM 형식으로 입력하세요.');
+        }
+        if (toMin(openStart) >= toMin(openEnd)) return alert('시작이 종료보다 빨라야 합니다.');
+
+        const memo = openNote.trim();
+        setHours((prev) => {
+            const next: ReservationOpenDate[] = [...prev.openDates];
+            const added = new Set<string>();
+            const cursor = new Date(`${openFrom}T00:00:00`);
+            const last = new Date(`${end}T00:00:00`);
+            while (cursor <= last) {
+                const key = toKey(cursor);
+                added.add(key);
+                const row: ReservationOpenDate = {
+                    date: key,
+                    note: memo,
+                    start: openStart,
+                    end: openEnd,
+                    lunch: openLunch,
+                };
+                const idx = next.findIndex((d) => d.date === key);
+                if (idx >= 0) next[idx] = row;
+                else next.push(row);
+                cursor.setDate(cursor.getDate() + 1);
+            }
+            next.sort((a, b) => a.date.localeCompare(b.date));
+            return {
+                ...prev,
+                openDates: next,
+                closedDates: prev.closedDates.filter((d) => !added.has(d.date)),
+            };
+        });
+        setOpenFrom('');
+        setOpenTo('');
+        setOpenNote('');
+    };
+
+    const patchOpen = (date: string, patch: Partial<ReservationOpenDate>) =>
+        setHours((prev) => ({
+            ...prev,
+            openDates: prev.openDates.map((d) => (d.date === date ? { ...d, ...patch } : d)),
+        }));
+
     const removeClosed = (date: string) =>
         setHours((prev) => ({ ...prev, closedDates: prev.closedDates.filter((d) => d.date !== date) }));
+
+    const removeOpen = (date: string) =>
+        setHours((prev) => ({ ...prev, openDates: prev.openDates.filter((d) => d.date !== date) }));
 
     const submit = async () => {
         if (!TIME_OK.test(hours.lunchStart) || !TIME_OK.test(hours.lunchEnd)) {
@@ -114,11 +195,21 @@ export default function HoursPage() {
             }
         }
 
+        for (const extra of hours.openDates) {
+            if (!TIME_OK.test(extra.start) || !TIME_OK.test(extra.end)) {
+                return alert(`${extra.date} 진료시간을 HH:MM 형식으로 입력하세요.`);
+            }
+            if (toMin(extra.start) >= toMin(extra.end)) {
+                return alert(`${extra.date} 시작이 종료보다 빨라야 합니다.`);
+            }
+        }
+
         setBusy(true);
         try {
             await saveReservationHoursSetting({
                 ...hours,
                 closedDates: normalizeClosedDates(hours.closedDates),
+                openDates: normalizeOpenDates(hours.openDates),
             });
             alert('저장했습니다.');
         } catch {
@@ -134,7 +225,8 @@ export default function HoursPage() {
         <div className="w-full max-w-4xl">
             <h1 className="text-2xl font-bold text-[#3a322c] lg:text-3xl">예약 시간 설정</h1>
             <p className="mt-1 text-sm text-neutral-500">
-                요일별 진료시간, 점심시간, 추석처럼 예약이 안 되는 날짜를 바꿉니다. 바로예약 달력에 바로 반영됩니다.
+                요일별 진료시간, 점심시간, 추석처럼 막는 날짜, 휴진 요일을 하루만 여는 날짜를 바꿉니다. 바로예약 달력에
+                바로 반영됩니다.
             </p>
 
             <div className="mt-6 overflow-hidden rounded-2xl border border-black/[0.04] bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
@@ -293,6 +385,138 @@ export default function HoursPage() {
                                         type="button"
                                         onClick={() => removeClosed(d.date)}
                                         className="shrink-0 text-xs text-red-500"
+                                    >
+                                        삭제
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
+            </div>
+
+            <div className="mt-6 overflow-hidden rounded-2xl border border-black/[0.04] bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+                <div className="space-y-5 p-6 sm:p-8">
+                    <div>
+                        <h2 className="text-base font-semibold text-[#3a322c]">임시 진료일</h2>
+                        <p className="mt-1 text-sm text-neutral-500">
+                            수요일이 휴진이어도 이 날짜는 예약이 열립니다. 지정 휴진일보다 우선하고, 진료시간은 날짜마다
+                            따로 정합니다.
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 items-end gap-3 sm:grid-cols-3">
+                        <label className="flex flex-col gap-1.5">
+                            <span className="text-[13px] font-medium text-neutral-600">날짜 시작</span>
+                            <input
+                                type="date"
+                                value={openFrom}
+                                onChange={(e) => {
+                                    setOpenFrom(e.target.value);
+                                    if (!openTo) setOpenTo(e.target.value);
+                                }}
+                                className={inputBase}
+                            />
+                        </label>
+                        <label className="flex flex-col gap-1.5">
+                            <span className="text-[13px] font-medium text-neutral-600">날짜 종료</span>
+                            <input
+                                type="date"
+                                value={openTo}
+                                onChange={(e) => setOpenTo(e.target.value)}
+                                className={inputBase}
+                            />
+                        </label>
+                        <label className="flex flex-col gap-1.5">
+                            <span className="text-[13px] font-medium text-neutral-600">메모</span>
+                            <input
+                                type="text"
+                                value={openNote}
+                                onChange={(e) => setOpenNote(e.target.value)}
+                                placeholder="수요일 정상진료"
+                                className={inputBase}
+                            />
+                        </label>
+                        <label className="flex flex-col gap-1.5">
+                            <span className="text-[13px] font-medium text-neutral-600">진료 시작</span>
+                            <input
+                                type="time"
+                                value={openStart}
+                                onChange={(e) => setOpenStart(e.target.value)}
+                                className={inputBase}
+                            />
+                        </label>
+                        <label className="flex flex-col gap-1.5">
+                            <span className="text-[13px] font-medium text-neutral-600">진료 종료</span>
+                            <input
+                                type="time"
+                                value={openEnd}
+                                onChange={(e) => setOpenEnd(e.target.value)}
+                                className={inputBase}
+                            />
+                        </label>
+                        <div className="flex items-end justify-between gap-3 pb-0.5">
+                            <label className="flex items-center gap-2 pb-2.5 text-sm text-neutral-600">
+                                <input
+                                    type="checkbox"
+                                    checked={openLunch}
+                                    onChange={(e) => setOpenLunch(e.target.checked)}
+                                />
+                                점심 휴진
+                            </label>
+                            <button
+                                type="button"
+                                onClick={addOpenRange}
+                                className="rounded-xl border border-black/10 bg-white px-4 py-2.5 text-sm font-medium text-[#3a322c]"
+                            >
+                                추가
+                            </button>
+                        </div>
+                    </div>
+
+                    {hours.openDates.length === 0 ? (
+                        <p className="text-sm text-neutral-400">등록된 날짜가 없습니다.</p>
+                    ) : (
+                        <ul className="flex flex-col gap-2">
+                            {hours.openDates.map((d) => (
+                                <li
+                                    key={d.date}
+                                    className="flex flex-col gap-3 rounded-xl border border-black/[0.06] bg-neutral-50 px-3.5 py-3 sm:flex-row sm:items-end"
+                                >
+                                    <div className="min-w-0 sm:w-[140px]">
+                                        <p className="text-sm font-medium text-[#3a322c]">{d.date}</p>
+                                        {d.note && <p className="text-xs text-neutral-500">{d.note}</p>}
+                                    </div>
+                                    <label className="flex min-w-0 flex-1 flex-col gap-1">
+                                        <span className="text-[11px] text-neutral-500">시작</span>
+                                        <input
+                                            type="time"
+                                            value={d.start || '10:00'}
+                                            onChange={(e) => patchOpen(d.date, { start: e.target.value })}
+                                            className={inputBase}
+                                        />
+                                    </label>
+                                    <label className="flex min-w-0 flex-1 flex-col gap-1">
+                                        <span className="text-[11px] text-neutral-500">종료</span>
+                                        <input
+                                            type="time"
+                                            value={d.end || '19:00'}
+                                            onChange={(e) => patchOpen(d.date, { end: e.target.value })}
+                                            className={inputBase}
+                                        />
+                                    </label>
+                                    <label className="flex items-center gap-2 pb-2.5 text-sm text-neutral-600">
+                                        <input
+                                            type="checkbox"
+                                            checked={d.lunch !== false}
+                                            onChange={(e) => patchOpen(d.date, { lunch: e.target.checked })}
+                                        />
+                                        점심
+                                    </label>
+                                    <button
+                                        type="button"
+                                        onClick={() => removeOpen(d.date)}
+                                        className="shrink-0 pb-2.5 text-xs text-red-500"
                                     >
                                         삭제
                                     </button>

@@ -1,4 +1,4 @@
-import { defaultReservationHours, isReservationClosed, type ReservationHoursSetting } from '@/types/settings';
+import { defaultReservationHours, reservationHoursForDate, type ReservationHoursSetting } from '@/types/settings';
 
 export const toMin = (hhmm: string) => {
     const [h, m] = hhmm.split(':').map(Number);
@@ -25,10 +25,8 @@ export function slotsOf(
 ): string[] {
     if (!dateKey) return [];
     const cfg = hours ?? defaultReservationHours();
-    if (isReservationClosed(dateKey, cfg)) return [];
-    const date = new Date(`${dateKey}T00:00:00`);
-    const rule = cfg.days[String(date.getDay())];
-    if (!rule?.open) return [];
+    const rule = reservationHoursForDate(dateKey, cfg);
+    if (!rule) return [];
 
     const now = new Date();
     const isToday = dateKey === toKey(now);
@@ -50,9 +48,12 @@ export function weekAxisTimes(hours?: ReservationHoursSetting | null): string[] 
     let min = Infinity;
     let max = 0;
     for (const rule of Object.values(cfg.days)) {
-        if (!rule.open) continue;
         min = Math.min(min, toMin(rule.start));
         max = Math.max(max, toMin(rule.end));
+    }
+    for (const extra of cfg.openDates) {
+        min = Math.min(min, toMin(extra.start));
+        max = Math.max(max, toMin(extra.end));
     }
     if (!Number.isFinite(min) || max <= min) return [];
     const out: string[] = [];
