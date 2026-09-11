@@ -46,6 +46,7 @@
         "philosophy": "Our Philosophy",
         "specialist": "Our Specialist",
         "space": "Our Space",
+        "equipment": "Equipment",
         "beforeAfter": "Before & After",
         "promotion": "Promotion",
         "precautions": "Aftercare",
@@ -376,5 +377,117 @@
         "hideToday": "Don't show again today",
         "label": "HARUYOUNG notice popup",
         "tab": "Notice {n}"
+    },
+    "equipment": {
+        "title": "Equipment",
+        "description": "Explore HARUYOUNG’s equipment for skin and body assessment, redness and pigmentation, acne and scars, lifting, skin care and body contouring.",
+        "subtitle": "Care that begins with a precise assessment",
+        "navLabel": "Equipment section menu",
+        "concerns": "Care areas",
+        "sections": {
+            "skin": {
+                "nav": "Skin & Body Diagnosis",
+                "title": "Skin & Body Diagnosis",
+                "about": "Your skin and body hold more information than appearance alone can reveal.\nAt HARUYOUNG, we assess skin condition alongside body composition, including body fat and muscle mass.\nThese measurements help us understand your current condition and plan care around your individual needs.",
+                "tags": [
+                    "Skin analysis",
+                    "Body composition",
+                    "Individual assessment",
+                    "Before & after comparison"
+                ],
+                "device": "Skin and body composition assessments guide the selection of treatments and ongoing care."
+            },
+            "redness": {
+                "nav": "Redness & Pigmentation",
+                "title": "Redness · Pigmentation",
+                "about": "Redness and pigmentation can appear together even when they have different causes. We assess the skin from several perspectives.\nHARUYOUNG considers vascular and pigment concerns separately, then selects equipment and treatment methods according to your skin condition.",
+                "tags": [
+                    "Redness care",
+                    "Even skin tone",
+                    "Blemish care",
+                    "Pigmentation care"
+                ],
+                "device": "Equipment is selected according to the skin’s condition, from redness and sensitivity to pigmentation concerns."
+            },
+            "scar": {
+                "nav": "Acne, Scars & Pores",
+                "title": "Acne · Scars · Pores",
+                "about": "Recurring acne, the marks it leaves and enlarged pores call for an assessment of oil production, inflammation and skin texture.\nHARUYOUNG examines acne, scar patterns and changes in skin texture to plan care for each individual.\nEquipment and treatments are selected with your current skin condition in mind.",
+                "tags": [
+                    "Sebum care",
+                    "Pore care",
+                    "Acne scars",
+                    "Skin renewal"
+                ],
+                "device": "We consider acne and skin texture together, selecting equipment according to the condition of scars and pores."
+            },
+            "tight": {
+                "nav": "Tightening & Lifting",
+                "title": "Tightening · Lifting",
+                "about": "Skin firmness and facial contours change with age.\nHARUYOUNG’s tightening and lifting care considers skin thickness, elasticity and the degree of laxity when planning treatment.\nEquipment is selected according to each area’s condition and the balance of the face.",
+                "tags": [
+                    "Radiofrequency care",
+                    "Firmness care",
+                    "Ultrasound lifting",
+                    "Contour care"
+                ],
+                "device": "Tightening and lifting equipment is selected according to skin firmness, facial contours and each treatment area."
+            },
+            "sooth": {
+                "nav": "Soothing & Skin Renewal",
+                "title": "Soothing · Regeneration",
+                "about": "Stressed skin needs rest and attentive care.\nHARUYOUNG assesses skin sensitivity and hydration to plan soothing and renewal care.\nCare methods and treatments are combined according to your skin’s condition, with attention to texture and overall comfort.",
+                "tags": [
+                    "Soothing care",
+                    "Hydration",
+                    "Skin renewal",
+                    "Texture care"
+                ],
+                "device": "Care equipment is selected with each individual’s skin condition and sensitivity in mind."
+            },
+            "mole": {
+                "nav": "Mole & Wart Removal",
+                "title": "Mole · Wart Removal",
+                "about": "Moles and warts require an assessment before treatment, as the approach depends on their type and depth.\nHARUYOUNG considers the lesion’s type, location and depth, as well as the surrounding skin, when planning removal.\nAftercare and the recovery process are explained together.",
+                "tags": [
+                    "Targeted removal",
+                    "Surrounding skin care",
+                    "Individual care",
+                    "Aftercare"
+                ],
+                "device": "Laser treatment is planned according to the lesion’s location and depth."
+            },
+            "body": {
+                "nav": "Body Contouring",
+                "title": "Body Contouring",
+                "about": "Body shape, fat distribution and skin firmness vary from person to person, so each area is assessed individually.\nHARUYOUNG’s body contouring care considers these factors alongside weight and your areas of concern.\nThe treatment plan is tailored to your condition and schedule.",
+                "tags": [
+                    "Body care",
+                    "Firmness care",
+                    "Body contours",
+                    "Area-specific care"
+                ],
+                "device": "Equipment can be used for facial and body care, including the arms and abdomen, according to each area’s condition."
+            }
+        },
+        "devices": {
+            "metavu": "Meta-Vu",
+            "inbody": "InBody",
+            "selectv": "CELLEC V",
+            "clarity": "CLARITY",
+            "picosure": "PicoSure",
+            "picoplus": "PICOPlus",
+            "neobeam": "NEOBeam",
+            "dermashine": "DERMASHINE PRO",
+            "upulse": "U-Pulse",
+            "potenza": "POTENZA",
+            "ultherapy": "Ultherapy",
+            "volnewmer": "VOLNEWMER",
+            "thermage": "Thermage",
+            "shurink": "SHURINK UNIVERSE",
+            "inmode": "InMode",
+            "corege": "COREGE",
+            "sonostyler": "SONO STYLER"
+        }
     }
 }
