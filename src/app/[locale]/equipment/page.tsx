@@ -130,7 +130,7 @@ export default async function EquipmentPage({ params }: { params: Promise<{ loca
                                                                 alt=""
                                                                 width={45}
                                                                 height={64}
-                                                                className="absolute -top-3 left-2 z-10 h-auto w-9 sm:w-[45px]"
+                                                                className="absolute -top-6 left-2 z-10 h-auto w-9 sm:w-[45px]"
                                                             />
                                                         )}
                                                         <figure className="flex h-full flex-col">

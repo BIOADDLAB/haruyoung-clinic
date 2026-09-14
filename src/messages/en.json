@@ -380,94 +380,64 @@
     },
     "equipment": {
         "title": "Equipment",
-        "description": "Explore HARUYOUNG’s equipment for skin and body assessment, redness and pigmentation, acne and scars, lifting, skin care and body contouring.",
-        "subtitle": "Care that begins with a precise assessment",
+        "description": "Discover HARUYOUNG Clinic’s equipment for skin & body diagnosis, redness and pigmentation, acne, scars and pores, tightening and lifting, skin care and body care.",
+        "subtitle": "HARUYOUNG equipment that begins with an accurate diagnosis",
         "navLabel": "Equipment section menu",
-        "concerns": "Care areas",
+        "concerns": "Key care areas",
         "sections": {
             "skin": {
-                "nav": "Skin & Body Diagnosis",
+                "nav": "Skin Diagnosis",
                 "title": "Skin & Body Diagnosis",
-                "about": "Your skin and body hold more information than appearance alone can reveal.\nAt HARUYOUNG, we assess skin condition alongside body composition, including body fat and muscle mass.\nThese measurements help us understand your current condition and plan care around your individual needs.",
+                "about": "Your skin and body hold far more information than what meets the eye.\nHARUYOUNG’s Skin & Body Diagnosis focuses first on precisely analyzing what lies beneath the surface, including hydration, elasticity and pigmentation in the skin, along with body composition data such as body fat and muscle mass.\nBased on accurate results from the Meta-Vu device, we find the treatment and care plan that truly fits you now, for natural, lasting improvement.",
                 "tags": [
-                    "Skin analysis",
-                    "Body composition",
-                    "Individual assessment",
-                    "Before & after comparison"
+                    "Hydration analysis",
+                    "Body composition measurement",
+                    "Elasticity diagnosis",
+                    "Personalized treatment planning"
                 ],
-                "device": "Skin and body composition assessments guide the selection of treatments and ongoing care."
+                "device": "We precisely analyze everything from skin hydration, elasticity and pigmentation to body fat and body balance, and find the treatment that’s exactly right for you now."
             },
             "redness": {
                 "nav": "Redness & Pigmentation",
                 "title": "Redness · Pigmentation",
-                "about": "Redness and pigmentation can appear together even when they have different causes. We assess the skin from several perspectives.\nHARUYOUNG considers vascular and pigment concerns separately, then selects equipment and treatment methods according to your skin condition.",
-                "tags": [
-                    "Redness care",
-                    "Even skin tone",
-                    "Blemish care",
-                    "Pigmentation care"
-                ],
-                "device": "Equipment is selected according to the skin’s condition, from redness and sensitivity to pigmentation concerns."
+                "about": "Redness and dull pigmentation often appear together even though their causes differ, so it’s important to tell them apart precisely. Rather than treating the visible redness and pigmentation together,\nHARUYOUNG focuses first on precisely analyzing the underlying cause, whether it’s the blood vessels or pigment buildup.\nA step-by-step approach tailored to your skin condition helps achieve a clear, comfortable skin tone.",
+                "tags": ["Vascular calming", "Even skin tone", "Barrier strengthening", "Pigmentation improvement"],
+                "device": "Calms redness-prone, sensitive blood vessels and skin, restoring comfortable, trouble-free skin."
             },
             "scar": {
                 "nav": "Acne, Scars & Pores",
                 "title": "Acne · Scars · Pores",
-                "about": "Recurring acne, the marks it leaves and enlarged pores call for an assessment of oil production, inflammation and skin texture.\nHARUYOUNG examines acne, scar patterns and changes in skin texture to plan care for each individual.\nEquipment and treatments are selected with your current skin condition in mind.",
-                "tags": [
-                    "Sebum care",
-                    "Pore care",
-                    "Acne scars",
-                    "Skin renewal"
-                ],
-                "device": "We consider acne and skin texture together, selecting equipment according to the condition of scars and pores."
+                "about": "Recurring acne, the deep scars it leaves behind, and enlarged pores don’t heal on their own over time, and can even make the skin’s texture look rougher. Rather than simply covering up acne, scars\nand pores on the surface, HARUYOUNG focuses first on regenerating the cause of inflammation, the damaged tissue and the structure around the pores together.\nA personalized approach suited to your skin condition helps achieve smooth, refined skin texture.",
+                "tags": ["Scar improvement", "Pore tightening", "Acne calming", "Skin regeneration"],
+                "device": "Regenerates recurring acne, deep-set scars and enlarged pores at the root, restoring smooth, refined skin texture."
             },
             "tight": {
                 "nav": "Tightening & Lifting",
                 "title": "Tightening · Lifting",
-                "about": "Skin firmness and facial contours change with age.\nHARUYOUNG’s tightening and lifting care considers skin thickness, elasticity and the degree of laxity when planning treatment.\nEquipment is selected according to each area’s condition and the balance of the face.",
-                "tags": [
-                    "Radiofrequency care",
-                    "Firmness care",
-                    "Ultrasound lifting",
-                    "Contour care"
-                ],
-                "device": "Tightening and lifting equipment is selected according to skin firmness, facial contours and each treatment area."
+                "about": "Over time, skin loses elasticity and begins to sag, blurring the overall facial contour.\nRather than simply concealing surface sagging, HARUYOUNG’s Tightening & Lifting care focuses first on restoring collagen production and the supportive structure deep within the skin.\nWith energy levels customized to the degree of sagging in each area, we help you achieve a firm, natural-looking contour.",
+                "tags": ["Collagen regeneration", "Elasticity strengthening", "Lifting effect", "Contour improvement"],
+                "device": "Stimulates skin that has lost firmness and sagged, tightening it into a firm, contoured facial line."
             },
             "sooth": {
                 "nav": "Soothing & Skin Renewal",
                 "title": "Soothing · Regeneration",
-                "about": "Stressed skin needs rest and attentive care.\nHARUYOUNG assesses skin sensitivity and hydration to plan soothing and renewal care.\nCare methods and treatments are combined according to your skin’s condition, with attention to texture and overall comfort.",
-                "tags": [
-                    "Soothing care",
-                    "Hydration",
-                    "Skin renewal",
-                    "Texture care"
-                ],
-                "device": "Care equipment is selected with each individual’s skin condition and sensitivity in mind."
+                "about": "Irritated, tired skin needs both time and direction to recover.\nRather than offering only temporary relief, HARUYOUNG’s Soothing & Regeneration care focuses first on restoring the damaged skin barrier and the skin’s own regenerative capacity.\nBy combining ingredients and treatments suited to your skin condition, we help you achieve smooth, healthy skin texture.",
+                "tags": ["Skin calming", "Regeneration boost", "Texture improvement", "Barrier recovery"],
+                "device": "Stabilizes irritated, tired skin while smoothing and brightening rough, dull skin texture."
             },
             "mole": {
                 "nav": "Mole & Wart Removal",
                 "title": "Mole · Wart Removal",
-                "about": "Moles and warts require an assessment before treatment, as the approach depends on their type and depth.\nHARUYOUNG considers the lesion’s type, location and depth, as well as the surrounding skin, when planning removal.\nAftercare and the recovery process are explained together.",
-                "tags": [
-                    "Targeted removal",
-                    "Surrounding skin care",
-                    "Individual care",
-                    "Aftercare"
-                ],
-                "device": "Laser treatment is planned according to the lesion’s location and depth."
+                "about": "Moles and warts can only be cleared cleanly, without scarring, when the removal method is matched to their location and depth.\nRather than simple removal, HARUYOUNG focuses first on precisely assessing the depth of the lesion and your skin type.\nWith treatment tailored to each area, we help you achieve clear skin with no worry of scarring.",
+                "tags": ["Precise removal", "Fast recovery", "Recurrence management", "Minimal scarring"],
+                "device": "Cleanly removes unwanted moles and warts using a precise method matched to their size and location."
             },
             "body": {
                 "nav": "Body Contouring",
                 "title": "Body Contouring",
-                "about": "Body shape, fat distribution and skin firmness vary from person to person, so each area is assessed individually.\nHARUYOUNG’s body contouring care considers these factors alongside weight and your areas of concern.\nThe treatment plan is tailored to your condition and schedule.",
-                "tags": [
-                    "Body care",
-                    "Firmness care",
-                    "Body contours",
-                    "Area-specific care"
-                ],
-                "device": "Equipment can be used for facial and body care, including the arms and abdomen, according to each area’s condition."
+                "about": "Localized fat and sagging lines often can’t be resolved through exercise alone.\nRather than focusing on simple volume reduction, HARUYOUNG’s Body Contouring focuses first on a plan that considers both fat distribution and skin elasticity for each area.\nWith an approach tailored to your body type, we help you achieve a balanced, natural silhouette.",
+                "tags": ["Line refinement", "Elasticity strengthening", "Body fat reduction", "Balanced silhouette"],
+                "device": "Smooths and balances not only the face but also body lines such as the arms and abdomen."
             }
         },
         "devices": {
