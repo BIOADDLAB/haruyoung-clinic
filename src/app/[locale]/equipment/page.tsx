@@ -92,7 +92,7 @@ export default async function EquipmentPage({ params }: { params: Promise<{ loca
                                                 </span>{' '}
                                                 About
                                             </h3>
-                                            <p className="text-[14px] leading-[1.85] whitespace-pre-line break-keep">
+                                            <p className="text-[14px] leading-[1.85] whitespace-normal min-[1400px]:whitespace-pre-line break-keep">
                                                 {t(`sections.${section.id}.about`)}
                                             </p>
                                             <ul className="mt-5 flex flex-wrap gap-2" aria-label={t('concerns')}>

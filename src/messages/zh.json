@@ -481,13 +481,13 @@
             "dermashine": "DERMASHINE PRO",
             "upulse": "U-Pulse",
             "potenza": "POTENZA",
-            "ultherapy": "Ultherapy",
-            "volnewmer": "VOLNEWMER",
+            "density": "DENSITY",
+            "linearz": "LINEAR Z",
             "thermage": "Thermage",
-            "shurink": "SHURINK UNIVERSE",
+            "ultherapyprime": "Ultherapy Prime",
             "inmode": "InMode",
-            "corege": "COREGE",
-            "sonostyler": "SONO STYLER"
+            "fascella": "FASCELLA",
+            "astrodome": "Astrodome Facial"
         }
     }
 }

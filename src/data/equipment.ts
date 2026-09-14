@@ -56,12 +56,12 @@ export const EQUIPMENT_SECTIONS = [
         keywords: 'Firmness · Elasticity · Contour',
         photo: 'img-equ-tight-01.jpg',
         devices: [
-            { key: 'ultherapy', image: 'img-equ-tight-02.png' },
-            { key: 'volnewmer', image: 'img-equ-tight-03.png' },
+            { key: 'density', image: 'img-equ-tight-02.png' },
+            { key: 'linearz', image: 'img-equ-tight-03.png' },
             { key: 'thermage', image: 'img-equ-tight-04.png' },
-            { key: 'shurink', image: 'img-equ-tight-05.png' },
+            { key: 'ultherapyprime', image: 'img-equ-tight-05.png' },
             { key: 'inmode', image: 'img-equ-tight-06.png' },
-            { key: 'corege', image: 'img-equ-tight-07.png' },
+            { key: 'fascella', image: 'img-equ-tight-07.png' },
         ],
     },
     {
@@ -70,7 +70,7 @@ export const EQUIPMENT_SECTIONS = [
         keywords: 'Calming · Renewal · Texture',
         photo: 'img-equ-sooth-01.jpg',
         devices: [
-            { key: 'sonostyler', image: 'img-equ-sooth-02.png' },
+            { key: 'astrodome', image: 'img-equ-sooth-02.png' },
             { key: 'clarity', image: 'img-equ-sooth-03.png' },
         ],
     },
@@ -86,7 +86,7 @@ export const EQUIPMENT_SECTIONS = [
         english: 'Body Contouring',
         keywords: 'Shape · Firmness · Balance',
         photo: 'img-equ-body-01.jpg',
-        devices: [{ key: 'corege', image: 'img-equ-body-02.png' }],
+        devices: [{ key: 'fascella', image: 'img-equ-body-02.png' }],
     },
 ] as const satisfies readonly EquipmentSection[];
 
