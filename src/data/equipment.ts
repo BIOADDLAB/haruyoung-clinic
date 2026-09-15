@@ -1,7 +1,6 @@
 type EquipmentDevice = {
     key: string;
     image: string;
-    badge?: boolean;
 };
 
 type EquipmentSection = {
@@ -21,7 +20,7 @@ export const EQUIPMENT_SECTIONS = [
         photo: 'img-equ-skin-01.jpg',
         devices: [
             { key: 'metavu', image: 'img-equ-skin-02.png' },
-            { key: 'inbody', image: 'img-equ-skin-03.png', badge: true },
+            { key: 'inbody', image: 'img-equ-skin-03.png' },
         ],
     },
     {

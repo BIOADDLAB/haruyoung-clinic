@@ -122,17 +122,8 @@ export default async function EquipmentPage({ params }: { params: Promise<{ loca
                                                 {section.devices.map((device) => (
                                                     <li
                                                         key={device.image}
-                                                        className="relative min-w-0 bg-[#CCB194]/20 rounded-[8px]"
+                                                        className="min-w-0 bg-[#CCB194]/20 rounded-[8px]"
                                                     >
-                                                        {device.badge && (
-                                                            <Image
-                                                                src="/images/l-equ-skin.svg"
-                                                                alt=""
-                                                                width={45}
-                                                                height={64}
-                                                                className="absolute -top-6 left-2 z-10 h-auto w-9 sm:w-[45px]"
-                                                            />
-                                                        )}
                                                         <figure className="flex h-full flex-col">
                                                             <Image
                                                                 src={`/images/${device.image}`}
