@@ -85,7 +85,10 @@ export const EQUIPMENT_SECTIONS = [
         english: 'Body Contouring',
         keywords: 'Shape · Firmness · Balance',
         photo: 'img-equ-body-01.jpg',
-        devices: [{ key: 'fascella', image: 'img-equ-body-02.png' }],
+        devices: [
+            { key: 'fascella', image: 'img-equ-body-02.png' },
+            { key: 'inmodebody', image: 'img-equ-body-04.png' },
+        ],
     },
 ] as const satisfies readonly EquipmentSection[];
 
