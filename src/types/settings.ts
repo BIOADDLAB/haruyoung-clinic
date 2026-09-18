@@ -45,7 +45,7 @@ export type PopupSetting = {
     tabs: PopupTab[];
 };
 
-export const POPUP_MAX_TABS = 5;
+export const POPUP_MAX_TABS = 10;
 
 /** 팝업 이미지 권장 규격. 인스타 피드 세로 게시물(4:5)과 같다 */
 export const POPUP_IMAGE_WIDTH = 1080;
