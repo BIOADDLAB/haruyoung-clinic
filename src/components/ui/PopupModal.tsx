@@ -82,6 +82,15 @@ export default function PopupModal() {
         return () => clearTimeout(timer);
     }, [open, reduced, tabs.length, index]);
 
+    useEffect(() => {
+        if (!open) return;
+        document.getElementById(`popup-tab-${index}`)?.scrollIntoView({
+            inline: 'center',
+            block: 'nearest',
+            behavior: reduced ? 'auto' : 'smooth',
+        });
+    }, [index, open, reduced]);
+
     const close = () => setOpen(false);
 
     const hideToday = () => {
@@ -106,7 +115,7 @@ export default function PopupModal() {
                     role="dialog"
                     aria-modal="true"
                     aria-label={t('label')}
-                    className="fixed inset-0 z-90 flex items-center justify-center overflow-y-auto bg-dark/55 px-5 py-10 backdrop-blur-[2px]"
+                    className="fixed inset-0 z-90 flex items-center justify-center overflow-y-auto bg-dark/55 px-4 py-6 backdrop-blur-[2px] sm:px-5 sm:py-10"
                 >
                     <button type="button" tabIndex={-1} aria-hidden onClick={close} className="absolute inset-0" />
 
@@ -117,31 +126,32 @@ export default function PopupModal() {
                         transition={{ duration: DUR.base, ease: EASE }}
                         // 부모에 배경을 깔면 둥근 모서리 안티에일리어싱 틈으로 그 색이 비친다.
                         // 배경은 아래 크림 영역들이 각자 갖는다
-                        className="relative flex max-h-[calc(100dvh-5rem)] w-full max-w-[720px] flex-col overflow-hidden rounded-[18px] shadow-[0_28px_70px_rgba(59,43,30,0.4)]"
+                        className="relative flex max-h-[calc(100dvh-3rem)] w-full max-w-[720px] flex-col overflow-hidden rounded-[18px] shadow-[0_28px_70px_rgba(59,43,30,0.4)] sm:max-h-[calc(100dvh-5rem)]"
                     >
-                        <div className="grid min-h-0 grid-cols-[minmax(0,1.55fr)_minmax(8rem,0.7fr)] items-stretch">
-                            {/* 인스타 4:5. 옆 목록이 라벨을 세로로 받으니 좌우가 잘리지 않는다 */}
-                            <div className="relative aspect-[4/5] overflow-hidden bg-cream">
+                        <div className="grid min-h-0 flex-1 grid-cols-1 items-stretch md:grid-cols-[minmax(0,1.55fr)_minmax(8rem,0.7fr)]">
+                            {/* 모바일은 이미지를 위에, 탭은 아래에 둔다. 데스크톱은 옆 목록 */}
+                            <div className="relative min-h-0 w-full overflow-hidden bg-cream aspect-[4/5] max-md:max-h-[min(68dvh,560px)]">
                                 {/* key 를 주소로 잡아 탭이 바뀌면 스켈레톤부터 다시 시작한다 */}
                                 <PopupImage key={current.imageUrl} tab={current} onInternalNavigate={close} />
                             </div>
 
-                            {/* 탭은 하나여도 그린다. 긴 이름도 줄바꿈해서 통째로 보여준다 */}
+                            {/* 모바일은 좌우 스크롤, 데스크톱은 옆 세로 목록 */}
                             <nav
                                 aria-label={t('label')}
-                                className="flex min-h-0 flex-col overflow-y-auto border-l border-dark/10 bg-cream [scrollbar-width:thin]"
+                                className="flex min-h-0 shrink-0 overflow-x-auto overflow-y-hidden border-t border-dark/10 bg-cream [scrollbar-width:thin] md:max-h-none md:flex-col md:overflow-x-hidden md:overflow-y-auto md:border-t-0 md:border-l"
                             >
                                 {tabs.map((tab, i) => (
                                     <button
+                                        id={`popup-tab-${i}`}
                                         key={`${tab.imageUrl}-${i}`}
                                         type="button"
                                         onClick={() => setIndex(i)}
                                         aria-current={i === index ? 'true' : undefined}
-                                        className={`w-full px-3 py-3.5 text-center text-caption leading-snug break-keep transition-colors duration-500 ease-brand sm:px-5 ${
+                                        className={`shrink-0 whitespace-nowrap px-4 py-3 text-center text-caption leading-snug break-keep transition-colors duration-500 ease-brand md:w-full md:shrink md:whitespace-normal md:px-5 md:py-3.5 ${
                                             i === index
                                                 ? 'bg-sand/45 font-semibold text-dark'
                                                 : 'text-dark/45 hover:bg-sand/25 hover:text-dark/70'
-                                        } ${i < tabs.length - 1 ? 'border-b border-dark/10' : ''}`}
+                                        } ${i < tabs.length - 1 ? 'border-r border-dark/10 md:border-r-0 md:border-b' : ''}`}
                                     >
                                         {labels[i]}
                                     </button>
