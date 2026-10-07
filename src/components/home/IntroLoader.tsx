@@ -14,6 +14,12 @@ const HOLD_MS = 1000;
 /** 영상이 끝내 준비되지 않아도 이만큼 지나면 카운트다운을 시작한다. */
 const READY_TIMEOUT_MS = 1500;
 
+/** 네트워크가 죽어도 이 시간이면 인트로를 강제로 닫는다. */
+const FAILSAFE_CLOSE_MS = 8000;
+
+/** 첫 프레임만 나오고 재생이 안 되면 이 시간 뒤 영상을 포기한다. */
+const STALL_MS = 2500;
+
 /** 마지막 00 만 길게 내려앉힌다. */
 const swapOf = (n: number) => (n === 0 ? 0.7 : 0.5);
 
@@ -37,7 +43,17 @@ export default function IntroLoader() {
     const [ready, setReady] = useState(false);
     const [count, setCount] = useState(START_COUNT);
     const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const closedRef = useRef(false);
     const visible = open && !reduced;
+
+    const unloadVideo = () => {
+        const el = videoRef.current;
+        if (!el) return;
+        el.pause();
+        el.removeAttribute('src');
+        el.load();
+    };
 
     useEffect(() => {
         let seen = false;
@@ -51,10 +67,15 @@ export default function IntroLoader() {
     }, []);
 
     const close = useCallback(() => {
+        if (closedRef.current) return;
+        closedRef.current = true;
         if (timer.current) clearTimeout(timer.current);
+        unloadVideo();
         markSeen();
         setSkipped(true);
         setOpen(false);
+        document.documentElement.style.setProperty(INTRO_DISPLAY_PROPERTY, 'none');
+        window.dispatchEvent(new Event(INTRO_CLOSED_EVENT));
     }, []);
 
     // 영상이 준비되지 않아도 인트로가 멈춰 있으면 안 된다
@@ -63,6 +84,46 @@ export default function IntroLoader() {
         const t = setTimeout(() => setReady(true), READY_TIMEOUT_MS);
         return () => clearTimeout(t);
     }, [visible, ready]);
+
+    useEffect(() => {
+        if (!visible) return;
+        const t = setTimeout(close, FAILSAFE_CLOSE_MS);
+        return () => clearTimeout(t);
+    }, [visible, close]);
+
+    // 첫 프레임에서 멈추면 영상만 포기하고, 클릭/카운트다운은 살려 둔다
+    useEffect(() => {
+        if (!visible) return;
+        const el = videoRef.current;
+        if (!el) return;
+
+        let cancelled = false;
+        const play = el.play();
+        void play?.catch(() => {
+            if (!cancelled) setReady(true);
+        });
+
+        const onProgress = () => {
+            if (!cancelled && el.currentTime >= 0.05) setReady(true);
+        };
+        el.addEventListener('timeupdate', onProgress);
+        el.addEventListener('playing', onProgress);
+
+        const stall = window.setTimeout(() => {
+            if (cancelled || closedRef.current) return;
+            if (el.currentTime < 0.05) {
+                el.pause();
+                setReady(true);
+            }
+        }, STALL_MS);
+
+        return () => {
+            cancelled = true;
+            window.clearTimeout(stall);
+            el.removeEventListener('timeupdate', onProgress);
+            el.removeEventListener('playing', onProgress);
+        };
+    }, [visible]);
 
     useEffect(() => {
         if (!visible || !ready) return;
@@ -102,28 +163,36 @@ export default function IntroLoader() {
                         scale: 1.08,
                         transition: { duration: 1, ease: EASE },
                     }}
-                    onClick={close}
-                    className="fixed inset-0 z-[100] cursor-pointer overflow-hidden bg-dark motion-reduce:hidden"
+                    className="fixed inset-0 z-[100] overflow-hidden bg-dark motion-reduce:hidden"
                 >
+                    {/* 영상 엘리먼트가 터치를 가로채지 않게 포스터를 깔고 영상은 클릭을 막는다 */}
+                    <img
+                        src="/images/intro-s.jpg"
+                        alt=""
+                        className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+                    />
                     <video
+                        ref={videoRef}
                         src="/videos/intro.mp4"
-                        poster="/images/intro-s.jpg"
                         autoPlay
                         muted
                         playsInline
-                        preload="auto"
+                        preload="none"
+                        disablePictureInPicture
+                        disableRemotePlayback
                         onCanPlay={() => setReady(true)}
-                        className="absolute inset-0 h-full w-full object-cover"
+                        onError={close}
+                        className="pointer-events-none absolute inset-0 h-full w-full object-cover"
                     />
 
                     {/* 영상 위에 글자가 묻히지 않게 눌러준다 */}
-                    <span aria-hidden="true" className="absolute inset-0 bg-dark/40" />
+                    <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-dark/40" />
 
                     <motion.div
                         initial={{ opacity: 0, y: 12 }}
-                        animate={ready ? { opacity: 1, y: 0 } : { opacity: 0 }}
+                        animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.9, ease: EASE }}
-                        className="absolute inset-0 flex items-center justify-center"
+                        className="pointer-events-none absolute inset-0 flex items-center justify-center"
                     >
                         <p className="flex items-baseline gap-3 font-display text-cream drop-shadow-[0_2px_12px_rgba(0,0,0,0.4)] sm:gap-5">
                             <span className="text-32 tracking-[0.14em] sm:text-48">HA</span>
@@ -151,9 +220,17 @@ export default function IntroLoader() {
                         </p>
                     </motion.div>
 
-                    <p className="absolute inset-x-0 bottom-10 text-center text-caption-sm tracking-[0.1em] text-cream/45">
+                    <p className="pointer-events-none absolute inset-x-0 bottom-10 text-center text-caption-sm tracking-[0.1em] text-cream/45">
                         {t('skip')}
                     </p>
+
+                    <button
+                        type="button"
+                        onPointerDown={close}
+                        onClick={close}
+                        className="absolute inset-0 z-10 cursor-pointer"
+                        aria-label={t('skip')}
+                    />
                 </motion.div>
             )}
         </AnimatePresence>
