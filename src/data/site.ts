@@ -12,7 +12,7 @@ const TREATMENT_ORDER = [
 ] as const;
 
 export const SITE_CONFIG = {
-    url: 'https://design.bioaddlab.com',
+    url: 'https://haruyoung.com',
     googleSiteVerification: '',
 };
 
