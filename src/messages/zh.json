@@ -23,7 +23,9 @@
         "searchDesc": "搜索 HARUYOUNG 医院的项目。",
         "treatmentDesc": "HARUYOUNG 医院 {name} 项目介绍与价格。",
         "beforeAfter": "前后对比",
-        "beforeAfterDesc": "按项目分类查看 HARUYOUNG 医院治疗前后照片。"
+        "beforeAfterDesc": "按项目分类查看 HARUYOUNG 医院治疗前后照片。",
+        "column": "皮肤健康专栏",
+        "columnDesc": "HARUYOUNG 医院带来的皮肤健康知识与术后护理指南。"
     },
     "nav": {
         "menu": "菜单",
@@ -60,7 +62,8 @@
         "care": "SKIN CARE",
         "iv": "IV THERAPY",
         "hair": "HAIR REMOVAL",
-        "booster": "SKIN BOOSTERS"
+        "booster": "SKIN BOOSTERS",
+        "column": "皮肤健康专栏"
     },
     "search": {
         "title": "项目搜索",
@@ -371,6 +374,15 @@
         "event1": "Welcome Event",
         "event2": "美白 / 色素活动",
         "event3": "护肤活动"
+    },
+    "column": {
+        "title": "皮肤健康专栏",
+        "subtitle": "HARUYOUNG 医院的皮肤健康知识",
+        "all": "全部",
+        "empty": "暂无专栏文章。",
+        "current": "当前文章",
+        "listTitle": "{category} 专栏",
+        "backToList": "返回列表"
     },
     "popup": {
         "close": "Close",

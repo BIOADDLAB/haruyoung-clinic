@@ -23,7 +23,9 @@
         "searchDesc": "하루영의원 시술을 검색해 보세요.",
         "treatmentDesc": "하루영의원 {name} 시술 안내와 가격입니다.",
         "beforeAfter": "전후사진",
-        "beforeAfterDesc": "하루영의원 시술 전후 사진을 카테고리별로 확인하세요."
+        "beforeAfterDesc": "하루영의원 시술 전후 사진을 카테고리별로 확인하세요.",
+        "column": "피부 건강 칼럼",
+        "columnDesc": "하루영의원 의료진이 전하는 피부 건강 정보와 시술 후 관리법을 칼럼으로 확인하세요."
     },
     "nav": {
         "menu": "MENU",
@@ -60,7 +62,8 @@
         "care": "SKIN CARE",
         "iv": "IV THERAPY",
         "hair": "HAIR REMOVAL",
-        "booster": "SKIN BOOSTERS"
+        "booster": "SKIN BOOSTERS",
+        "column": "피부 건강 칼럼"
     },
     "search": {
         "title": "시술 바로 검색",
@@ -371,6 +374,15 @@
         "event1": "Welcome Event",
         "event2": "미백/색소 이벤트",
         "event3": "스킨케어 이벤트"
+    },
+    "column": {
+        "title": "피부 건강 칼럼",
+        "subtitle": "하루영의원이 전하는 피부 건강 이야기",
+        "all": "전체",
+        "empty": "등록된 칼럼이 없습니다.",
+        "current": "현재글",
+        "listTitle": "{category} 칼럼",
+        "backToList": "목록으로"
     },
     "popup": {
         "close": "Close",

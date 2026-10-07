@@ -13,5 +13,11 @@ service firebase.storage {
       allow read: if true;
       allow write: if isAdmin();
     }
+
+    // 칼럼 대표 이미지·본문 이미지
+    match /columns/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
   }
 }

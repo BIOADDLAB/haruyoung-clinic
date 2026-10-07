@@ -32,6 +32,7 @@ export const MENU_GROUPS = [
     },
     { title: 'TREATMENTS', items: treatments },
     { title: 'PROMOTION', items: [{ key: 'promotion', href: '/promotion' }] },
+    { title: 'COLUMN', items: [{ key: 'column', href: '/column' }] },
     { title: 'PRECAUTIONS', items: [{ key: 'precautions', href: '/precautions' }] },
 ] as const;
 

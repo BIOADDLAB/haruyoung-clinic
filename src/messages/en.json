@@ -23,7 +23,9 @@
         "searchDesc": "Search treatments at HARUYOUNG CLINIC.",
         "treatmentDesc": "{name} treatments and pricing at HARUYOUNG CLINIC.",
         "beforeAfter": "Before & After",
-        "beforeAfterDesc": "See HARUYOUNG CLINIC treatment results by category."
+        "beforeAfterDesc": "See HARUYOUNG CLINIC treatment results by category.",
+        "column": "Skin Health Column",
+        "columnDesc": "Skin health tips and post-treatment care guides from HARUYOUNG CLINIC."
     },
     "nav": {
         "menu": "MENU",
@@ -60,7 +62,8 @@
         "care": "SKIN CARE",
         "iv": "IV THERAPY",
         "hair": "HAIR REMOVAL",
-        "booster": "SKIN BOOSTERS"
+        "booster": "SKIN BOOSTERS",
+        "column": "Skin Health Column"
     },
     "search": {
         "title": "Treatment search",
@@ -371,6 +374,15 @@
         "event1": "Welcome Event",
         "event2": "Brightening & Pigment",
         "event3": "Skin Care"
+    },
+    "column": {
+        "title": "Skin Health Column",
+        "subtitle": "Skin health stories from HARUYOUNG CLINIC",
+        "all": "All",
+        "empty": "No columns yet.",
+        "current": "Now reading",
+        "listTitle": "{category} columns",
+        "backToList": "Back to list"
     },
     "popup": {
         "close": "Close",

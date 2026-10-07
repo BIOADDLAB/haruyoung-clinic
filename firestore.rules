@@ -36,6 +36,13 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // 피부 건강 칼럼. 발행된 글만 공개 조회 가능하다.
+    // 공개 측 쿼리는 반드시 where('published','==',true) 를 포함해야 통과한다.
+    match /columns/{id} {
+      allow read: if resource.data.published == true || isAdmin();
+      allow write: if isAdmin();
+    }
+
     // 예약은 쓰기만 열고 읽기는 관리자만
     match /reservations/{id} {
       allow create: if request.resource.data.status == 'pending'

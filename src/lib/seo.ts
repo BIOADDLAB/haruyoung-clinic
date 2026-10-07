@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { SITE_CONFIG } from '@/data/site';
 import { routing, type Locale } from '@/i18n/routing';
+import { columnLocales, type Column } from '@/types/column';
 
 export const SITE_URL = SITE_CONFIG.url.replace(/\/$/, '');
 
@@ -49,6 +50,20 @@ export function getAlternates(locale: string, path = '/'): Metadata['alternates'
         canonical: getLocalizedUrl(locale, path),
         languages: getLanguageAlternates(path),
     };
+}
+
+/**
+ * 칼럼 글의 언어별 URL. 검수 완료되어 실제 공개된 언어만 넣는다 (columnLocales).
+ * 미검수 언어의 URL 을 hreflang·사이트맵에 알리면 검색엔진에 404 를 노출하게 된다.
+ * 상세 페이지 metadata 와 sitemap 이 같은 로직을 쓰도록 여기 하나로 모았다.
+ */
+export function getColumnLanguageAlternates(column: Column, path: string) {
+    const languages: Record<string, string> = {};
+    for (const locale of columnLocales(column)) {
+        languages[LANGUAGE_TAG[locale]] = getLocalizedUrl(locale, path);
+    }
+    languages['x-default'] = getLocalizedUrl('ko', path);
+    return languages;
 }
 
 type PageMetadataOptions = {

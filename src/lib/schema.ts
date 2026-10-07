@@ -57,6 +57,67 @@ export function createClinicSchema({ locale, name, description, address }: Clini
     };
 }
 
+type ColumnSchemaOptions = {
+    locale: Locale;
+    slug: string;
+    headline: string;
+    description: string;
+    /** 대표 이미지 절대 URL */
+    image: string;
+    /** 'YYYY-MM-DD' */
+    datePublished: string;
+    /** ISO */
+    dateModified: string;
+    clinic: string;
+    /** 칼럼 목록 페이지 표기명 */
+    boardName: string;
+};
+
+/** 칼럼 상세의 Article + 빵부스러기. 의료 콘텐츠라 publisher 를 의원 스키마에 연결한다 */
+export function createColumnSchema({
+    locale,
+    slug,
+    headline,
+    description,
+    image,
+    datePublished,
+    dateModified,
+    clinic,
+    boardName,
+}: ColumnSchemaOptions) {
+    const url = getLocalizedUrl(locale, `/column/${slug}`);
+    const breadcrumbId = `${url}#breadcrumb`;
+
+    return {
+        '@context': 'https://schema.org',
+        '@graph': [
+            {
+                '@type': 'BreadcrumbList',
+                '@id': breadcrumbId,
+                itemListElement: [
+                    { '@type': 'ListItem', position: 1, name: clinic, item: getLocalizedUrl(locale) },
+                    { '@type': 'ListItem', position: 2, name: boardName, item: getLocalizedUrl(locale, '/column') },
+                    { '@type': 'ListItem', position: 3, name: headline, item: url },
+                ],
+            },
+            {
+                '@type': 'Article',
+                '@id': `${url}#article`,
+                mainEntityOfPage: url,
+                headline,
+                description,
+                image,
+                datePublished,
+                dateModified,
+                inLanguage: LANGUAGE_TAG[locale],
+                author: { '@id': `${SITE_URL}/#clinic` },
+                publisher: { '@id': `${SITE_URL}/#clinic` },
+                breadcrumb: { '@id': breadcrumbId },
+            },
+        ],
+    };
+}
+
 type TreatmentSchemaOptions = {
     locale: Locale;
     slug: string;

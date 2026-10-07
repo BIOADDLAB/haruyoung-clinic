@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { usePathname } from '@/i18n/navigation';
 import { routing, type Locale } from '@/i18n/routing';
 import { PROMOTION_SUB_NAV, TREATMENT_SUB_NAV } from '@/data/site';
+import { adminCategoryName } from '@/constants/categories';
 import { getPromotionCategories } from '@/lib/promotionCategories';
 import { localizedCategory, type PromotionCategory } from '@/types/promotion';
 
@@ -160,7 +161,39 @@ function BeforeAfterNav() {
     return <NavLists items={items} currentHref={currentHref} />;
 }
 
-export default function SubNav() {
+function ColumnNav({ category }: { category?: string }) {
+    const tb = useTranslations('banner');
+    const tc = useTranslations('column');
+    const locale = useLocale();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+    const selected = searchParams.get('c');
+
+    // 한국어는 관리자 화면과 같은 카테고리명, 영·중은 banner 번역을 쓴다
+    const label = (slug: string) => (locale === 'ko' ? adminCategoryName(slug) : tb(slug));
+
+    const items: NavItem[] = [
+        { key: 'all', href: '/column', label: tc('all') },
+        ...TREATMENT_SUB_NAV.map((item) => ({
+            key: item.key,
+            href: `/column?c=${item.key}`,
+            label: label(item.key),
+        })),
+    ];
+    // 목록에서는 선택한 필터를, 상세(/column/slug)에서는 보고 있는 글의 카테고리를 강조한다
+    const currentHref =
+        pathname === '/column'
+            ? selected
+                ? `/column?c=${selected}`
+                : '/column'
+            : category
+              ? `/column?c=${category}`
+              : '';
+
+    return <NavLists items={items} currentHref={currentHref} />;
+}
+
+export default function SubNav({ columnCategory }: { columnCategory?: string } = {}) {
     const pathname = usePathname();
     const t = useTranslations('nav');
 
@@ -194,6 +227,18 @@ export default function SubNav() {
                 }
             >
                 <BeforeAfterNav />
+            </Suspense>
+        );
+    }
+
+    if (pathname === '/column' || pathname.startsWith('/column/')) {
+        return (
+            <Suspense
+                fallback={
+                    <NavLists items={[{ key: 'all', href: '/column', label: t('column') }]} currentHref="/column" />
+                }
+            >
+                <ColumnNav category={columnCategory} />
             </Suspense>
         );
     }
