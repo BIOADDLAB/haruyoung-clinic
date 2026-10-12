@@ -19,7 +19,7 @@ export const EQUIPMENT_SECTIONS = [
         keywords: 'Monitoring · Composition · Balance',
         photo: 'img-equ-skin-01.jpg',
         devices: [
-            { key: 'metavu', image: 'img-equ-skin-02.png' },
+            { key: 'markvu', image: 'img-equ-skin-markvu.png' },
             { key: 'inbody', image: 'img-equ-skin-03.png' },
         ],
     },
