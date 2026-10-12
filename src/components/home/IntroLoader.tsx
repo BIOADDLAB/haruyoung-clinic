@@ -112,10 +112,7 @@ export default function IntroLoader() {
 
         const stall = window.setTimeout(() => {
             if (cancelled || closedRef.current) return;
-            if (el.currentTime < 0.05) {
-                el.pause();
-                setReady(true);
-            }
+            if (el.currentTime < 0.05) setReady(true);
         }, STALL_MS);
 
         return () => {
@@ -135,29 +132,46 @@ export default function IntroLoader() {
         const ctx = canvas.getContext('2d', { alpha: false });
         if (!ctx) return;
 
-        let frame = 0;
         const paint = () => {
             const width = canvas.clientWidth;
             const height = canvas.clientHeight;
-            if (width > 0 && height > 0) {
-                const dpr = Math.min(window.devicePixelRatio || 1, 2);
-                const pw = Math.round(width * dpr);
-                const ph = Math.round(height * dpr);
-                if (canvas.width !== pw || canvas.height !== ph) {
-                    canvas.width = pw;
-                    canvas.height = ph;
-                    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-                }
-                if (video.readyState >= 2 && video.videoWidth > 0) {
-                    const scale = Math.max(width / video.videoWidth, height / video.videoHeight);
-                    const dw = video.videoWidth * scale;
-                    const dh = video.videoHeight * scale;
-                    ctx.drawImage(video, (width - dw) / 2, (height - dh) / 2, dw, dh);
-                }
+            if (width <= 0 || height <= 0) return;
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            const pw = Math.round(width * dpr);
+            const ph = Math.round(height * dpr);
+            if (canvas.width !== pw || canvas.height !== ph) {
+                canvas.width = pw;
+                canvas.height = ph;
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
             }
-            frame = window.requestAnimationFrame(paint);
+            if (video.readyState < 2 || video.videoWidth <= 0) return;
+            const scale = Math.max(width / video.videoWidth, height / video.videoHeight);
+            const dw = video.videoWidth * scale;
+            const dh = video.videoHeight * scale;
+            ctx.drawImage(video, (width - dw) / 2, (height - dh) / 2, dw, dh);
         };
-        frame = window.requestAnimationFrame(paint);
+
+        const media = video as HTMLVideoElement & {
+            requestVideoFrameCallback?: (cb: () => void) => number;
+            cancelVideoFrameCallback?: (id: number) => void;
+        };
+
+        if (media.requestVideoFrameCallback && media.cancelVideoFrameCallback) {
+            let handle = 0;
+            const onFrame = () => {
+                paint();
+                handle = media.requestVideoFrameCallback!(onFrame);
+            };
+            handle = media.requestVideoFrameCallback(onFrame);
+            return () => media.cancelVideoFrameCallback!(handle);
+        }
+
+        let frame = 0;
+        const loop = () => {
+            paint();
+            frame = window.requestAnimationFrame(loop);
+        };
+        frame = window.requestAnimationFrame(loop);
         return () => window.cancelAnimationFrame(frame);
     }, [visible]);
 
@@ -212,13 +226,13 @@ export default function IntroLoader() {
                         autoPlay
                         muted
                         playsInline
-                        preload="none"
+                        preload="auto"
                         disablePictureInPicture
                         disableRemotePlayback
                         onCanPlay={() => setReady(true)}
                         onError={close}
                         aria-hidden
-                        className="pointer-events-none absolute left-0 top-0 size-8 overflow-hidden opacity-0"
+                        className="pointer-events-none absolute -left-full top-0 h-full w-full object-cover"
                     />
                     <canvas
                         ref={canvasRef}
