@@ -44,6 +44,7 @@ export default function IntroLoader() {
     const [count, setCount] = useState(START_COUNT);
     const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
     const closedRef = useRef(false);
     const visible = open && !reduced;
 
@@ -125,6 +126,41 @@ export default function IntroLoader() {
         };
     }, [visible]);
 
+    // 영상은 재생만 하고 화면에는 캔버스로 그린다. GPU 영상 레이어가 클릭을 가로채지 않게 한다.
+    useEffect(() => {
+        if (!visible) return;
+        const video = videoRef.current;
+        const canvas = canvasRef.current;
+        if (!video || !canvas) return;
+        const ctx = canvas.getContext('2d', { alpha: false });
+        if (!ctx) return;
+
+        let frame = 0;
+        const paint = () => {
+            const width = canvas.clientWidth;
+            const height = canvas.clientHeight;
+            if (width > 0 && height > 0) {
+                const dpr = Math.min(window.devicePixelRatio || 1, 2);
+                const pw = Math.round(width * dpr);
+                const ph = Math.round(height * dpr);
+                if (canvas.width !== pw || canvas.height !== ph) {
+                    canvas.width = pw;
+                    canvas.height = ph;
+                    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                }
+                if (video.readyState >= 2 && video.videoWidth > 0) {
+                    const scale = Math.max(width / video.videoWidth, height / video.videoHeight);
+                    const dw = video.videoWidth * scale;
+                    const dh = video.videoHeight * scale;
+                    ctx.drawImage(video, (width - dw) / 2, (height - dh) / 2, dw, dh);
+                }
+            }
+            frame = window.requestAnimationFrame(paint);
+        };
+        frame = window.requestAnimationFrame(paint);
+        return () => window.cancelAnimationFrame(frame);
+    }, [visible]);
+
     useEffect(() => {
         if (!visible || !ready) return;
 
@@ -165,7 +201,6 @@ export default function IntroLoader() {
                     }}
                     className="fixed inset-0 z-[100] overflow-hidden bg-dark motion-reduce:hidden"
                 >
-                    {/* 영상 엘리먼트가 터치를 가로채지 않게 포스터를 깔고 영상은 클릭을 막는다 */}
                     <img
                         src="/images/intro-s.jpg"
                         alt=""
@@ -182,7 +217,13 @@ export default function IntroLoader() {
                         disableRemotePlayback
                         onCanPlay={() => setReady(true)}
                         onError={close}
-                        className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+                        aria-hidden
+                        className="pointer-events-none absolute left-0 top-0 size-8 overflow-hidden opacity-0"
+                    />
+                    <canvas
+                        ref={canvasRef}
+                        aria-hidden
+                        className="pointer-events-none absolute inset-0 h-full w-full"
                     />
 
                     {/* 영상 위에 글자가 묻히지 않게 눌러준다 */}
