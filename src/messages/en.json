@@ -400,7 +400,7 @@
             "skin": {
                 "nav": "Skin Diagnosis",
                 "title": "Skin & Body Diagnosis",
-                "about": "Your skin and body hold far more information than what meets the eye.\nHARUYOUNG’s Skin & Body Diagnosis focuses first on precisely analyzing what lies beneath the surface, including hydration, elasticity and pigmentation in the skin, along with body composition data such as body fat and muscle mass.\nBased on accurate results from the Meta-Vu device, we find the treatment and care plan that truly fits you now, for natural, lasting improvement.",
+                "about": "Your skin and body hold far more information than what meets the eye.\nHARUYOUNG’s Skin & Body Diagnosis focuses first on precisely analyzing what lies beneath the surface, including hydration, elasticity and pigmentation in the skin, along with body composition data such as body fat and muscle mass.\nBased on accurate results from the Mark-Vu device, we find the treatment and care plan that truly fits you now, for natural, lasting improvement.",
                 "tags": [
                     "Hydration analysis",
                     "Body composition measurement",
@@ -453,7 +453,7 @@
             }
         },
         "devices": {
-            "metavu": "Meta-Vu",
+            "markvu": "Mark-Vu",
             "inbody": "InBody",
             "selectv": "CELLEC V",
             "clarity": "CLARITY",
